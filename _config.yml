@@ -1,6 +1,6 @@
-title:            Blog Title
+title:            oad to CUBA and beyond...
 description:      Describe your website here.
-disqus_shortname: neohpstrtheme
+disqus_shortname: roadtocubaandbeyond
 reading_time:     true
 words_per_minute: 200
 logo:             images/logo.png
@@ -15,43 +15,20 @@ menu:
     url: '/about'
   - title: 'Tags'
     url: '/tags'
-  - title: 'Categories'
-    url: '/categories'
-    type: 'categories'
-  - title: 'Favorites'
-    url: '#'
-    submenu:
-      - title: 'highlighter'
-        url: '/code-highlighting-post/'
-      - title: 'intro'
-        url: '/readability-post/'
 
 # Owner/author information
 owner:
-  name:           Your name
-  site:           http://aronbordin.com
+  name:           Mario David
+  site:           http://road-to-cuba-and-beyond.com
   avatar:         images/avatar.jpg
-  bio:            "Your bio goes here. It shouldn't be super long but a good two sentences or two should suffice."
-  email:          you@email.com
+  bio:            "Software developer with passion on agile, web and fast development, blogger, father, family guy"
+  email:          mario@road-to-cuba-and-beyond.com
   # Social networking links used in footer. Update and remove as you like.
-  twitter: aron_bordin
-  facebook:
-  github: aron-bordin
-  stackexchange:
-  linkedin:
-  instagram:
-  flickr:
-  tumblr:
-  # google plus id, include the '+', eg +AronBordin
-  google_plus:    +yourid
+  twitter: mariomddavid
+  github: mariodavid
+  stackexchange: mariodavid
 
 social:
-  - title: "github"
-    url: "https://github.com/aron-bordin"
-  - title: "linkedin"
-    url: "https://br.linkedin.com/in/aronbordin"
-  - title: "youtube"
-    url: "https://www.youtube.com/channel/UCfnSek-9HPWOx5e2pH7VFgg"
 # Background image to be tiled on all pages
 background:
 
@@ -62,7 +39,7 @@ google_verify:
 bing_verify:
 
 # http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-timezone:    America/New_York
+timezone:    Germany/Berlin
 future:      true
 highlighter: pygments
 markdown:    kramdown
