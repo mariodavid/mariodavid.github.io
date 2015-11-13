@@ -1,7 +1,7 @@
 ---
 layout: post
 title: My personal CRUD story – or how i came to CUBA platform
-description: "Just about everything you'll need to style in the theme: headings, paragraphs, blockquotes, tables, code blocks, and more."
+description: "In this blog post i’d like to lay out how i came to the CUBA platform and what the benefits of this tool are. I’ll dig a little into the different phases on my young “business application development” history, just to give you a little context."
 modified: 2015-11-02
 tags: [cuba, crud]
 ---
