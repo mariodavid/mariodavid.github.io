@@ -1,6 +1,6 @@
 ---
 layout: post
-title: CUBA's extended Filter features that lets you don't want to program again
+title: Are CUBA filters the fast food of CRUD software?
 description: "..."
 modified: 2015-11-13
 tags: [cuba, filtering]
@@ -9,7 +9,6 @@ tags: [cuba, filtering]
 Last time, i wrote about the generic filter possibilities that CUBA provides out of the box. I left off with two requirements as a developer, that are necessary to be confident that the generic solution does not fall down with real world problems.
 
 <!-- more -->
-
 
 
 ## Going from fast food to a real healthy meal
@@ -97,7 +96,7 @@ The third option that you as a programmer have, is to adjust the underlying data
 This datasource definition is used via the id attribute of the collectionDatasource XML Tag in the definition of the filter ui element. In this definition you have the option to first change the query string that should be executed. As this is a plain old JPQL Query, there is obviously a lot of freedom. A few examples can be found in the [docs](http://docs.cuba-platform.com/cuba/6.0/manual/en/html-single/manual.html#datasource_query). 
 
 
-## 2. support for complex filters that go beyond attribute values of the or related entities
+## 2. support for complex filters that go beyond attribute values or related entities
 
 The second objection that i brought up last time, is the question about the support for filters that go beyond "simple" attribute based filterings. That is even more important for the decision to use the filter mechanisms as the basis for filter requirements for my application.
 
@@ -113,13 +112,75 @@ First of all we create a *new condition* via the UI (Product browser > Add searc
 
 <figure class="center">
 	<a href="{{ site.url }}/images/2015-11-15-cuba-extended-filter-features/from-last-week-condition.png"><img src="{{ site.url }}/images/2015-11-15-cuba-extended-filter-features/from-last-week-condition.png" alt=""></a>
-	<figcaption><a href="{{ site.url }}/images/2015-11-15-cuba-extended-filter-features/from-last-week-condition.png" title="Custom filter UI defined in the Entity Log view">Custom filter UI defined in the Entity Log view</a></figcaption>
+	<figcaption><a href="{{ site.url }}/images/2015-11-15-cuba-extended-filter-features/from-last-week-condition.png" title="New custom condition which defines all products from last week">New custom condition which defines all products from last week</a></figcaption>
 </figure>
 
 In the *Where* condition we'll use the JPQL macro @between to define, that the attribute *createdTs* has to be in the time frame (now-5) and now. *{E}* is the current entity (in this case *Product*).
 
-	
+### Gimme all the iPhone lovers
+The next filter example is based on an 1:N relationship. In this case, we want all the orders, that contain at least one iPhone in it. This is a little more advanced, because the product information are stored in the LineItem entity, not in the order directly. 
 
+The object graph displayed as a wonderful [train wreck](http://c2.com/cgi/wiki?TrainWreck) goes like this:
 
+{% highlight java %}
+myOrder.getLineItems().getAt(0).getProduct().getName()
+{% endhighlight %}
+
+To get this up and running, lets go into the Orders browse view and create two orders:
+
+<figure class="center">
+	<a href="{{ site.url }}/images/2015-11-15-cuba-extended-filter-features/order-examples.png"><img src="{{ site.url }}/images/2015-11-15-cuba-extended-filter-features/order-examples.png" alt=""></a>
+	<figcaption><a href="{{ site.url }}/images/2015-11-15-cuba-extended-filter-features/order-examples.png" title="Two example orders with one iPhone order from Misty">Two example orders with one iPhone order from Misty</a></figcaption>
+</figure>
+
+You'll find the orders the [example app](https://github.com/mariodavid/cuba-ordermanagement). The second one, 15/11/2015 from Misty contains a Line Item with an iPhone as the product.
+
+Next, we create another new search condition with the following settings:
+
+<figure class="center">
+	<a href="{{ site.url }}/images/2015-11-15-cuba-extended-filter-features/order-with-iphone-condition.png"><img src="{{ site.url }}/images/2015-11-15-cuba-extended-filter-features/order-with-iphone-condition.png" alt=""></a>
+	<figcaption><a href="{{ site.url }}/images/2015-11-15-cuba-extended-filter-features/order-with-iphone-condition.png" title="A condition that defines there has to be at least one line item with a product called something like 'iPhone'">A condition that defines there has to be at least one line item with a product called something like 'iPhone'</a></figcaption>
+</figure>
+
+in the Join Attribute, we will join the line items relation in the query. Next, in the Where attribute, we tell CUBA that *li* (the current Line Item) should have a product, which has a name that is *like* '%iPhone%'.
+
+This is basically it. When doing the search (and choose the checkbox above the search button to activate the condition), you'll get only Misty's order.
+
+### It's a bit over, is that ok?
+
+A tiny little extension will drastically increase the value of this filter. Instead of pre-defining the search string, you can let the user decide what product names to search for. Changing the Where attribute to the following:
+
+{% highlight java %}
+li.product.name like ?
+{% endhighlight %}
+
+As well as setting the parameter type to "String" instead of "No Parameter" will give you a input field in the filter section. Entering "iPhone" or "8810" will give the the first or the corresponding second order.
+
+Using the parameter feature a little more, we could extend our query to search for all orders that have a product in the category that the user wants to:
+
+<figure class="center half">
+	<img src="{{ site.url }}/images/2015-11-15-cuba-extended-filter-features/orders-with-product-categorie.png" alt="">
+	<figcaption>All Orders that have a product of a certain categorie</figcaption>
+</figure>
+
+I could go on with the examples of "advanced" filters a little more, but i'll think you get the point. I haven't covered all available possibilites, but it's up to you to find it out. 
+
+The bottom line of this second objection is, that the limit is not the one you might think of after my last [blog post](http://www.road-to-cuba-and-beyond.com/the-generic-filter-in-cuba-platform-excel-filters-on-steorids/). Instead the limit is broader and includes much more filter use cases.
+
+## If it is fast food, than at least it's a good one
+
+If we really want to stick to the fast food analogy, lets say it like Samuel L. Jackson Pulp Fiction did:
+
+<blockquote>
+	Mmm, this is a tasty burger! - Jules Winnfield
+</blockquote>
+
+It's not this McDonalds or Burger King kind of fast food. Its not just any fast food restaurant. At least the CUBA filters are a very tasty Burger from *Big Kahuna Burger*.
+
+First of all, CUBA generic filters are fast. Thats a fact. If you compare it to developing the same feature set from scratch - well, we'll see us in year (only if you have your five programming buddies around). Even if you plan to implement the concrete filter requirements you have at hand. Compare the effort to using this solution, even in this case it will be more.
+
+Second, CUBA generic filters are cheap. Since software developers paychecks are the driving cost factors in most IT efforts, you should probably optimize for it. I will not start the *make or buy* discussion right here, but i think the price/performance ratio is pretty unique. Perhaps i'll cover this topic in a future blog post.
+
+Last but not least, CUBA generic filters are healthier than there reputation. I hope i could point out, that unlike our burger example here, the filter mechanism is not just for the run-of-the-mill case. Instead it can handle filter requirements that are way beyond what anyone could call "easy".
 
 
