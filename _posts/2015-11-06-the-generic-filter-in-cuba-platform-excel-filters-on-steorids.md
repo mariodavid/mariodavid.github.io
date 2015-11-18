@@ -10,7 +10,7 @@ image:
   feature_source_2: https://www.iconfinder.com/icons/272703/excel_icon#size=128
 ---
 
-As i promised [last](http://www.road-to-cuba-and-beyond.com/my-personal-crud-story-or-how-i-came-to-cuba/) time, i plan to go through some features of the platform, that i think are very valuable. So i’m going to do a little series here. Starting with the obvious one’s like UI, Filtering, Security to some advanced features like Web Portal, extensibility, Auditing, dynamic attributes and so on.
+As i promised [last](http://www.road-to-cuba-and-beyond.com/my-personal-crud-story-or-how-i-came-to-cuba/) time, i plan to go through some features of the [platform](https://www.cuba-platform.com/), that i think are very valuable. So i’m going to do a little series here. Starting with the obvious one’s like UI, Filtering, Security to some advanced features like Web Portal, extensibility, Auditing, dynamic attributes and so on.
 
 <!-- more -->
 
