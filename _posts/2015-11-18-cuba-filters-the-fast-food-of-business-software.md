@@ -168,7 +168,7 @@ I could go on with the examples of "advanced" filters a little more, but i'll th
 
 The bottom line of this second objection is, that the limit is not at the point you might think of after reading my last [blog post](http://www.road-to-cuba-and-beyond.com/the-generic-filter-in-cuba-platform-excel-filters-on-steorids/). Instead it is broader and includes much more filter use cases.
 
-## If you think it's fast food, than at least it's a delicios one
+## If you think it's fast food, than at least it's a delicious one
 
 If we really want to stick to the fast food analogy (and i want - on that one you can be sure), lets say it like Jules Winnfield in Pulp Fiction did:
 
