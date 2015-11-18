@@ -4,6 +4,9 @@ title: The generic filter in cuba platform – excel filters on steorids
 description: "Starting the series of CUBA features with this blog post about the generic filter solution that the platform allows the user to filter entity lists on quite every possible facet."
 modified: 2015-11-06
 tags: [cuba, filtering]
+image:
+  feature: 2015-11-06-the-generic-filter-in-cuba/feature.jpg
+  feature_source: https://pixabay.com/de/ausbildung-langhantel-muskeln-h%C3%A4nde-603981/
 ---
 
 As i promised [last](http://www.road-to-cuba-and-beyond.com/my-personal-crud-story-or-how-i-came-to-cuba/) time, i plan to go through some features of the platform, that i think are very valuable. So i’m going to do a little series here. Starting with the obvious one’s like UI, Filtering, Security to some advanced features like Web Portal, extensibility, Auditing, dynamic attributes and so on.

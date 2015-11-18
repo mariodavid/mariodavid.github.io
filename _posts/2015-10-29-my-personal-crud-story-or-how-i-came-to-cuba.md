@@ -4,7 +4,11 @@ title: My personal CRUD story – or how i came to CUBA platform
 description: "In this blog post i’d like to lay out how i came to the CUBA platform and what the benefits of this tool are. I’ll dig a little into the different phases on my young “business application development” history, just to give you a little context."
 modified: 2015-11-02
 tags: [cuba, crud]
+image:
+  feature: my-personal-crud-story/feature.jpg
+  feature_source: https://pixabay.com/de/gliederung-karte-kuba-geographie-322490/
 ---
+
 
 In this blog post i’d like to lay out how i came to the CUBA platform and what the benefits of this tool are. I’ll dig a little into the different phases on my young “business application development” history, just to give you a little context. So let’s start with how i came to the typical CRUD applications to help non-tech people to be a little more productive. 
 

@@ -1,9 +1,12 @@
 ---
 layout: post
-title: Are CUBA filters the fast food of CRUD software?
+title: Are CUBA filters the fast food of business software?
 description: "..."
 modified: 2015-11-13
 tags: [cuba, filtering]
+image:
+  feature: 2015-11-15-cuba-extended-filter-features/feature.jpg
+  feature_source: https://pixabay.com/de/burger-pommes-frites-salat-kalorien-874531/
 ---
 
 Last time, i wrote about the generic filter possibilities that CUBA provides out of the box. I left off with two requirements as a developer, that are necessary to be confident that the generic solution does not fall down with real world problems.
@@ -25,12 +28,12 @@ From a developer point of view this is just boring stuff. As you'll get the sche
 
 Going back to the solution we have at hand from the last blog post. After the first attempts to do some stuff with the filtering mechanism, i wasn't aware what to make of it. At this point it feels a little like *fast food*.
 
-> OK at the exact moment. But after eating it, you often have a queasy conscience. First of all you probably know that it's going to bite you in the long run when buying a big mac every second day. Additionally you know that two hours later you probably will be hungry again.
+> Mostly fast, pricing is moderate, OK to eat at the exact moment. But after eating it, you often have a queasy conscience. You probably know that it's going to bite you in the long run when buying a big mac every second day.
+
 
 The question basically is: *Is this is healthy well tasting meal?*. Meaning: Are you on the right track with this solution, or will this tool fall off after the first non-obvious filter problems?
 
 For this to figure out i will go through the two objections from the last blog post.
-
 
 
 ## 1. pre-define filter combinations in behalf of the user
@@ -167,9 +170,13 @@ I could go on with the examples of "advanced" filters a little more, but i'll th
 
 The bottom line of this second objection is, that the limit is not the one you might think of after my last [blog post](http://www.road-to-cuba-and-beyond.com/the-generic-filter-in-cuba-platform-excel-filters-on-steorids/). Instead the limit is broader and includes much more filter use cases.
 
-## If it is fast food, than at least it's a good one
+## If you think it's fast food, than at least it's a delicios one
 
-If we really want to stick to the fast food analogy, lets say it like Samuel L. Jackson Pulp Fiction did:
+If we really want to stick to the fast food analogy, lets say it like Jules Winnfield in Pulp Fiction did:
+
+<figure class="center">
+	<img src="{{ site.url }}/images/2015-11-15-cuba-extended-filter-features/jules-winnfield-burger.jpg" alt="">
+</figure>
 
 <blockquote>
 	Mmm, this is a tasty burger! - Jules Winnfield
