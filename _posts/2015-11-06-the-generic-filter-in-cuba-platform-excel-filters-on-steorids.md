@@ -133,4 +133,8 @@ To be even more precise, you’ll often don’t write the definition yourself. I
 
 In this case, you’ll fire up your local studio installation (and do a git clone from the [example project](https://github.com/mariodavid/cuba-ordermanagement)), open the project, look at your product entity (as you see above) and tell it to generate standard views for it. After answering a few questions about the different options of this generation step, it will lead to the exact XML descriptor file for the list view of this entity including the filter possibilities.
 
+## What's about the real heavy stuff?
+
+After sawing this, two thing came to my mind. First, this is just for kind of ad-hoc filtering scenarios. How can pre-define this filters so that my users do not have to pick them up by themselves over and over again?. The second thing is, that there are often filtering requirements, that go beyond the described possibilities. How is this tackled by CUBA?
+
 The platform has solutions for these objections. I’ll cover both in the next parts of this series.
