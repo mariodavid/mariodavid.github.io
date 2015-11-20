@@ -24,8 +24,8 @@ In this blog post i want to cover is the generic filter solution. But before get
 We will stick with the example from last time:
 
 <figure class="center">
-	<a href="{{ site.url }}/images/my-personal-crud-story/domain-example-customer-orders-uml1.png"><img src="{{ site.url }}/images/my-personal-crud-story/domain-example-customer-orders-uml1.png" alt=""></a>
-	<figcaption><a href="{{ site.url }}/images/my-personal-crud-story/domain-example-customer-orders-uml1.png" title="A domain example with a customer – orders relationship">A domain example with a customer – orders relationship</a></figcaption>
+	<a href="{{ site.url }}/images/2015-10-29-my-personal-crud-story/domain-example-customer-orders-uml1.png"><img src="{{ site.url }}/images/2015-10-29-my-personal-crud-story/domain-example-customer-orders-uml1.png" alt=""></a>
+	<figcaption><a href="{{ site.url }}/images/2015-10-29-my-personal-crud-story/domain-example-customer-orders-uml1.png" title="A domain example with a customer – orders relationship">A domain example with a customer – orders relationship</a></figcaption>
 </figure>
 
 
