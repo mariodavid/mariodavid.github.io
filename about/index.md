@@ -17,8 +17,6 @@ In this blog i will write about my experience that i gather during my Journey of
 </div>
 
 
-
-
 You'll find information about different technical topics regarding this piece of technology. As well i would like to share my opinions about developing with CUBA in particular and business software in general. One example of this you'll find in my first blog post about [My personal CRUD story – or how i came to CUBA platform](http://www.road-to-cuba-and-beyond.com/my-personal-crud-story-or-how-i-came-to-cuba/).
 
 Additionally you'll find descriptions about *other Road's* that lead to CUBA and posts about Roads that go beyond CUBA or other *Islands* :) 
