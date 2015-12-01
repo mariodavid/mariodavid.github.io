@@ -5,7 +5,7 @@ description: "CUBA Platform has a build in REST API - I'll give a quick overview
 modified: 2015-11-18
 tags: [cuba, rest]
 image:
-  feature: 2015-11-26-cuba-rest-api/feature.jpg
+  feature: 2015-12-01-cubas-rest-api/feature.jpg
   feature_source: ...
 ---
 
@@ -67,7 +67,7 @@ When we look at the compliance of Level 3 constraint (Hypermedia), Roy has a pre
 So lets face it: from the angle of *REST* as an *architectural style*, this API Implementation does not at all fulfil the different requirements to get the *Glory of REST* as Leonard Richardson calls it.
 
 
-<img style="float:right" src="{{site.url}}/images/2015-11-30-cubas-rest-api/hat-theoretical.png">
+<img style="float:right" src="{{site.url}}/images/2015-12-01-cubas-rest-api/hat-theoretical.png">
 
 
 ## The story about the two hats
@@ -76,7 +76,7 @@ So lets face it: from the angle of *REST* as an *architectural style*, this API 
 At this point, we could leave this topic. But the above description is made just my theoretical dogmatic hat on my head. It's ok, i like this hat. I wear it quite often. It fits quite well and looks gorgeous. But the problems with this hat are versatile. First of all it is expensive. If you want to wear it, you have to pay a pretty high price. Additionally it is not a headgear for every day. If you wear it on a every other normal business day in the office, probably collegues look at you a little mazed.
 
 
-<img style="float:left; width:64px;" src="{{site.url}}/images/2015-11-30-cubas-rest-api/hat-practical-gekippt.png">
+<img style="float:left; width:64px;" src="{{site.url}}/images/2015-12-01-cubas-rest-api/hat-practical-gekippt.png">
 <p style="padding-top:25px;">
 Because of this, i'll put this hat beside for now and put on the other one i own: <br/>the practical pragmatic one.
 </p>
