@@ -9,7 +9,7 @@ image:
   feature_source: ...
 ---
 
-Going further on the feature overview of CUBA Platforms capabilities, i'll will go through the next topic, which is quite important these days: APIs. CUBA has a build-in feature, called REST API. We'll have a look at what this means and how to interact with it. After this overview, we'll have a look about what alternatives we have, if this generic API is not suitable for our needs.
+Going further on the feature overview of [CUBA Platforms](http://www.cuba-platform.com) capabilities, i'll will go through the next topic, which is quite important these days: APIs. CUBA has a build-in feature, called REST API. We'll have a look at what this means and how to interact with it. After this overview, we'll have a look about what alternatives we have, if this generic API is not suitable for our needs.
 
 <!-- more -->
 
