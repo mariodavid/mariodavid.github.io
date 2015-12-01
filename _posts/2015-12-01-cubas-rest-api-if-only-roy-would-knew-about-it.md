@@ -77,9 +77,7 @@ At this point, we could leave this topic. But the above description is made just
 
 
 <img style="float:left; width:64px;" src="{{site.url}}/images/2015-12-01-cubas-rest-api/hat-practical-gekippt.png">
-<p style="padding-top:25px;">
 Because of this, i'll put this hat beside for now and put on the other one i own: <br/>the practical pragmatic one.
-</p>
 
 When i step back a little and rethink about the above written evaluation, a few things come to my mind. 
 
