@@ -140,5 +140,3 @@ A pretty good combination seems be to create a public facing API for a iOS app f
 Another approach would be to create a little microservice that only serves the API. It is just a proxy service, that will delegate to the actual CUBA REST API. Within this service, you can easily define your own API and translate between the two APIS. That enables a little more freedom in terms of scaling, distribution and so on.
 
 With this approach, you will get the benefits of both sides: no effort for the of-the-shelf use cases and full control over the outcome where its appropriate.
-
-
