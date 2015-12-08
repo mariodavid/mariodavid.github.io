@@ -50,7 +50,7 @@ And then, we have the filters, that are based on a 1:N / M:N relationship:
 * list all orders having at most 5 line items
 * list all orders where total amount of line items is greater than 200$
 
-These are general categories for filter requirements, that cover perhaps about 80% of use cases.
+These are general categories for filter requirements, that cover probably about 80% of use cases.
 
 ## The programatic way to solve these kind of problems
 
