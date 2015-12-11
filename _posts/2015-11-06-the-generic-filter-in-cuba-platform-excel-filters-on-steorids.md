@@ -1,6 +1,6 @@
 ---
 layout: post
-title: The generic filter in cuba platform – excel filters on steorids
+title: The generic filter in cuba platform – excel filters on steroids
 description: "Starting the series of CUBA features with this blog post about the generic filter solution that the platform allows the user to filter entity lists on quite every possible facet."
 modified: 2015-11-06
 tags: [cuba, filtering]
