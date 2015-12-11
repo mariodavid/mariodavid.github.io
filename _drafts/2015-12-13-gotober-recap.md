@@ -20,7 +20,7 @@ As Russ is a amazing story teller, this story absolutly absorbed me. Since the m
 
 With his analogy drawings between rocket science and software development he took all of us back down to earth and the nitty gritty problems that the John Doe developer has as a sotware developer. But it was the right mindset to get onto the next talks about different technologies, software practices and experience reports.
 
-### The different tracks
+### Thursday: The first conference day
 The conference was split into six parallel [tracks](http://gotocon.com/berlin-2015/schedule/thursday.jsp). I was personally interessted in Docker, Cloud and so on, i started off with a talk called "[Build, Ship and Run the Docker Way](http://gotocon.com/dl/goto-berlin-2015/slides/MaximeHeckel_BuildShipAndRunTheDockerWay.pdf)" from [Maxime Heckel](https://twitter.com/MaximeHeckel). He showed how [Tumtum](https://www.tutum.co), an orchestration enginge with a slick UI and plenty of features that let you step up from the docker command line to something more high-level. It is meant to be used for running docker in production.
 In my opinion the title promised a slightly different topic but it was ok for me, since the ecosystem around docker is at least equally interessting as the tool itself.
 
@@ -33,6 +33,7 @@ After this we had a pretty amazing lunch break. Due to this i was in a good mood
 
 These kind of talks from Internet scale companies like Twitter, Netflix, Amazon or like in this case Spotify are pretty impressive just from the numbers. When hearing about ~800 active running microservices developed by currently 600+ developers and 90+ teams - this is where you try to get your head around this. Especially when thinking about, that these guys are probably 10x faster and able to change their business that the normal enterprise is. Very interessting, although there was "nothing new", because it was just an experience report.
 
+### DevOps: Next
 For me there were two more talks about Containers and then just before the party started there was this Keynote from [Nicole Forsgren](https://twitter.com/nicolefv) called "[DevOps: Next](http://gotocon.com/dl/goto-berlin-2015/slides/NicoleForsgren_PartyKeynoteDevOpsNext.pdf)". It was a very interessting talk. She referenced the [Puppet Labs 2015 State of DevOps Report](https://puppetlabs.com/2015-devops-report), an annually survey about the implementation state of DevOps in organisations. 
 
 With different numbers she showed that DevOps together with Lean practices enables not only IT performance but also organizational performance. Changing IT from a cost center to something that lives in the heard of the organization as a fundamental profit center. Very cool talk, although as a John Doe developer it is not something that can be taken home to be implemented, but more as a general advice.
@@ -50,6 +51,12 @@ Right after this talk, there was [Nicola Paolucci](https://twitter.com/durdn) fr
 
 Then i went to the talk from [Jez Humble](https://twitter.com/jezhumble) called "[Why Scaling Agile Doesn't Work](http://gotocon.com/dl/goto-berlin-2015/slides/JezHumble_WhyScalingAgileDoesntWork.pdf)". Jez, at least for me, is a pretty amazing speaker. I already saw him last year at the conference and so unfortunately both talks overlapped a little bit. Nevertheless he introduced a phrase i wasn't aware of: "Water-Scrum-fall". he explained that even if you optimize your dev department with stuff like agile practices and so on, it is just relevant to a very little degree if the projects that you work on are planned a year before that. And the reactions of the users to this projects will never influce the decision to even start with the project, because they see it that later in time. He promoted the ideas behind continous delivery and lean. Also a very good talk.
 
-<img style="float:right; padding-left: 10px; width:200px;" src="{{site.url}}/images/2015-12-15-gotober-recap/kubernetes.png">
-The last talk i attended to was from [Brian Dorsey](https://twitter.com/briandorsey) from Google. He introduced [Kubernetes](http://kubernetes.io/), another possibility to orchestrate containers, created by Google. Since i had already had heard about it but had the time looking into it, i was really looking forward to hearing about it. It was a very cool talk. Opening VIM in a talk is always a good idea :)
+<img style="float:left; padding-right: 10px; width:100px;" src="{{site.url}}/images/2015-12-15-gotober-recap/kubernetes.png">
+The last talk i attended to was from [Brian Dorsey](https://twitter.com/briandorsey) from Google. He introduced [Kubernetes](http://kubernetes.io/), created by Google. Kubernetes is another possibility to orchestrate containers. Since i had already had heard about it but had the time looking into it, i was really looking forward to hearing about it. It was a very cool talk. Firing up VIM in a talk is always a good idea :)
 
+### Conclusion
+
+To sum it up, GOTO Conference was pretty amazing. Most of the talks were really enlightening. Especially the keynotes this year were super cool. 
+<a href="https://www.youtube.com/user/GotoConferences">
+<img style="float:right; padding: 10px;" src="{{site.url}}/images/2015-12-15-gotober-recap/youtube.png"></a>
+If you're interessted in looking at some of the talks, i think the recordings are being published at their [Youtube Channel](https://www.youtube.com/user/GotoConferences). I'm really looking forward to next year.
