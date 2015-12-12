@@ -8,6 +8,7 @@ image:
   feature: 2015-11-06-the-generic-filter-in-cuba/feature.jpg
   feature_source: https://pixabay.com/de/ausbildung-langhantel-muskeln-h%C3%A4nde-603981/ 
   feature_source_2: https://www.iconfinder.com/icons/272703/excel_icon#size=128
+
 ---
 
 As was promised [last](http://www.road-to-cuba-and-beyond.com/my-personal-crud-story-or-how-i-came-to-cuba/) time, I'm going to run through some features of the [platform](https://www.cuba-platform.com/), which I think are very valuable. I’m going to write a series of sub-articles here, starting with the elementary aspects, such as UI, filtering, security for some advanced parts like web portal, extensibility, audit, dynamic attributes and so on.
