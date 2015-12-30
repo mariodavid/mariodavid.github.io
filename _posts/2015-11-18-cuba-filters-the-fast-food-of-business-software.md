@@ -1,7 +1,7 @@
 ---
 layout: post
 title: CUBA filters - the fast food of business software?
-description: "Is the generic filter solution form CUBA platform just like fast food for the developer - or can it really solve real world problems programmers have like pre-defining filters and advanced filter conditions?"
+description: "Is the generic filter solution from CUBA platform just like fast food for the developer - or can it really solve real world problems programmers have like pre-defining filters and advanced filter conditions?"
 modified: 2015-11-18
 tags: [cuba, filtering]
 image:
