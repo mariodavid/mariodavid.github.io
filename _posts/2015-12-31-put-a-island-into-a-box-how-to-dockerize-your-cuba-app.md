@@ -43,9 +43,13 @@ There are some additional advantages i didn't cover in this [DZone article](http
 
 ## Create a Container for our CUBA app
 
-Docker's definition of a container is done via a file called Dockerfile. In this file you normally start with a base image. These images are often stored in Docker Hub. There are plenty of images for operating systems as well as images for application servers, databases and applications. In this case we'll create an image on the basis of the official [Apache Tomcat image](https://hub.docker.com/_/tomcat/). 
+Docker's definition of a container is done via a file called Dockerfile. In this file you normally start with a base image. These images are often stored in [Docker Hub](https://hub.docker.com/). There are plenty of images for operating systems as well as images for application servers, databases and applications. In this case we'll create an image on the basis of the official [Apache Tomcat image](https://hub.docker.com/_/tomcat/). 
 
-If you wonder what that actually means, you can give it a try. Given you have Docker installed [correctly](https://docs.docker.com/engine/installation/), you can give this image a try with the following command:
+If you wonder what all of this actually means, you can give it a try. 
+
+<div class="well">I assume you are on Linux here. If not, check out <a href="https://docs.docker.com/machine/">docker-machine</a>.</div>
+
+Given you have Docker installed [correctly](https://docs.docker.com/engine/installation/), you run an instance of tomcat with the following command:
 
 {% highlight bash %}
 
@@ -53,9 +57,12 @@ docker run -it --rm tomcat:8-jre8 bash
 
 {% endhighlight %}
 
-The first time the tomcat image will be downloaded and cached on your computer. You now have a bash were you can look at the newly created docker container. Browse the directory structure, create and change config files, look and the tomcat installation and so on. After typing <code>exit</code> the bash process will do so and due to the option <code>--rm</code>, the container will be destroyed with all the data in it. 
 
-Executing the same command line once again, a brand new container will be created (this will instead just take a few seconds, because the image is alredy downloaded). All the changes you made last time will be gone. If you think this is crazy, well this is how containers normally work. If you want to change something, don't change it in the container itself, but in the Dockerfile that creates it. Otherwise your back in the old days with [configuration drift](http://kief.com/configuration-drift.html), not reproduceable environments and not insfrastructure as code.
+
+
+The first time the tomcat image will be downloaded and cached on your computer. After this you have a bash were you can look at the newly created docker container. Browse the directory structure, create and change config files, look and the tomcat installation and so on. After typing <code>exit</code> the bash process will do so and due to the option <code>--rm</code>, the container will be destroyed with all the data in it. 
+
+Executing the same command line once again, a brand new container will be created (this will instead just take a few seconds, because the image is already downloaded). All the changes you made last time will be gone. If you think this is crazy, well this is how containers normally work. If you want to change something, don't change it in the container itself, but in the Dockerfile that creates it. Otherwise you are back in the old days with [configuration drift](http://kief.com/configuration-drift.html), !(reproduceable environments) and !(insfrastructure as code).
 
 
 ### Docker container vs image
@@ -106,9 +113,6 @@ Since we want to connect to a Postgres DB, we'll add the postgres drivers into t
 ### Build the described image and start the first container
 
 In the example app, there is the subfolder [docker-image](https://github.com/mariodavid/cuba-ordermanagement/tree/master/docker-image) that contains the Dockerfile as well as the files that are beeing added. If you want to try it out by yourself follow these steps:
-
-<div class="well">I assume you are on Linux here. If not, check out <a href="https://docs.docker.com/machine/">docker-machine</a>.</div>
-<br />
 
 {% highlight bash %}
 
