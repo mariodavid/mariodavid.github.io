@@ -1,5 +1,5 @@
 title:            Road to CUBA and beyond...
-description:      Describe your website here.
+description:      On this blog you'll find information about the CUBA Platform and related stuff
 disqus_shortname: roadtocubaandbeyond
 reading_time:     true
 words_per_minute: 200
@@ -22,7 +22,7 @@ owner:
   site:           http://road-to-cuba-and-beyond.com
   avatar:         images/avatar.jpg
   bio:            "Software developer with passion on agile, web and fast development, blogger, father, family guy"
-  email:          mario@road-to-cuba-and-beyond.com
+  email:          mario@die-davids.de
   # Social networking links used in footer. Update and remove as you like.
   twitter: mariomddavid
   github: mariodavid
