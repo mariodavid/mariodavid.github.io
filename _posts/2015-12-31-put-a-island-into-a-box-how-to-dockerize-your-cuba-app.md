@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Put your island into a box - how to dockerize your CUBA app
-description: ""
+description: "In this blog post i will talk about how to dockerize your CUBA application and the benefits behind isolating your applications with containers."
 modified: 2015-12-15
 tags: [cuba, docker, tomcat, docker compose]
 image:
