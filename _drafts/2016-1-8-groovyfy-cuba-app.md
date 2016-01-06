@@ -19,27 +19,181 @@ Why? Because in my opinion this productivity advantage of CUBA falls apart when 
 
 Coming from a Groovy background and haven't developed in Java for quite some time, it feels a little bit clumsy to go back. This is why i think it's probably worth thinking about raising the productivity grain just a little bit by getting the different benefits of the Groovy language onto our CUBA application.
 
-## The elevator pitch for Groovy
+<style type="text/css">
+#the-elevator-pitch-for-groovy + p + .highlight pre {
+	height:300px;
+}
+</style>
 
+### The elevator pitch for Groovy
+
+Ok, for an elevator pitch, the easiest thing is to come up with is syntax. We as programmers all love to care about syntax, so here we are. A basic customer POJO class in Java:
 
 {% highlight java %}
+import java.util.Collection;
+import java.util.Date;
 
-public class Person {
-	
-	private String firstName
-	privat String lastName
+public class Customer {
 
-	private int age
+    private String firstName;
+    private String lastName;
+    private Date birthday;
+    private Collection<Order> orders;
 
-	public String getFirstName() {
-		return firstName;
-	}
-	public String getLastName() {
-		return lastName;
-	}
-	public int getAge() {
-		return age;
-	}
+    public Customer() {}
+
+    public Customer(String firstName, String lastName, Date birthday, Collection<Order> orders) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthday = birthday;
+        this.orders = orders;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public Collection<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Collection<Order> orders) {
+        this.orders = orders;
+    }
+    
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", birthday=" + birthday +
+                ", orders=" + orders +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Customer customer = (Customer) o;
+
+        if (firstName != null ? !firstName.equals(customer.firstName) : customer.firstName != null) return false;
+        if (lastName != null ? !lastName.equals(customer.lastName) : customer.lastName != null) return false;
+        if (birthday != null ? !birthday.equals(customer.birthday) : customer.birthday != null) return false;
+        return orders != null ? orders.equals(customer.orders) : customer.orders == null;
+
+    }
+
+
+    public int calculateTurnover() {
+        int totalTurnover = 0;
+        
+        for(Order order: orders) {
+            totalTurnover += order.getAmount();
+        }
+        
+        return totalTurnover;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = firstName != null ? firstName.hashCode() : 0;
+        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+        result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
+        result = 31 * result + (orders != null ? orders.hashCode() : 0);
+        return result;
+    }
 }
 
+
 {% endhighlight %}
+
+The equivalent in Groovy:
+
+{% highlight groovy %}
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
+@ToString
+@EqualsAndHashCode
+class Customer {
+    String firstName
+    String lastName
+    Date birthday
+    Collection<Order> orders = []
+
+    int calculateTurnover() {
+        orders*.amount.sum() ?: 0
+    }
+}
+{% endhighlight %}
+
+That's it. It has the same functionality.
+
+Ken Kounsen even proved (with a unit test) that this is true in his [article](https://www.accelebrate.com/blog/call-pogo-name/), just in case you think i'm kidding.
+
+Groovy basically has a better signal to noice ratio. I'm not sure, if you noticed it, but there is a little bit of signal in this class. It's the method <code>calculateTurnover</code>, which is basically the "business logic" if you will. It's a little hard to find in the Java class, since it's just not very visible. 
+
+### The differences of Groovy
+
+When going through the different stuff that is different, we will see the following:
+
+* added default imports
+* removed <code>;</code>
+* removed <code>private</code> for fields and <code>public</code> for methods, because that's what is the case in 99% of all Java classes
+* removed *Getters* and *Setters*, will be generated by the compiler in the default case
+* removed *constructors* and added a map based constructor as well as a default one
+* removed <code>toString</code>, <code>equals</code> and <code>hashCode</code> because of the AST-Transformation Annotation
+
+We could even reduce it further with <code>@Canonical</code> instead of <code>@ToString</code> and <code>@EqualsAndHashCode</code>.
+A running example of this you'll find [here](http://goo.gl/UmkYw2) (which is a very good playground to start with btw.)
+
+Since bashing about Java Getters and Setters is not my main purpose here, let's have a look at some more interessting stuff like the implementation of <code>calculateTurnover</code>.
+
+{% highlight groovy %}
+int calculateTurnover() {
+    orders*.amount.sum() ?: 0
+}
+{% endhighlight %}
+
+Groovy has some very interessting features regarding the Collections API. [In the official docs](http://www.groovy-lang.org/groovy-dev-kit.html) you'll find a good overview of the features (2. Working with collections). I'll guide you through a few of them.
+
+Starting with the <code>*</code> Operator. The attribute orders is a collection. When doing a *. on a collection, it will execute the thing after the <code>.</code> for each items in the collection. The result of this is a List with the results of each entry. If you are familiar with functional programming, the [Map](https://en.wikipedia.org/wiki/Map_(higher-order_function)) operation would be something similar.
+
+Then, since <code>orders*.amount</code> returns a list, we can call the operation <code>sum</code> on it, which will act according to it's name. The elvis operator <code>?:</code> will either return the expression on the left if it's not <code>null</code>, otherwise it will return the right side.
+
+if this is to scary to you, another alternative implementation would be something like:
+{% highlight groovy %}
+int calculateTurnover() {
+    def sum = 0
+    orders.each {
+        sum += it.amount
+    }
+    sum
+}
+{% endhighlight %}
+
+This example is a little closer to what we saw in the Java class. <code>each</code> is a method on a List, that takes a [closure](http://www.groovy-lang.org/closures.html) (a function) as a parameter. On each element in the list the function will be executed and <code>it</code> will be the corresponding list item. Same story as Java 8 Lambdas.
+
+There are two additional things that are worth mentioning. First, as i said, the each method has one argument: a closure. In groovy, often times it is not required to use parentheses at all. In this case, it is equivalent to <code>orders.each({ sum += it.amount })</code> (see the [docs](http://www.groovy-lang.org/style-guide.html) - "5. Omitting parentheses" for more details). Second, <code>return</code> is an optional keyword. If it's not in place, groovy will use the last expression of the method as the return value.
