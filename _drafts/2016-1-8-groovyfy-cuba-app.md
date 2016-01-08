@@ -149,11 +149,11 @@ class Customer {
 }
 {% endhighlight %}
 
-That's it. It has the same functionality.
+**That's it**. It has the same functionality. 
 
-Ken Kounsen even proved (with a unit test) that this is true in his [article](https://www.accelebrate.com/blog/call-pogo-name/), just in case you think i'm kidding.
+Just in case you think i'm kidding: The Unit test in this in this [article](https://www.accelebrate.com/blog/call-pogo-name/) proves that both variants are semantically equivalent.
 
-Groovy basically has a better signal to noice ratio. I'm not sure, if you noticed it, but there is a little bit of signal in this class. It's the method <code>calculateTurnover</code>, which is basically the "business logic" if you will. It's a little hard to find in the Java class, since it's just not very visible. 
+Groovy basically has a significant better *signal to noice ratio*. I'm not sure, if you noticed it, but there is a little bit of signal in this class. It's the method <code>calculateTurnover</code>, which is basically the "business logic" if you will. In the Java class this *signal* is very hard to find, since it's just not very visible. 
 
 ### The differences of Groovy
 
@@ -203,13 +203,13 @@ There are two additional things that are worth mentioning. First, as i said, the
 
 Since the sub header talks about List and *Maps*, let's have a short look at this first class language construct of groovy.
 
-A Map in Groovy goes like this:
+Here we have a few examples on how groovy handles Maps:
 
 {% highlight groovy %}
-def map = ["hello" : "world"]
+def map = ["hello" : "world", "lorem" : "ipsum"]
 
 assert map["hello"] == "world"
-assert map.hello == "world"
+assert map.lorem == "ipsum"
 
 // create a customer with a map constructor
 def customer = new Customer([
@@ -222,4 +222,12 @@ def customer = new Customer([
 
 {% endhighlight %}
 
-The map constructor gives you a cartesian product on the possible constructors. Using a map as the parameter list in general (not just in the constructor) can be a very good idea, because it drastically increases the readability of the code compared to parameter lists where the third and the firth parameter is a boolean, and nobody is able to know what that actually indicates.  
+The map constructor gives you a cartesian product on the possible constructors. Using a map as the parameter list in general (not just in the constructor) can be a very good idea, because it drastically increases the readability of the code compared to parameter lists where the third and the firth parameter is a boolean, and nobody is able to know what that actually indicates. 
+
+More differences that differtiates Groovy from Java can be found in the [Groovy style guide](http://www.groovy-lang.org/style-guide.html).
+
+By the way, <code>==</code> is not a reference comparison like in Java. Instead the <code>equals</code> method of the objects are called, because like before:
+
+<div class="well">Groovy changes the default behavior to something that makes sence in most cases</div>
+
+###
