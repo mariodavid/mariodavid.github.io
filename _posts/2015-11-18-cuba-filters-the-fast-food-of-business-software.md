@@ -49,7 +49,7 @@ So let's look at the different solution layers one by one, starting with *pre-de
 
 ### 1.1 pre-defined generic filters
 
-The first option that CUBA gives the user is, that a ad-hoc filter (like created in the last blog post), can be saved within the application. To do this, the Filter section has a little *Config* icon on the left, that lets the user choose between different possibilities to save an ad-hoc filter.
+The first option that CUBA gives the user is, that an ad-hoc filter (like created in the last blog post), can be saved within the application. To do this, the Filter section has a little *Config* icon on the left, that lets the user choose between different possibilities to save an ad-hoc filter.
 
 
 <figure class="center half"><img src="{{ site.url }}/images/2015-11-15-cuba-extended-filter-features/save-filters-cuba.png" alt="">
@@ -101,13 +101,13 @@ In the query tag you have the option to change the query string that should be e
 
 The second objection that i brought up last time is the question about the support for filters that go beyond "simple" attribute based filterings. That might be even more important than the last topic.
 
-So let's have a look about what CUBA is capable of in this regard. SInce it's a little bit harder to categorize these advanced filter requirements, i'll go through a few examples, that should give an overview of what is possible out of the box.
+So let's have a look about what CUBA is capable of in this regard. Since it's a little bit harder to categorize these advanced filter requirements, i'll go through a few examples, that should give an overview of what is possible out of the box.
 
 ### Products that have created within the last week
 
 The first example that shows the dynamism of the filter feature is the possibility to add a custom condition. We'll define this condition with a criteria that uses a JQPL macro.
 
-> Lets assume we want to filter for all products, that have created within the last week. We want to track the success of this products through the orders to do a marketing campaign if necessary
+> Lets assume we want to filter for all products, that have created within the last week. We want to track the success of this products through the orders to do a marketing campaign if necessary.
 
 First of all we create a *new condition* via the UI (Product browser > Add search condition > Create new...). The name can be something like "from last week".
 
@@ -182,7 +182,7 @@ If we really want to stick to the fast food analogy (and i want - on that one yo
 
 It's not this McDonalds or Burger King kind of fast food. Its not just any fast food restaurant. At least the CUBA filters are a very tasty Burger from *Big Kahuna Burger*.
 
-First of all, CUBA generic filters are fast (to "develop"). That's a fact. If you compare it to developing the same feature set from scratch - well, we'll see us in year (if you have your five programming buddies around). Even if you plan to implement the concrete filter requirements you have at hand. Compare the effort to using this solution: even in this case it will be more.
+First of all, CUBA generic filters are fast (to "develop"). That's a fact. If you compare it to developing the same feature set from scratch - well, we'll see us in a year (if you have your five programming buddies around). Even if you plan to implement the concrete filter requirements you have at hand. Compare the effort to using this solution: even in this case it will be more effort.
 
 Second, CUBA generic filters are cheap. Since software developers paychecks are the driving cost factors in most IT efforts, you should probably optimize for it. I will not start the *make or buy* discussion right here, but i think the price/performance ratio is pretty unique. Perhaps i'll cover this topic in a future blog post.
 
