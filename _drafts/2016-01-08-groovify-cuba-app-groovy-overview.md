@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Groovify your CUBA App
+title: Groovify CUBA - An overview on Groovy
 description: "In this blog post i’d like to show you how to change the normal Java CUBA App to a Groovy CUBA App to increase the developer productivity even further"
 modified: 2015-1-8
 tags: [cuba, groovy, java]
@@ -13,6 +13,8 @@ Basically developing an application in [CUBA](https://www.cuba-platform.com/) is
 
 
 <!-- more -->
+
+In this first of two blog posts i will give you an overview about Groovy so you get a understanding why this might be valuable for you.
 
 In this blog post i will give you a little guideline how to change the language of a CUBA App from Java to Groovy.
 Why? Because in my opinion this productivity advantage of CUBA falls apart when going away from generating the UI or creating the domain model to the part of programming where you actually want to implement business logic. In this scenario you are back at a good old POJO model either in your Controller logic or in the services that are just Spring beans. This is because after striping everything down to efficiency except the raw business logic and probably some database access or ui related logic is the last part that remains.
@@ -131,6 +133,9 @@ public class Customer {
 
 The equivalent in Groovy:
 
+
+<img style="width: 150px; float:right; padding: 10px; margin-right:-15px;" src="{{site.url}}/images/groovify-cuba-app/arrow-up.png">
+
 {% highlight groovy %}
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
@@ -149,6 +154,7 @@ class Customer {
 }
 {% endhighlight %}
 
+
 **That's it**. It has the same functionality. 
 
 Just in case you think i'm kidding: The Unit test in this in this [article](https://www.accelebrate.com/blog/call-pogo-name/) proves that both variants are semantically equivalent.
@@ -156,6 +162,11 @@ Just in case you think i'm kidding: The Unit test in this in this [article](http
 Groovy basically has a significant better *signal to noice ratio*. I'm not sure, if you noticed it, but there is a little bit of signal in this class. It's the method <code>calculateTurnover</code>, which is basically the "business logic" if you will. In the Java class this *signal* is very hard to find, since it's just not very visible. 
 
 ### The differences of Groovy
+
+
+
+
+<img style="float:left; padding: 10px; margin-left:-293px;" src="{{site.url}}/images/groovify-cuba-app/groovy-baby2.png">
 
 When going through the different stuff that is different, we will see the following:
 
@@ -172,6 +183,9 @@ A running example of this you'll find [here](http://goo.gl/UmkYw2) (which is a v
 
 ### Groovy shines with Maps and Lists
 
+
+
+
 Since bashing about Java Getters and Setters is not my main purpose here, let's have a look at some more interessting stuff like the implementation of <code>calculateTurnover</code>.
 
 {% highlight groovy %}
@@ -182,11 +196,14 @@ int calculateTurnover() {
 
 Groovy has some very interessting features regarding the Collections API. [In the official docs](http://www.groovy-lang.org/groovy-dev-kit.html) you'll find a good overview of the features (2. Working with collections). I'll guide you through a few of them.
 
-Starting with the <code>*</code> Operator. The attribute orders is a collection. When doing a *. on a collection, it will execute the thing after the <code>.</code> for each items in the collection. The result of this is a List with the results of each entry. If you are familiar with functional programming, the [Map](https://en.wikipedia.org/wiki/Map_(higher-order_function)) operation would be something similar.
+Starting with the <code>*</code> Operator. The attribute orders is a collection. When doing a <code>*.</code> on a collection, it will execute the thing after the <code>.</code> for each items in the collection. The result of this is a List with the results of each entry. If you are familiar with functional programming, the [Map](https://en.wikipedia.org/wiki/Map_(higher-order_function)) operation would be something similar (the exact equivalent of it is the <code>collect</code> method in groovy).
 
 Then, since <code>orders*.amount</code> returns a list, we can call the operation <code>sum</code> on it, which will act according to it's name. The elvis operator <code>?:</code> will either return the expression on the left if it's not <code>null</code>, otherwise it will return the right side.
 
-if this is to scary to you, another alternative implementation would be something like:
+
+<img style="width: 150px; float:right; padding: 10px; margin-right:-250px;" src="{{site.url}}/images/groovify-cuba-app/arrow-side-down.png">
+
+If this is to scary to you, another alternative implementation would be something like:
 {% highlight groovy %}
 int calculateTurnover() {
     def sum = 0
@@ -228,6 +245,23 @@ More differences that differtiates Groovy from Java can be found in the [Groovy 
 
 By the way, <code>==</code> is not a reference comparison like in Java. Instead the <code>equals</code> method of the objects are called, because like before:
 
-<div class="well">Groovy changes the default behavior to something that makes sence in most cases</div>
+<div class="well">Groovy changes default Java behaviour to something that makes sence in most cases</div>
 
-###
+### Syntax is just Syntax - there are more things
+
+Although this syntactic sugar compared to Java is neat, there a other things to keep in mind before switching your whole project from one language to another. Since this discussion would clearly go beyond this blog post, i'll just go over them and give you some resources to dig down further.
+
+Performance is one of these issues. In the beginning, before [invokedynamic](http://docs.oracle.com/javase/7/docs/technotes/guides/vm/multiple-language-support.html) was build into the JVM, creating performant dynamic languages on the JVM was pretty hard. Nowadays Groovy gives the user choices about speed with <code>@CompileStatic</code>. More information you'll find at this [InfoQ article](http://www.infoq.com/articles/new-groovy-20) from 2012 as well as this SE Radio [podcast](http://www.se-radio.net/2015/10/se-radio-episode-240-the-groovy-language-with-cedric-champeau/) with Cédric Champeau. But whenever thinking about performance, keep in mind the two [rules of software optimization](http://c2.com/cgi/wiki?RulesOfOptimization).
+
+Next up, we have dynamic-, static-, strong- and duck-typing. All of these attributes are correct for Groovy. You basically can <code>def</code> all the things if you want to. The runtime will figure out the rest on your behalf. This is potentially not the best thing to do, so Groovy gives you choices. When you want to use types and have that checked by the compiler there are options like <code>@TypeChecked</code> or <code>@CompileStatic</code>. Have a look at this article [optional typing in groovy](https://objectpartners.com/2013/08/19/optional-typing-in-groovy/) for a few insights. 
+
+Aditionally there is a meta object protocol, which lets you do runtime metaprogramming and since Groovy is compiled, you can do compile time metaprogramming with AST-Transformations.
+
+With this feature comes another one: [domain specific languages](http://docs.groovy-lang.org/docs/latest/html/documentation/core-domain-specific-languages.html). You can create languages that look like this:
+
+{% highlight groovy %}
+take 2.pills of chloroquinine after 6.hours
+
+// equivalent to: take(2.pills).of(chloroquinine).after(6.hours)
+{% endhighlight %}
+
