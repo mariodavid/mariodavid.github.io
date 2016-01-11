@@ -2,19 +2,19 @@
 layout: post
 title: Groovify CUBA - An overview of Groovy
 description: "In this two part blog posts i'll show how to groovify your CUBA app. In this first part, i’d like to show you how the things "
-modified: 2015-1-8
+modified: 2016-01-11
 tags: [cuba, groovy, java]
 image:
   feature: groovify-cuba-app/feature.jpg
   feature_source: https://pixabay.com/de/neujahr-silvester-silvester-2015-1090770/
 ---
 
-Basically developing an application in [CUBA](https://www.cuba-platform.com/) is mostly about productivity. It has other advantages, but productivity is probably one of the most important reasons. To ramp up productivity on all stages of CUBA app development, we can invite Groovy to the party.
+Developing an application in [CUBA](https://www.cuba-platform.com/) is mostly about productivity. It has other advantages, but productivity is probably one of the most important reasons. To ramp up productivity on all stages of CUBA app development, we can invite Groovy to the party.
 
 
 <!-- more -->
 
-In this first of two blog posts i will give you an overview about Groovy so you get a understanding why this might be valuable for you. Why? Because in my opinion this productivity advantage of CUBA falls apart when going away from generating the UI or creating the domain model to the part of programming where you actually want to implement business logic. In this scenario you are back at a good old POJO model either in your Controller logic or in the services that are just Spring beans.
+In this first of two blog posts i will give you an overview about Groovy, so you get a understanding that this might be valuable for you. Why? Because in my opinion the productivity advantage of CUBA falls apart when turn from *generating the UI or creating the domain model* to the part of programming where you actually want to implement business logic. In this case you are back at the POJO model either in your controller logic or in the services that are just Spring beans.
 
 Coming to CUBA from a Groovy background and haven't developed in Java for quite some time, it feels a little bit clumsy to go back. This is why i think it's probably worth thinking about raising the productivity gain (in the business logic side of things) just a little bit by getting the different benefits of the Groovy language onto our CUBA application.
 
@@ -26,7 +26,7 @@ Coming to CUBA from a Groovy background and haven't developed in Java for quite 
 
 ### The elevator pitch for Groovy
 
-Ok, for an elevator pitch, the easiest thing is to come up with is syntax. We as programmers all love to care about syntax, so here we are. A basic customer POJO class in Java (~100 LOC):
+Ok, for an elevator pitch, the easiest thing is to come up with is syntax. We as programmers all love to care about syntax, so there you go. A customer class in Java (~100 LOC):
 
 {% highlight java %}
 import java.util.Collection;
@@ -156,16 +156,13 @@ class Customer {
 
 Just in case you think i'm kidding: The Unit test in this in this [article](https://www.accelebrate.com/blog/call-pogo-name/) proves that both variants are semantically equivalent.
 
-Groovy basically has a significant better *signal to noice ratio*. I'm not sure, if you noticed it, but there is a little bit of signal in this class. It's the method <code>calculateTurnover</code>, which is basically the "business logic" if you will. In the Java class this *signal* is very hard to find, since it's just not very visible. 
+Groovy basically has a significant better *signal to noice ratio*. I'm not sure, if you noticed it, but there is a little bit of signal in this class. It's the method <code>calculateTurnover</code>, which is basically the "business logic" if you will. In the Java class it's very hard to find, because it's just not visible. 
 
 ### The differences of Groovy
 
-
-
-
 <img style="float:left; padding: 10px; margin-left:-293px;" src="{{site.url}}/images/groovify-cuba-app/groovy-baby2.png">
 
-When going through the different stuff that is different, we will see the following:
+When comparing both examples, these are some of the things that are different:
 
 * removed imports, because of more default imports in Groovy
 * removed semicolons where not needed
@@ -180,9 +177,6 @@ A running example of this you'll find [here](http://goo.gl/UmkYw2) (which is a v
 
 ### Groovy shines with Maps and Lists
 
-
-
-
 Since bashing about Java Getters and Setters is not my main purpose here, let's have a look at some more interessting stuff like the implementation of <code>calculateTurnover</code>.
 
 {% highlight groovy %}
@@ -191,7 +185,7 @@ int calculateTurnover() {
 }
 {% endhighlight %}
 
-Groovy has some very interessting features regarding the Collections API. [In the official docs](http://www.groovy-lang.org/groovy-dev-kit.html) you'll find a good overview of the features (2. Working with collections). I'll guide you through a few of them.
+Groovy has some very cool features regarding the Collections API. [In the official docs](http://www.groovy-lang.org/groovy-dev-kit.html) you'll find a good overview of the features (2. Working with collections). I'll guide you through a few of them.
 
 Starting with the <code>*</code> Operator. The attribute orders is a collection. When doing a <code>*.</code> on a collection, it will execute the method call after the <code>.</code> for each items in the collection. In this case <code>getAmount()</code> on every item in the orders list will be called. The result of this is a List with the results of each entry. If you are familiar with functional programming, the [Map](https://en.wikipedia.org/wiki/Map_(higher-order_function)) operation would be something similar (the exact equivalent of it is the <code>collect</code> method in Groovy).
 
@@ -215,7 +209,7 @@ This example is a little closer to what we saw in the Java class. <code>each</co
 
 There are two additional things that are worth mentioning. First, as i said, the each method has one argument: a closure. In Groovy, often times it is not required to use parentheses at all. In this case, it is equivalent to <code>orders.each({ sum += it.amount })</code> (see the [docs](http://www.groovy-lang.org/style-guide.html) - "5. Omitting parentheses" for more details). Second, <code>return</code> is an optional keyword. If it's not in place, Groovy will use the last expression of the method as the return value.
 
-Since the sub header talks about List and *Maps*, let's have a short look at this first class language construct of Groovy. Here we have a few examples on how Groovy handles Maps:
+Since the headline talks about List and *Maps*, let's have a short look at this first class language construct of Groovy. Here we have a few examples on how Groovy handles Maps:
 
 {% highlight groovy %}
 def map = ["hello" : "world", "lorem" : "ipsum"]
@@ -244,7 +238,7 @@ By the way, <code>==</code> is not a reference comparison like in Java. Instead 
 
 ### Syntax is just Syntax - there are more things
 
-Although this syntactic sugar compared to Java is neat, there a other things to keep in mind before switching your whole project from one language to another. Since this discussion would clearly go beyond this blog post, i'll just go over them and give you some resources to dig down further.
+Although this syntactic sugar compared to Java is neat, there are other things to keep in mind before switching your whole project from one language to another. Since this discussion would clearly go beyond this blog post, i'll just go over them and give you some resources to dig down further.
 
 Performance is one of these issues. In the beginning, before [invokedynamic](http://docs.oracle.com/javase/7/docs/technotes/guides/vm/multiple-language-support.html) was build into the JVM, creating performant dynamic languages on the JVM was pretty hard. Nowadays Groovy gives the user choices about speed with <code>@CompileStatic</code>. More information you'll find at this [InfoQ article](http://www.infoq.com/articles/new-groovy-20) from 2012 as well as this SE Radio [podcast](http://www.se-radio.net/2015/10/se-radio-episode-240-the-groovy-language-with-cedric-champeau/) with Cédric Champeau. But whenever thinking about performance, keep in mind the two [rules of software optimization](http://c2.com/cgi/wiki?RulesOfOptimization).
 
@@ -278,6 +272,8 @@ take 2.pills of chloroquinine after 6.hours
 // equivalent to: take(2.pills).of(chloroquinine).after(6.hours)
 {% endhighlight %}
 
+To create a DSL in Groovy really is a breeze.
+This is perhaps not directly relevant for the developers (although it could be), doing this right can give your process a dramatic additional performance boost and include other people be part of the process as well. Have a look at the book [domain specific languages](http://martinfowler.com/books/dsl.html) from [Martin Fowler](https://twitter.com/martinfowler) for further reading.
 
 ### Grooovy can make a difference
 
@@ -285,6 +281,6 @@ To wrap this up, i think you get a good feeling about the differences that Groov
 
 As i already wrote last time, *software developers paychecks are the driving cost factors in most IT efforts*. This is especially true for software development. Any opportunity to get better in this regard will increase the overall outcome. CUBA has helped us with different things to go down this road pretty far. To use Groovy in this scenario is just another one of these steps that focuses on the business part of things.
 
-If you want to take a deeper look into Groovy (and i hope i could acourage you to do so), there a very good book about Groovy, called [Programming Groovy 2](http://www.amazon.de/dp/1937785300) form [Venkat Subramaniam](https://twitter.com/venkat_s) which goes very deep in the described topics.
+If you want to take a deeper look into Groovy (and i hope i could encourage you to do so), there a very good book about Groovy, called [Programming Groovy 2](http://www.amazon.de/dp/1937785300) form [Venkat Subramaniam](https://twitter.com/venkat_s) which goes much deeper in the described topics.
 
 In the second part of this two part blog posts, i will go trough the actual integration. We'll have a look on how to enable Groovy in the CUBA app and probably look at some other possibilities as well.

@@ -5,7 +5,7 @@ description: "In this blog post i’d like to show you how to change the normal 
 modified: 2015-1-20
 tags: [cuba, groovy, java]
 image:
-  feature: groovify-cuba-app/feature.jpg
+  feature: groovify-cuba-app/feature-2.jpg
   feature_source: https://pixabay.com/de/neujahr-silvester-silvester-2015-1090770/
 ---
 
