@@ -19,7 +19,7 @@ In this blog i will write about my experience that i gather during my Journey of
 
 You'll find information about different technical topics regarding this piece of technology. As well i would like to share my opinions about developing with CUBA in particular and business software in general. One example of this you'll find in my first blog post about [My personal CRUD story – or how i came to CUBA platform](http://www.road-to-cuba-and-beyond.com/my-personal-crud-story-or-how-i-came-to-cuba/).
 
-Additionally you'll find descriptions about *other Road's* that lead to CUBA and posts about *Road's* that go beyond CUBA to other *Islands* :)
+Additionally you'll find descriptions about *other Road's* that lead to CUBA and posts about *Road's* that go beyond CUBA to other *Islands* like the blog post about [how to dockerize your CUBA app](http://www.road-to-cuba-and-beyond.com/put-a-island-into-a-box-how-to-dockerize-your-cuba-app/).
 
 I have been a software developer since about one decade. While making my CS degree, i've mostly been working in the area of businesss software. Since then i've always been interessted in creating software that solves these kind of problems for a better execution of the corresponding business processes.
 
