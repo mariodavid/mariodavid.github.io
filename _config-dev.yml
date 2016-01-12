@@ -74,5 +74,3 @@ exclude: ["lib", "config.rb", "Capfile", "config", "Gemfile", "Gemfile.lock", "R
 
 gems:
   - jekyll-redirect-from
-
-url: http://www.road-to-cuba-and-beyond.com
