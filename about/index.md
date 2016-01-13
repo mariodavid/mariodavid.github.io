@@ -11,7 +11,7 @@ modified: 2015-11-20
 <div class="author-container">
       <img class="author-img" src="{{site.url}}/{{site.owner.avatar}}" alt="{{site.owner.name}}" />
       <div class="author-bio">
-Hi, i'm Mario David. The Author of "Road to CUBA and beyond". 
+Hi, i'm Mario David, the Author of "Road to CUBA and beyond". 
 In this blog i will write about my experience that i gather during my Journey of learning about the CUBA platform. 
       </div>
 </div>
