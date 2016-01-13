@@ -156,7 +156,7 @@ class Customer {
 
 Just in case you think i'm kidding: The Unit test in this in this [article](https://www.accelebrate.com/blog/call-pogo-name/) proves that both variants are semantically equivalent.
 
-Groovy basically has a significant better *signal to noice ratio*. I'm not sure, if you noticed it, but there is a little bit of signal in this class. It's the method <code>calculateTurnover</code>, which is basically the "business logic" if you will. In the Java class it's very hard to find, because it's just not visible. 
+Groovy basically has a significant better *signal to noice ratio*. I'm not sure if you noticed it, but there is a little bit of signal in this class. It's the method <code>calculateTurnover</code>, which is basically the "business logic" if you will. In the Java class it's very hard to find, because it's just not visible. 
 
 ### The differences of Groovy
 
