@@ -101,7 +101,7 @@ public class ${entity.className}Browse extends AbstractLookup {
 
 {% endhighlight %}
 
-Now it get's a little bit meta, because the the content of the file is [Groovy Template Engine Code](http://docs.groovy-lang.org/latest/html/documentation/template-engines.html#_simpletemplateengine), because studio has to replace some of the content in that file with something dynamic like the class name. This dynamism is expressed in this <code>${}</code> expressions. We don't care about that little strage situation and go straight in to groovify the class:
+Now it get's a little bit meta, because the content of the file is [Groovy Template Engine Code](http://docs.groovy-lang.org/latest/html/documentation/template-engines.html#_simpletemplateengine), because studio has to replace some of the content in that file with something dynamic like the class name. This dynamism is expressed in this <code>${}</code> expressions. We don't care about that little strage situation and go straight in to groovify the class:
 
 {% highlight groovy %}
 
@@ -207,7 +207,7 @@ class Order {
 
 // ...
 
-def 'When an order is placed, the the order placement sytem will get notified'() {
+def 'When an order is placed, the order placement sytem will get notified'() {
 
     given: 'a mocked order placement system'
     def orderPlacementServiceMock = Mock(OrderPlacementService)
