@@ -9,7 +9,7 @@ image:
   feature_source: https://pixabay.com/de/neujahr-silvester-silvester-2015-1090770/
 ---
 
-After [introducing Groovy](http://www.road-to-cuba-and-beyond.com/groovify-cuba-app-groovy-overview/) in the first blg post, this second blog post about groovify your [CUBA](https://www.cuba-platform.com/) app is all about integrating Groovy with CUBA in different shapes.
+After [introducing Groovy](http://www.road-to-cuba-and-beyond.com/groovify-cuba-app-groovy-overview/) in the first blog post, this second blog post is all about groovify your [CUBA](https://www.cuba-platform.com/) app. There are different integration possibilities that we will look through like CUBA Studio Groovy integration and Testing with Spock.
 
 
 <!-- more -->
@@ -107,6 +107,11 @@ public class ${entity.className}Browse extends AbstractLookup {
 
 Now it get's a little bit meta, because the content of the file is [Groovy Template Engine Code](http://docs.groovy-lang.org/latest/html/documentation/template-engines.html#_simpletemplateengine). The reason for this is, that studio has to replace some of the content in the template file with something dynamic like the class name. This dynamism is expressed in this <code>${}</code> expressions. We don't care about that little strage situation and go straight in to groovify the class:
 
+
+
+<img style="float:left; width:200px; margin-left:-275px;" src="{{site.url}}/images/groovify-cuba-app/arrow-loop-left.png">
+
+
 {% highlight groovy %}
 
 <%
@@ -139,7 +144,7 @@ Even if you are not plan to use Groovy, you can use the template stuff either wa
 
 After getting the Groovy foot into the CUBA door, there a different things that can be used. One thing that i would like to talk about is Unit testing. There is a framework that got a lot of attraction during the last few years even outside of the Groovy ecosystem which is called *Spock*.
 
-<a href="https://flic.kr/p/6Eg4oz"><img src="{{site.url}}/images/groovify-cuba-app/spock3.jpg"></a>
+<a href="https://flic.kr/p/6Eg4oz"><img src="{{site.url}}/images/groovify-cuba-app/spock.jpg"></a>
 
 [Spock](https://github.com/spockframework/spock) is a unit testing framework like JUnit, just with superpower. It combines a normal unit testing framework like JUnit with a Mocking framework like [Mockito](http://mockito.org/) and puts a lot of syntactic sugar on top of it like [RSpec](http://rspec.info/) does. Here is a quick example of a Spock specification:
 

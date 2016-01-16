@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Groovify CUBA - An overview of Groovy
-description: "In this two part blog posts i'll show how to groovify your CUBA app. In this first part, i’d like to show you how the things "
+description: "In this two part blog posts i'll show how to groovify your CUBA app. The first part i'll give a brief overview of Groovy and the benefits of using it"
 modified: 2016-01-11
 tags: [cuba, groovy, java]
 image:
@@ -160,7 +160,7 @@ Groovy basically has a significant better *signal to noice ratio*. I'm not sure 
 
 ### The differences of Groovy
 
-<img style="float:left; padding: 10px; margin-left:-293px;" src="{{site.url}}/images/groovify-cuba-app/groovy-baby2.png">
+<img style="float:left; padding: 10px; margin-left:-293px;" src="{{site.url}}/images/groovify-cuba-app/groovy-baby.png">
 
 When comparing both examples, these are some of the things that are different:
 
@@ -283,4 +283,4 @@ As i already wrote last time, *software developers paychecks are the driving cos
 
 If you want to take a deeper look into Groovy (and i hope i could encourage you to do so), there a very good book about Groovy, called [Programming Groovy 2](http://www.amazon.de/dp/1937785300) form [Venkat Subramaniam](https://twitter.com/venkat_s) which goes much deeper in the described topics.
 
-In the second part of this two part blog posts, i will go trough the actual integration. We'll have a look on how to enable Groovy in the CUBA app and probably look at some other possibilities as well.
+In the [second part](http://www.road-to-cuba-and-beyond.com/groovify-cuba-app-integrate-with-cuba/) of this two part blog posts, i will go trough the actual integration. We'll have a look on how to enable Groovy in the CUBA app and take look at some other integration possibilities as well.
