@@ -14,7 +14,7 @@ In this blog post i’d like to lay out how i came to the CUBA platform and what
 
 <!-- more -->
 
-## A brief histroy on my CRUD background
+## A brief history on my CRUD background
 
 Over the years i stumbled upon the same kind of problems in totally different areas of companies. From small shops to fairly large enterprises, often people have some basic business process, that should be fulfilled. Often these business processes go hand in hand with entering data.
 
