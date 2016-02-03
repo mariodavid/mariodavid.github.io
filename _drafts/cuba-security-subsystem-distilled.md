@@ -5,7 +5,7 @@ description: "..."
 modified: 2015-11-02
 tags: [cuba, security]
 image:
-  feature: cuba-security-subsystem-distilled/feature.jpg
+  feature: cuba-security-subsystem-distilled/feature-2.jpg
 
 ---
 
@@ -14,12 +14,29 @@ Resuming my blog post series about an overview on the [CUBA Platform](https://ww
 
 <!-- more -->
 
+
+
+
+<img style="float: left; margin-left:-280px; margin-top:-450px;" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel-7.jpg">
+
+
 ### From Albuquerque to Havanna
-Walter, Jesse, Saul and Mike. After screwing up their last "Company" in Albuquerque, they started over again and try their Luck in Cuba. This time, with some serious trading business in place. The company is called *CUBa SeCurity Inc.* To get that going, they selected [cuba-ordermanagement](https://github.com/mariodavid/cuba-ordermanagement) as the basis for their ERP system. But unfortunately they had some requirements regarding security, that we will go through to see what the [CUBA Platform](https://www.cuba-platform.com) is capable of to accomplish their needs.
+Walter, Jesse, Saul and Mike. After screwing up their last "Company" in Albuquerque, they started over again and try their Luck in Cuba. This time, with some serious trading business in place. The company is called *CUBa SeCurity Inc.* 
+
+
+<figure class="center">
+<img style="" src="{{site.url}}/images/cuba-security-subsystem-distilled/landkarte-dark.jpg">
+</figure>
+
+To get that going, they selected [cuba-ordermanagement](https://github.com/mariodavid/cuba-ordermanagement) as the basis for their ERP system. But unfortunately they had some requirements regarding security, that we will go through to see what the [CUBA Platform](https://www.cuba-platform.com) is capable of to accomplish their needs.
+
+<img style="float: right; margin-right:-280px" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel-6.jpg">
 
 ### The wide ocean called security
 
 *Security* is a pretty bloated term. Words like Encryption, Integrity, ACL, TLS, Authentication, Cerfiticats, OAuth2, SQL Injection, AES, LDAP, PGP, Role based Access, Malware, Safety, 2-Factor authentication, Confidentiality and so on are subtopics, implementations or related topics to *security* and stuff that came out of the first requirements meetings with *CUBa SeCurity Inc.*
+
+
 
 It can mean so much different things to different people, that it is necessary to talk about what i mean when talking about security. The subpart of security, that i want to cover is the typical business software scenario that include more or less something like this:
 
@@ -27,7 +44,6 @@ It can mean so much different things to different people, that it is necessary t
 * User & User Groups based Acces Control to different parts of the software as well as Data (Authorization)
 * Audit of user actions, who editied what data when and possibly why?
 
-<img style="float:right; width:150px; margin-right:-50px;" src="{{site.url}}/images/cuba-security-subsystem-distilled/clip.png">
 
 ### What will not be covered in this article
 
@@ -42,6 +58,14 @@ So after setting the scene, let's get back to the "functional non functional sec
 <h2>CU<img src="{{site.url}}/images/cuba-security-subsystem-distilled/Ba.png" style="width: 2em;" alt="BA">'s security subsystem</h2>
 
 The possibilities that CUBA's security subsystem implements in this whole area are versitale. But mainly it solves different problems i described above as "functional non-functional security requirements". 
+
+
+
+
+<img style="float: right; margin-right:-280px" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel-5.jpg">
+
+
+
 
 The concept behind it from a 10,000 feet overview is basically a *role-based access control* model. The baseline of the implementation has three different parts: *User*, *Role* and *Permission*. A User has different roles that grand or deny certain permissions. Permissions can be set on Entities, Entity attributes, UI elements like menus, buttons or screens. Additionally Users can be grouped in access groups to constrain data to a certain sub-part of the system.
 
@@ -66,13 +90,22 @@ This one should be pretty straightforward. To achieve this, we've just to start 
 
 Besides the obvious ones like setting a password and personal information, you have the possibility to assign roles and *substituted users* to this user. Below, you'll see the management UI for creating a user with the described attributes.
 
-<img src="{{site.url}}/images/cuba-security-subsystem-distilled/create-new-user-dark.png">
+
+<figure class="center">
+	<a href="{{ site.url }}/images/cuba-security-subsystem-distilled/create-new-user.png"><img src="{{ site.url }}/images/cuba-security-subsystem-distilled/create-new-user-dark.png" alt=""></a>
+	<figcaption><a href="{{ site.url }}/images/cuba-security-subsystem-distilled/create-new-user.png" title="Creation of a new User">Creation of a new User</a></figcaption>
+</figure>
+
 
 Additionally, you have to select a *Group* where the user is placed in. We'll take a deeper Look into Groups a little later. For now, let's get to our next Requirement.
 
 
 
-<img style="float:right; width:200px; padding: 10px; margin-right:-50px;" src="{{site.url}}/images/cuba-security-subsystem-distilled/jesse-pinkman.png">
+<img style="float: left; margin-left:-177px" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel-2.jpg">
+
+
+
+<img style="float:right; width:200px; padding: 10px; margin-right:-50px;" src="{{site.url}}/images/cuba-security-subsystem-distilled/jesse-pinkman.jpg">
 
 ### >> Let Jesse only see products and categories
 
@@ -90,21 +123,33 @@ Since the *Master Data Manager* role has only rights on the two entities *Produc
 	<figcaption><a href="{{ site.url }}/images/cuba-security-subsystem-distilled/master-data-manager-role.png" title="Entity persmission of the Master Data Manager role">Entity persmission of the Master Data Manager role</a></figcaption>
 </figure>
 
+
+<img style="float: right; margin-right:-320px" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel.jpg">
+
 To assign users to this new role, you can either edit the user and add the role, or you can use the "Assign to Users" Button on the Roles browser. After doing that, Jesse is will only get the corresponding views and rights to edit *Products* and *Product Categories.
 
+
 <figure class="center">
-	<img src="{{site.url}}/images/cuba-security-subsystem-distilled/jesse-application-view.png">
+	<a href="{{ site.url }}/images/cuba-security-subsystem-distilled/jesse-application-view.png"><img src="{{ site.url }}/images/cuba-security-subsystem-distilled/jesse-application-view-dark.jpg" alt=""></a>
+	<figcaption><a href="{{ site.url }}/images/cuba-security-subsystem-distilled/jesse-application-view.png" title="Jesse can only see Products and Categories">Jesse can only see Products and Categories</a></figcaption>
 </figure>
+
 
 <h3> » Walter is responsible for the Northeast of the <img src="{{site.url}}/images/cuba-security-subsystem-distilled/U.png" style="width: 2em;" alt="U"> S</h3>
 
+
+<img style="float:right; margin-right: -30px; width:150px; padding: 10px;" src="{{site.url}}/images/cuba-security-subsystem-distilled/walter-white.jpg">
+
 From earlier connections to New Hampshire, Walter - the sales guy, is selected to be responsible for the Northeast region of the US market. 
 
-<img style="float:left; width:150px; padding: 10px;" src="{{site.url}}/images/cuba-security-subsystem-distilled/walter-white.png">
 Due to this, the scope of the data, that Walter needs to act upon is basically the customers that are based here. 
 To achieve this kind of requirement, we'll have to take a look at the already mentioned *User Groups* and the constraints that can created for them. 
 
 After creating a User account for Walt and a Role called *Sales* which has full permissions on Customers, Orders and read permissions on the Products and Categories, we will create a Access Group called "Northeast". We assign Walter to this group. 
+
+
+<img style="float: left; margin-left:-280px" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel-8.jpg">
+
 
 Next, we will create two contraints that will only allow access to data of the customers and the orders, where the customers state attribute is in the northeast of the US. 
 
@@ -120,6 +165,12 @@ With this setting in place, Walt will only be able to see the orders and custome
 
 Walter had some problems with its physical condition in the last years. This is why Mike wants Saul, the Head of Sales to take on business for Walter in certain situations. Normally, Saul sales region is the Midwest of the United States, especially Nebraska because *CUBa SeCurity Inc.* has a branch office in Omaha. 
 
+
+<img style="float: right; margin-right:-320px" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel-7.jpg">
+
+
+
+
 <figure class="center">
 <img style="width: 400px; padding: 10px;" src="{{site.url}}/images/cuba-security-subsystem-distilled/saul-and-walter.jpg">
 </figure>
@@ -129,6 +180,8 @@ Instead of giving Saul rights on data for the midwest as well as northeast, we w
 <img style="float: right; width: 300px; padding: 10px;" src="{{site.url}}/images/cuba-security-subsystem-distilled/saul-user-substitution-walter.png">
 
 A User for Saul is created, Sales Role will be assigned and an addtional Access Group under "US" called "Midwest" next to the "Northeast". Next up, we'll go into the User details of Saul and create a *User Substition*. The substituted User is Walter in this case. Optionally a substitution can be granted for a given time period (not necessary in this case).
+
+<img style="float: left; margin-left:-320px" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel-3.jpg">
 
 After doing so, Saul can login and see a little select box in the top of the menu where he can change the user to Walt. This context switch will lead to the described situation. Before, Saul is able to see all orders and customers from the midwest. After the switch, Saul can see the ones in the northeast and actually acting as Walt with all the permissions that are granted to him.
 
