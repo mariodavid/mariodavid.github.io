@@ -27,6 +27,7 @@ It can mean so much different things to different people, that it is necessary t
 * User & User Groups based Acces Control to different parts of the software as well as Data (Authorization)
 * Audit of user actions, who editied what data when and possibly why?
 
+<img style="float:right; width:150px; margin-right:-50px;" src="{{site.url}}/images/cuba-security-subsystem-distilled/clip.png">
 
 ### What will not be covered in this article
 
@@ -38,7 +39,7 @@ Besides these application security topics, i won't cover the layers below the ap
 
 So after setting the scene, let's get back to the "functional non functional security requirements".
 
-## CUBA's security subsystem
+<h2>CU<img src="{{site.url}}/images/cuba-security-subsystem-distilled/Ba.png" style="width: 2em;" alt="BA">'s security subsystem</h2>
 
 The possibilities that CUBA's security subsystem implements in this whole area are versitale. But mainly it solves different problems i described above as "functional non-functional security requirements". 
 
@@ -46,16 +47,24 @@ The concept behind it from a 10,000 feet overview is basically a *role-based acc
 
 On the administration layer, CUBA comes with UI that allow the administrators to manage users, their roles and permission. Alternatively user management can be achieved via an LDAP integration.
 
+
+
 To get a better understanding of this pretty generic description, we will go through different scenarios that have been extracted from different consulting meetings with *CUBa SeCurity Inc.*
 
+<figure class="center">
+	<img src="{{site.url}}/images/cuba-security-subsystem-distilled/requirements-meeting.jpg" width="300">
+</figure>
 
-<img style="float:right" src="{{site.url}}/images/cuba-security-subsystem-distilled/cuba-login-dark.png">
 
-### >> Only allow registered users access to the app
 
-This one should be pretty straightforward. To achieve this, we've just to start up the app, because this feature is enabled by default. In the menu <code>Administration > Users</code> you get an extended CRUD mask for users. Besides the obvious ones like setting a password and personal information, you have the possibility to assign roles and *substituted users* to this user. 
+### >> Only allow those four buddies access to the app
 
-User Substitution is a way to allow users to act on other users behalf. An example of this is a holiday replacement.
+<img style="float: right; padding: 10px; width: 150px;" src="{{site.url}}/images/cuba-security-subsystem-distilled/cuba-login-dark.png">
+
+
+This one should be pretty straightforward. To achieve this, we've just to start up the app, because this feature is enabled by default. In the menu <code>Administration > Users</code> you get an extended CRUD mask for users. 
+
+Besides the obvious ones like setting a password and personal information, you have the possibility to assign roles and *substituted users* to this user. Below, you'll see the management UI for creating a user with the described attributes.
 
 <img src="{{site.url}}/images/cuba-security-subsystem-distilled/create-new-user-dark.png">
 
@@ -69,10 +78,58 @@ Additionally, you have to select a *Group* where the user is placed in. We'll ta
 
 This is Jesse. Jesse is responsible for the master data of the products and their categories. Since Jesse's manners aren't always the best, Mike, the manager, has decided to keep Jesse away from direct customer contact. Due to this, Jesse is not allowed to see and manage anything but the products and their categories.
 
-To ensure this kind of requirement, we have to create a Role called <code>Master Data Manager</code>.
+To ensure this kind of requirement, we have to create a Role called *Master Data Manager*.
+
+In the entities tab, you are able to search for certain entites that you want to give permissions on. Just uncheck the "Assigned only" flag and click "Apply", which will show all entities. When you select a certain entity, you can grand or deny permissions for this selection. For attribute based security it works exactly the same in the "Attributes" tab. 
+
+Since the *Master Data Manager* role has only rights on the two entities *Product* and *Product Category* we'll just enable them for management. On the screen tab, we'll only allow the screen of these two to be shown.
 
 
 <figure class="center">
 	<a href="{{ site.url }}/images/cuba-security-subsystem-distilled/master-data-manager-role.png"><img src="{{ site.url }}/images/cuba-security-subsystem-distilled/master-data-manager-role.png" alt=""></a>
 	<figcaption><a href="{{ site.url }}/images/cuba-security-subsystem-distilled/master-data-manager-role.png" title="Entity persmission of the Master Data Manager role">Entity persmission of the Master Data Manager role</a></figcaption>
 </figure>
+
+To assign users to this new role, you can either edit the user and add the role, or you can use the "Assign to Users" Button on the Roles browser. After doing that, Jesse is will only get the corresponding views and rights to edit *Products* and *Product Categories.
+
+<figure class="center">
+	<img src="{{site.url}}/images/cuba-security-subsystem-distilled/jesse-application-view.png">
+</figure>
+
+<h3> » Walter is responsible for the Northeast of the <img src="{{site.url}}/images/cuba-security-subsystem-distilled/U.png" style="width: 2em;" alt="U"> S</h3>
+
+From earlier connections to New Hampshire, Walter - the sales guy, is selected to be responsible for the Northeast region of the US market. 
+
+<img style="float:left; width:150px; padding: 10px;" src="{{site.url}}/images/cuba-security-subsystem-distilled/walter-white.png">
+Due to this, the scope of the data, that Walter needs to act upon is basically the customers that are based here. 
+To achieve this kind of requirement, we'll have to take a look at the already mentioned *User Groups* and the constraints that can created for them. 
+
+After creating a User account for Walt and a Role called *Sales* which has full permissions on Customers, Orders and read permissions on the Products and Categories, we will create a Access Group called "Northeast". We assign Walter to this group. 
+
+Next, we will create two contraints that will only allow access to data of the customers and the orders, where the customers state attribute is in the northeast of the US. 
+
+<figure class="center">
+	<img src="{{site.url}}/images/cuba-security-subsystem-distilled/access-group-northeast.png">
+</figure>
+
+As shown in the image above, a constraint can have a *Where* condition, which will reduce the data corresponding to this condition. For the Customer entity it is something like: <code>{E}.state = 'NH' or {E}.state = 'MA'</code> where <code>{E}</code> is the selected entity.
+
+With this setting in place, Walt will only be able to see the orders and customers in the selected area.
+
+<h3> » S<img src="{{site.url}}/images/cuba-security-subsystem-distilled/AU.png" style="width: 1.5em;" alt="AU">l can take on business for Walter</h3>
+
+Walter had some problems with its physical condition in the last years. This is why Mike wants Saul, the Head of Sales to take on business for Walter in certain situations. Normally, Saul sales region is the Midwest of the United States, especially Nebraska because *CUBa SeCurity Inc.* has a branch office in Omaha. 
+
+<figure class="center">
+<img style="width: 400px; padding: 10px;" src="{{site.url}}/images/cuba-security-subsystem-distilled/saul-and-walter.jpg">
+</figure>
+
+Instead of giving Saul rights on data for the midwest as well as northeast, we will use *User Substitudion* to achieve this goal.
+
+<img style="float: right; width: 300px; padding: 10px;" src="{{site.url}}/images/cuba-security-subsystem-distilled/saul-user-substitution-walter.png">
+
+A User for Saul is created, Sales Role will be assigned and an addtional Access Group under "US" called "Midwest" next to the "Northeast". Next up, we'll go into the User details of Saul and create a *User Substition*. The substituted User is Walter in this case. Optionally a substitution can be granted for a given time period (not necessary in this case).
+
+After doing so, Saul can login and see a little select box in the top of the menu where he can change the user to Walt. This context switch will lead to the described situation. Before, Saul is able to see all orders and customers from the midwest. After the switch, Saul can see the ones in the northeast and actually acting as Walt with all the permissions that are granted to him.
+
+The described example with all the required data can be found at the [cuba-ordermanagement](https://github.com/mariodavid/cuba-ordermanagement) example app.
