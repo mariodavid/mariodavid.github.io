@@ -47,6 +47,10 @@ It can mean so much different things to different people, that it is necessary t
 
 ### What will not be covered in this article
 
+
+<img style="float: left; margin-left:-280px" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel-8.jpg">
+
+
 This seems to be the *functional part* of the generally *non functional requirements*. Then we have the real *non non functional requirements*, like that the software should have a basic implementation againts application security attacks. A resilience against *SQL Injection* or *cross side scripting* and so on. 
 
 This kind of security will not be part of this article firstly because of the sheer size of this problemspace and secondly because *CUBa SeCurity Inc.* is not interessted in these kinds of things, because they are planning to implement their ERP system as an offline application. 
@@ -119,12 +123,12 @@ Since the *Master Data Manager* role has only rights on the two entities *Produc
 
 
 <figure class="center">
-	<a href="{{ site.url }}/images/cuba-security-subsystem-distilled/master-data-manager-role.png"><img src="{{ site.url }}/images/cuba-security-subsystem-distilled/master-data-manager-role.png" alt=""></a>
-	<figcaption><a href="{{ site.url }}/images/cuba-security-subsystem-distilled/master-data-manager-role.png" title="Entity persmission of the Master Data Manager role">Entity persmission of the Master Data Manager role</a></figcaption>
+	<a href="{{ site.url }}/images/cuba-security-subsystem-distilled/role-master-data-manager.png"><img src="{{ site.url }}/images/cuba-security-subsystem-distilled/role-master-data-manager-dark.jpg" alt=""></a>
+	<figcaption><a href="{{ site.url }}/images/cuba-security-subsystem-distilled/role-master-data-manager.png" title="Entity persmission of the Master Data Manager role">Entity persmission of the Master Data Manager role</a></figcaption>
 </figure>
 
 
-<img style="float: right; margin-right:-320px" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel.jpg">
+<img style="float: left; margin-left:-280px" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel.jpg">
 
 To assign users to this new role, you can either edit the user and add the role, or you can use the "Assign to Users" Button on the Roles browser. After doing that, Jesse is will only get the corresponding views and rights to edit *Products* and *Product Categories.
 
@@ -148,7 +152,7 @@ To achieve this kind of requirement, we'll have to take a look at the already me
 After creating a User account for Walt and a Role called *Sales* which has full permissions on Customers, Orders and read permissions on the Products and Categories, we will create a Access Group called "Northeast". We assign Walter to this group. 
 
 
-<img style="float: left; margin-left:-280px" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel-8.jpg">
+<img style="float: right; margin-right:-280px" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel-3.jpg">
 
 
 Next, we will create two contraints that will only allow access to data of the customers and the orders, where the customers state attribute is in the northeast of the US. 
@@ -166,7 +170,7 @@ With this setting in place, Walt will only be able to see the orders and custome
 Walter had some problems with its physical condition in the last years. This is why Mike wants Saul, the Head of Sales to take on business for Walter in certain situations. Normally, Saul sales region is the Midwest of the United States, especially Nebraska because *CUBa SeCurity Inc.* has a branch office in Omaha. 
 
 
-<img style="float: right; margin-right:-320px" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel-7.jpg">
+<img style="float: left; margin-left:-280px" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel-7.jpg">
 
 
 
@@ -181,7 +185,7 @@ Instead of giving Saul rights on data for the midwest as well as northeast, we w
 
 A User for Saul is created, Sales Role will be assigned and an addtional Access Group under "US" called "Midwest" next to the "Northeast". Next up, we'll go into the User details of Saul and create a *User Substition*. The substituted User is Walter in this case. Optionally a substitution can be granted for a given time period (not necessary in this case).
 
-<img style="float: left; margin-left:-320px" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel-3.jpg">
+
 
 After doing so, Saul can login and see a little select box in the top of the menu where he can change the user to Walt. This context switch will lead to the described situation. Before, Saul is able to see all orders and customers from the midwest. After the switch, Saul can see the ones in the northeast and actually acting as Walt with all the permissions that are granted to him.
 
