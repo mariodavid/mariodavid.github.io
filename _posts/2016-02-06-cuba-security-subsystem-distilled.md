@@ -161,7 +161,7 @@ This user switch will lead to the following situation: Before, Saul is able to s
 
 ## ✓ Primary requirements fulfilled
 
-As you see, CUBA Platform comes with a really comprehensive security subsystem. Additional information and best practices on using it can be found in the [docs](https://docs.cuba-platform.com/cuba/6.0/manual/en/html-single/manual.html#chapter_security). The described example with all the required data can be found at the [cuba-ordermanagement](https://github.com/mariodavid/cuba-ordermanagement) example app.
+As you see, CUBA Platform comes with a really comprehensive security subsystem. Additional information and best practices on using it can be found in the [docs](https://docs.cuba-platform.com/cuba/6.0/manual/en/html-single/manual.html#chapter_security). The described example with all the required data can be found at the [cuba-ordermanagement](https://github.com/mariodavid/cuba-ordermanagement) (branch: [cuba-security-distilled-1](https://github.com/mariodavid/cuba-ordermanagement/tree/cuba-security-distilled-1)) example app.
 
 With the explained configuration settings, *CUBa SeCurity Inc.* is able to fulfil it's primary requirements regarding security. They can start entering their master data for their security products and start selling their stuff. 
 
