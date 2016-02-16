@@ -24,18 +24,18 @@ CUBA Platform currently does not support URL changes via *HTML5 History API* out
 
 ## CUBA Platform understands deep links
 
-Although CUBA is not updating the browsers url bar, it is in fact capabale of dealing with deep links. What i mean by that is, when you want to directly link to a certain customer entry, CUBA is able to handle that request and display e.g. the editor screen of the customer.
+Although CUBA is not updating the address bar, it is in fact capabale of dealing with deep links. What i mean by that is, when you want to directly link to a certain customer entry, CUBA is able to handle that request and display e.g. the editor screen of the customer.
 
-The part of the docs is called: [Screen Links](https://docs.cuba-platform.com/cuba/6.0/manual/en/html-single/manual.html#link_to_screen). With Screen Links you can address parts of the application, in particular a certain screen. An example of this would be:
+The feature is called [Screen Links](https://docs.cuba-platform.com/cuba/6.0/manual/en/html-single/manual.html#link_to_screen). With Screen Links you can address parts of the application, in particular a certain screen. An example of this would be:
 
 <code>http://localhost:8080/app/open?screen=om$Customer.edit&item=om$Customer-*UUID*</code>
 
 The parameters *screen* defines the required screen to show and the *item* parameter qualifies the desired customer entity. The docs have some other examples like additional parameters that will be passed into the <code>init()</code> method so the controller of the view is capable to handle them.
 
 
-## Generate Links via the UI
-Since hand-crafting these URLs seems not to be the best approach, we can create a mechanism in the application, which at least generates this url for us. Obviously it would be better if we could just copy the URL from the address bar, but since this is currently not possible, we can try to achieve something similar.
+## Generate links via the UI
+Since hand-crafting these URLs seems not to be the best approach for the users, we can create a mechanism in the application which at least generates these URLs for us. Obviously it would be better if we could just copy the URL from the address bar, but since this is currently not possible, we can try to achieve something similar.
 
 ...
 
-With this little generator in-place, we can easily create links that the user can copy and paste to directly talk about a specific resource with a co-worker. In this sense - i wish happy linking!
+With this little generator in-place, we can easily create links that the user can copy and paste to reference a specific resource with when talking with a co-worker. In this sense - i wish happy linking!
