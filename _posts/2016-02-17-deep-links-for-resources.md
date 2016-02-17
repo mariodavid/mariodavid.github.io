@@ -1,25 +1,25 @@
 ---
 layout: post
 title: Deep Links for Resources
-description: "A little hidden feature in CUBA platform is deep linking to resources"
-modified: 2016-02-18
+description: "A little hidden feature in CUBA platform is deep linking to resources, which is addressed here"
+modified: 2016-02-17
 tags: [cuba]
 image:
-  feature: deep-link/feature.jpg
+  feature: deep-link-for-resources/feature.jpg
   feature_source: https://pixabay.com/de/treffpunkt-treffen-pfeile-zetrum-755795/
-  background: deep-link/feature-bottom4.jpg
+  
 ---
 
-Here's a thing I stumbled upon lately in the CUBA Platform docs, that seems not to be very common but nevertheless very valuable: Deep Links to resources.
+Here's a thing I stumbled upon lately in the [CUBA Platform](http://www.cuba-platform.com) docs, that seems not to be very common but nevertheless very valuable: Deep Links to resources.
 
 <!-- more -->
 
-When opening up a CUBA application in your browser, you'll end up with a static URL like <code>http://localhost:8080/app/#!</code>. It is *one* endpoint. In fact, it is *literally* and *end-point*, because it's kind of the end of the web. There is no ability to get down further into the application via a link (at least, it is not shown in the URL of the browser). This is sad a bit. This is due to Vaadin architecture, but also very common nowadays when looking into the whole *single page application land*.
+When opening up a CUBA application in your browser, you'll end up with a static URL like <code>http://localhost:8080/app/#!</code>. It is *one* endpoint. In fact, it is *literally* and *end-point*, because it's kind of the end of the web. There is no ability to get down further into the application via a link (at least, it is not shown in the URL of the browser). This is sad a bit. It is due to Vaadin architecture, but also very common nowadays when looking into the whole *single page application land*.
 
 CUBA Platform currently does not support URL changes via *HTML5 History API* out of the box, meaning that it will change the shown URL when navigating through the application. 
 
 
-<img style="float:right; padding: 10px; margin-right:-50px;" src="{{site.url}}/images/deep-link/labyrinth.jpg">
+<img style="float:right; padding: 10px; margin-right:-50px;" src="{{site.url}}/images/deep-link-for-resources/labyrinth.jpg">
 
 ## CUBA Platform understands deep links
 
@@ -115,10 +115,19 @@ and register a button on the [UI declaration](https://github.com/mariodavid/cuba
 After setting this up, the application can create deep links for users like you see in the picture below.
 
 <figure class="center">
-	<a href="{{ site.url }}/images/deep-link/deep-link-dialog.png"><img src="{{ site.url }}/images/deep-link/deep-link-dialog.png" alt=""></a>
-	<figcaption><a href="{{ site.url }}/images/deep-link/deep-link-dialog.png" title="Create a deep link via the UI for a selected entity instance">Create a deep link via the UI for a selected entity instance</a></figcaption>
+	<a href="{{ site.url }}/images/deep-link-for-resources/deep-link-dialog.png"><img src="{{ site.url }}/images/deep-link-for-resources/deep-link-dialog.png" alt=""></a>
+	<figcaption><a href="{{ site.url }}/images/deep-link-for-resources/deep-link-dialog.png" title="Create a deep link via the UI for a selected entity instance">Create a deep link via the UI for a selected entity instance</a></figcaption>
 </figure>
 
 With this little generator in-place we can easily create links that a user can copy and paste to reference specific resource when, for instance, talking with a co-worker. As always, you'll find the full example in the [cuba-ordermanagement](https://github.com/mariodavid/cuba-ordermanagement) demo application.
 
 In this sense: Happy linking!
+
+
+
+
+<style type="text/css">
+body {
+    background: #b3dfff url(/images/deep-link-for-resources/feature-bottom.jpg) repeat-x bottom;
+}
+</style>
