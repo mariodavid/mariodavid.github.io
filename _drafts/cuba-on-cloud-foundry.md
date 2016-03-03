@@ -23,14 +23,23 @@ CaaS blurs the lines between classic IaaS and the topic i want to talk about in 
 
 ### Abstracting away your Infrastructure
 
-As you probalby have noticed, it's a little hard to distinguish between the categories, because the lines between them start to blur more and more. To clearify this a little bit, here is a categoriziation of the *\[I\|P\|S\]aaS world*.
+As you probalby have noticed, it's a little hard to distinguish between the categories, because the lines between them start to blur more and more. To clearify this a little bit, here are two ways of describing the differences in the *\[I\|P\|S\]aaS world*.
 
 <figure class="center">
-	<a href="{{ site.url }}/images/cloud-foundry/iaas-paas-saas.png"><img src="{{ site.url }}/images/cloud-foundry/iaas-paas-saas.png" alt=""></a>
-	<figcaption><a href="{{ site.url }}/images/cloud-foundry/iaas-paas-saas.png" title="What you / they have to manage in the different migration from self hosting to cloud">What you / they have to manage in the different migration from self hosting to cloud</a></figcaption>
+	<img src="{{ site.url }}/images/cloud-foundry/iaas-paas-saas.png" alt="">
 </figure>
 
-What we want to talk about in this article about the third category: Platform as a Service. The differences between what we have seen in the Docker world which is quite similar to IaaS that we have to care about the operating system. We know about and have to care about stuff like filesystem structures, drivers for certain databases, copy files and set system environment variables (see the Dockerfile for an example).
+
+<div style="margin: auto auto 25% 25%; width: 50%">
+<blockquote class="twitter-tweet" data-lang="de"><p lang="en" dir="ltr">The entire PaaS vs Container (e.g. Docker) debate explained in one simple diagram - <a href="https://t.co/B0oib5gihz">pic.twitter.com/B0oib5gihz</a></p>&mdash; swardley (@swardley) <a href="https://twitter.com/swardley/status/663089099989889024">7. November 2015</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>  
+</div>
+
+<div style="margin-top:-175px">&nbsp;</div>
+
+What we want to talk about in this article about the third category: Platform as a Service. The differences between what we have seen in the Docker world which is quite similar to IaaS that we have to care about the operating system. 
+
+The application developer knows about and have to care about stuff like filesystem structures, drivers for certain databases, copy files and set system environment variables. (see the Dockerfile for an example).
 
 
 {% highlight dockerfile %}
@@ -45,4 +54,38 @@ ENV CATALINA_OPTS="-Dlogback.configurationFile=/opt/cuba_home/logback.xml"
 {% endhighlight %}
 
 
-So when comparing it to a PaaS, you don't have to care about this stuff anymore. Which implies, that you also can't care about this stuff as well. The only thing you have to tell is the runtime that you want to use for your application. This is another abstraction layer, that the developer acts upon.
+Additionally you have to care about monitoring, backup, fault-tolerance, orchestration and much more. If you do this with some kind of combination of bash scripts and docker commands, you probably sould consider this:
+  
+<div style="margin: auto auto 10% 10%; width: 75%">
+    <blockquote class="twitter-tweet" data-lang="de"><p lang="en" dir="ltr">Sure, you can choose to build your own <a href="https://twitter.com/hashtag/PaaS?src=hash">#PaaS</a>.. Comparing build your own to a structured platform be like.. <a href="https://t.co/KBW9KINYHn">pic.twitter.com/KBW9KINYHn</a></p>&mdash; Dan Mearls (@DanMearls) <a href="https://twitter.com/DanMearls/status/657961157114875905">24. Oktober 2015</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+</div>
+
+
+<div style="margin-top:-75px">&nbsp;</div>
+
+So when comparing it to a PaaS, you don't have to care about this stuff anymore. Which implies, that you also can't care about this stuff as well (just to keep in mind). The only thing you have to tell your environment is the runtime that you want to use for your application.
+
+To get a sense of how that looks like, let's move to Cloud Foundry and try to deploy a CUBA app on this platform.
+
+
+
+
+<img style="float:right; padding: 10px;" src="{{site.url}}/images/cloud-foundry/cloud.png">
+
+### Cloud Foundry 
+
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+
+
+
+
+
