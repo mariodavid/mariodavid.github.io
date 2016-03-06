@@ -69,23 +69,23 @@ So when comparing it to a PaaS, you don't have to care about this stuff anymore.
 
 To get a sense of how that looks like, let's move to Cloud Foundry and try to deploy a CUBA app on this platform.
 
-
-
-
 <img style="float:right; padding: 10px;" src="{{site.url}}/images/cloud-foundry/cloud.png">
 
 ### Cloud Foundry 
 
+Cloud Foundry is an open-source PaaS solution backed up by a lot of big companies. Initially started at VMWare / Pivotal is has become a solution for different Cloud offerings like IBM Bluemix, HP helios and the Cloud solution from Pivotal itself.
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+When comparing it to other solutions like Heroku, the basic difference is that since CF is open source, you can run it in your own datacenter if you want to. Another possiblity is to the PaaS on AWS or any other IaaS provider on your own.
+
+//....
 
 
+### Get ready to go via Pivotal Web Services
+So let's get started with Cloud Foundry. To do so, i have created a free acc. at [Pivotal Web Services](https://run.pivotal.io/), the Pivotal CF Cloud offering, which let's me play with CF for 2 month for free.
 
+After creating the acc. and installing their [CLI](http://docs.run.pivotal.io/cf-cli/) you are ready to login via the command line like this:
 
-
+{% highlight bash %}
+cf login -a https://api.run.pivotal.io
+{% endhighlight %}
 
