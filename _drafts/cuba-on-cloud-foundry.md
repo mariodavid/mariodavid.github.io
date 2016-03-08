@@ -83,9 +83,18 @@ When comparing it to other solutions like Heroku, the basic difference is that s
 ### Get ready to go via Pivotal Web Services
 So let's get started with Cloud Foundry. To do so, i have created a free acc. at [Pivotal Web Services](https://run.pivotal.io/), the Pivotal CF Cloud offering, which let's me play with CF for 2 month for free.
 
-After creating the acc. and installing their [CLI](http://docs.run.pivotal.io/cf-cli/) you are ready to login via the command line like this:
+After creating the acc. and installing their [CLI](http://docs.run.pivotal.io/cf-cli/) you are ready to login via the command line:
 
 {% highlight bash %}
 cf login -a https://api.run.pivotal.io
 {% endhighlight %}
 
+After doing so your command line is ready to go to push your application. But first, let's have a look at the web UI which allows you to view the running instances. After a successful [login](https://login.run.pivotal.io/login)
+
+
+
+<a href="{{ site.url }}/images/cloud-foundry/pws-ui.png"><img style="width: 50%; float:right" src="{{site.url}}/images/cloud-foundry/pws-ui.png"></a>
+
+First, i created an organisation called "cuba-ordermanagement". This oragnisation contains one "Space". A space normally is an aggregation of services and apps that are scoped via project or an environment. I created a space called "development", which should describe the phase of the CD pipeline. 
+
+As you see on the right, i already started my apps and one service, so let's get going with the command line again.
