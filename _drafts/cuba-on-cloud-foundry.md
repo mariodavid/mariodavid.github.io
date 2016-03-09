@@ -98,7 +98,82 @@ After a successful [login](https://login.run.pivotal.io/login) you will see a sc
 
 First, i created an organisation called "cuba-ordermanagement". This oragnisation contains one *space*. A *space* is an aggregation of services and apps that are scoped via project or an environment. I created a space called "development", which should describe the phase of my imaginary continous delivery pipeline pipeline. 
 
-As you see on the right, i already started my apps and one service, so let's get going with the command line again.
+As you see on the right, i already started my apps and one service, so let's get started with deploying an app on CF.
+
+
+## Make CUBA Cloud-ready &trade;
+
+There are a few things that have to be changed from the traditional deployment model. We'll go through it step by step so you should be able adjust your app right as we go.
+
+### Create a postgres database in Cloud Foundry
+
+First of all, we have to create a datastore for our cloud version of the cuba app. In *IaaS world* you would set up a vanilla postgres instance, figure out connection settings and tell your app where to find your datastore.
+
+In Cloud Foundry your database is *just another* service, that the application can depend upon. The Pivotal offering of Cloud Foundry has a couple of services available for stuff like caching, search, (non-) relational datastores, monitoring tools and so on. 
+
+When you want to take a look at what are the different offerings, just use the marketplace cmd option.
+
+{% highlight bash %}
+$ cf marketplace
+{% endhighlight %}
+
+We will choose a postgres installation for now. You can either use the web UI or the command line interface:
+
+{% highlight bash %}
+$ cf create-service elephantsql turtle cuba-ordermanagement-postgres
+{% endhighlight %}
+
+*elephantsql* is the name for the service (Postgres as a Service) and *turtle* the service plan (turtle is the free one). *cuba-ordermanagement-postgres* is the name of the service instance, which we'll need for later reference.
+
+Now we have a running postgres db installation. Next thing is that we have to configure our application to use this datastore.
+
+
+### Springs Cloud Connector for DataSource creation
+
+Within the spring ecosystem there are different packages that handle integration with cloud systems in general and PaaS like Cloud Foundry in particular. In the <code>build.gradle</code>, the <code>coreModul</code> needs the following two additional dependencies:
+
+{% highlight groovy %}
+
+configure(coreModule) {
+	//...
+    dependencies {
+        //...
+        compile('org.springframework.cloud:spring-cloud-spring-service-connector:1.2.1.RELEASE')
+        compile('org.springframework.cloud:spring-cloud-cloudfoundry-connector:1.2.1.RELEASE')
+    }
+    //...
+}
+{% endhighlight %}
+
+Next, since we want the the database to be looked up from the cloud, we need to override the creation of the <code>dataSource</code> bean.
+
+### Create deployment information for Cloud Foundry
+
+Since we can't really get down to the underlying infrastructure of the app, we are not able to change the way the tomcat (or whatever servlet container is underneath your app in this case) works. But certain metadata has to be given to the PaaS in order to run our application properly, e.g. the java version, the amount of memory required, external services (like datastores) and so on.
+
+For these kind of information, CF required a file called *manifest.yml* to be in place. This file is the entry point for the deployment.
+
+So the file that we are going to create looks pretty much like [this](https://github.com/mariodavid/cuba-ordermanagement/blob/cloud-foundry/manifest.yml):
+
+{% highlight yaml %}
+---
+applications:
+- name: cuba-ordermanagement
+memory: 1024M
+instances: 1
+host: cuba-ordermanagement
+path: build/distributions/war/app.war
+services:
+- cuba-ordermanagement-postgres
+env:
+  JBP_CONFIG_OPEN_JDK_JRE: '{jre: { version: 1.8.0_+ }}'
+{% endhighlight %}
+
+
+
+
+
+
 
 
 
