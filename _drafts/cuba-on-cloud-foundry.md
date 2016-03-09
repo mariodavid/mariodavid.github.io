@@ -145,7 +145,44 @@ configure(coreModule) {
 }
 {% endhighlight %}
 
-Next, since we want the the database to be looked up from the cloud, we need to override the creation of the <code>dataSource</code> bean.
+Next, since we want the the database to be looked up from the cloud, we need to override the creation of the <code>dataSource</code> bean. This can be done via dependency injection. In the <code>spring.xml</code> of the <code>core</code> module we tell Spring to use a Factory bean for the creation of the <code>cubaDataSource</code> bean, which is used throughout the CUBA application. 
+
+
+{% highlight xml %}
+
+<bean id="cloudFoundryDataSourceFactory" class="com.company.ordermanagement.cloud.CloudFoundryDataSourceFactory">
+    <property name="dbServiceName" value="cuba-ordermanagement-postgres" />
+</bean>
+
+<bean id="cubaDataSource" factory-bean="cloudFoundryDataSourceFactory"
+      factory-method="createDataSourceForPostgresDbService">
+</bean>
+{% endhighlight %}
+
+The <code>cubaDataSource</code> bean will now be created via the factory method <code>cloudFoundryDataSourceFactory.createDataSourceForPostgresDbService()</code>. The value of <code>dbService</code> attribute of the factory is the service name of the postgres instance we created earlier.
+
+Since this Factory class does not exist yet, let have a look at the [implementation](https://github.com/mariodavid/cuba-ordermanagement/blob/cloud-foundry/modules/core/src/com/company/ordermanagement/cloud/CloudFoundryDataSourceFactory.groovy):
+
+
+{% highlight groovy %}
+//...
+
+class CloudFoundryDataSourceFactory {
+
+    String dbServiceName
+
+    DataSource createDataSourceForPostgresDbService() {
+
+        Cloud cf = new CloudFactory().cloud
+        def postgresSerciveInfo = cf.getServiceInfo(dbServiceName)
+        cf.getServiceConnector(postgresSerciveInfo.id, DataSource, null);
+
+    }
+}
+
+{% endhighlight %}
+
+With this little glue code inplace, the application is ready to connect to the database via a service name instead of DNS names through the cloud platform.
 
 ### Create deployment information for Cloud Foundry
 
