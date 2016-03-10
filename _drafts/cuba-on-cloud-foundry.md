@@ -86,7 +86,7 @@ So let's get started with Cloud Foundry. To do so, i have created a free acc. at
 After creating the acc. and installing their [CLI](http://docs.run.pivotal.io/cf-cli/) you are ready to login via the command line:
 
 {% highlight bash %}
-cf login -a https://api.run.pivotal.io
+$ cf login -a https://api.run.pivotal.io
 {% endhighlight %}
 
 After doing so your command line is ready to go to push your application. But first, let's have a look at the web UI which allows you to view the running instances. 
@@ -98,12 +98,8 @@ After a successful [login](https://login.run.pivotal.io/login) you will see a sc
 
 First, i created an organisation called "cuba-ordermanagement". This oragnisation contains one *space*. A *space* is an aggregation of services and apps that are scoped via project or an environment. I created a space called "development", which should describe the phase of my imaginary continous delivery pipeline pipeline. 
 
-As you see on the right, i already started my apps and one service, so let's get started with deploying an app on CF.
+As you see on the right, i already started my cuba app and one service, so let's get started with deploying an app on CF.
 
-
-## Make CUBA Cloud-ready &trade;
-
-There are a few things that have to be changed from the traditional deployment model. We'll go through it step by step so you should be able adjust your app right as we go.
 
 ### Create a postgres database in Cloud Foundry
 
@@ -128,7 +124,13 @@ $ cf create-service elephantsql turtle cuba-ordermanagement-postgres
 Now we have a running postgres db installation. Next thing is that we have to configure our application to use this datastore.
 
 
-### Springs Cloud Connector for DataSource creation
+
+## Make CUBA Cloud-ready &trade;
+
+There are a few things that have to be changed from the traditional deployment model. We'll go through it step by step so you should be able adjust your app right as we go.
+
+
+### 1. Springs Cloud Connector for DataSource creation
 
 Within the spring ecosystem there are different packages that handle integration with cloud systems in general and PaaS like Cloud Foundry in particular. In the <code>build.gradle</code>, the <code>coreModul</code> needs the following two additional dependencies:
 
@@ -182,9 +184,51 @@ class CloudFoundryDataSourceFactory {
 
 {% endhighlight %}
 
-With this little glue code inplace, the application is ready to connect to the database via a service name instead of DNS names through the cloud platform.
+With this little glue code inplace (i hope you don't mind i used groovy here), the application is ready to connect to the database via a service name instead of DNS names through the cloud platform.
 
-### Create deployment information for Cloud Foundry
+The only thing they we have to tell the application is, that we actually want to use *postgres* as the dbms of our choice. When we do this we can additionally put the other required configuration inplace.
+
+### 2. Set up the *.properties file of the CUBA app
+
+To tell CUBA that it should use Postgres as the dbms we have to change the <code><a href="https://github.com/mariodavid/cuba-ordermanagement/blob/cloud-foundry/modules/core/src/app.properties">app.properties</a></code> in the core module the following way:
+
+{% highlight properties %}
+
+cuba.dbmsType = postgres
+cuba.automaticDatabaseUpdate = true
+
+{% endhighlight %}
+
+Additionally we have to change the <code>app.home</code> attribute in <code><a href="https://github.com/mariodavid/cuba-ordermanagement/blob/cloud-foundry/modules/core/src/app.properties">app.properties</a></code> in the core module and the <code><a href="https://github.com/mariodavid/cuba-ordermanagement/blob/cloud-foundry/modules/web/src/web-app.properties">web-app.properties</a></code> file in the web module to <code>..</code>:
+
+
+{% highlight properties %}
+
+app.home = ..
+
+{% endhighlight %}
+
+### 3. Configure CUBA to be delivered as a single war
+
+To make deployment of the app a little easier, we'll combine the core and the web module as a single war file. This has some benefits but also some drawbacks regarding to scaling and so on. Due to this it's up to you if you want to follow this path.
+
+If you read the docs about the [single war approach](https://docs.cuba-platform.com/cuba/6.0/manual/en/html-single/manual.html#build.gradle_buildWar) you'll see, that we have to create another web.xml and use it during war building.
+
+Just copy & paste the XML file from the [docs](https://docs.cuba-platform.com/cuba/6.0/manual/en/html-single/manual.html#build.gradle_buildWar) and put it in the <code>web</code> module to <code>web/WEB-INF/single-war-web.xml</code>. You have to adjust the Context parameter <code>Web Client Application class</code> to fit to your application class. The created file for cuba-ordermanagement you'll find [here](https://github.com/mariodavid/cuba-ordermanagement/blob/cloud-foundry/modules/web/web/WEB-INF/single-war-web.xml).
+
+After doing so, the last thing you have to do is to create a gradle task in the <code><a href="https://github.com/mariodavid/cuba-ordermanagement/blob/cloud-foundry/build.gradle">build.gradle</a></code> file. In this task you reference the newly generated <code>single-war-web.xml</code> as the web.xml file like this:
+
+
+{% highlight groovy %}
+
+task buildWar(type: CubaWarBuilding) {
+    appHome = '..'
+    webXml = "${webModule.projectDir}/web/WEB-INF/single-war-web.xml"
+}
+
+{% endhighlight %}
+
+### 4. Create deployment information for Cloud Foundry
 
 Since we can't really get down to the underlying infrastructure of the app, we are not able to change the way the tomcat (or whatever servlet container is underneath your app in this case) works. But certain metadata has to be given to the PaaS in order to run our application properly, e.g. the java version, the amount of memory required, external services (like datastores) and so on.
 
@@ -207,12 +251,26 @@ env:
 {% endhighlight %}
 
 
+**That's it**. Ok, it took a little bit longer than i would like it to be. This is due to the fact that we have done different things here. Not all of them have directly to do with make it cloud ready. Anyway - now we are ready to take the app and deploy it to Cloud Foundry.
+
+## Pushing it up
+
+First we need to create the war file that we want to deploy:
+
+{% highlight bash %}
+$ ./gradlew buildWar
+{% endhighlight %}
+
+Next we do the actual deployment via the command cf push and point it our manifest file:
+
+{% highlight bash %}
+$ cf push -f manifest.yml
+{% endhighlight %}
+
+<img style="float:right; padding: 10px; width: 50%" src="{{site.url}}/images/cloud-foundry/cf-cuba-login.png">
 
 
+Then the cli will care about uploading the artefact, creating a "server", connecting it to the service and start up the tomcat installation.
 
-
-
-
-
-
+When everything worked out fine, you can access your application at [http://cuba-ordermanagement.cfapps.io/](http://cuba-ordermanagement.cfapps.io/) (or whatever Route is defined for the application. You can look it up via the web ui).
 
