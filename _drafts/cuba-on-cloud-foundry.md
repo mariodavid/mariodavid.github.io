@@ -177,7 +177,7 @@ class CloudFoundryDataSourceFactory {
 
         Cloud cf = new CloudFactory().cloud
         def postgresSerciveInfo = cf.getServiceInfo(dbServiceName)
-        cf.getServiceConnector(postgresSerciveInfo.id, DataSource, null);
+        cf.getServiceConnector(postgresSerciveInfo.id, DataSource, null)
 
     }
 }
@@ -188,7 +188,7 @@ With this little glue code inplace (i hope you don't mind i used groovy here), t
 
 The only thing they we have to tell the application is, that we actually want to use *postgres* as the dbms of our choice. When we do this we can additionally put the other required configuration inplace.
 
-### 2. Set up the *.properties file of the CUBA app
+### 2. Set up the *.properties files of the CUBA app
 
 To tell CUBA that it should use Postgres as the dbms we have to change the <code><a href="https://github.com/mariodavid/cuba-ordermanagement/blob/cloud-foundry/modules/core/src/app.properties">app.properties</a></code> in the core module the following way:
 
@@ -232,9 +232,7 @@ task buildWar(type: CubaWarBuilding) {
 
 Since we can't really get down to the underlying infrastructure of the app, we are not able to change the way the tomcat (or whatever servlet container is underneath your app in this case) works. But certain metadata has to be given to the PaaS in order to run our application properly, e.g. the java version, the amount of memory required, external services (like datastores) and so on.
 
-For these kind of information, CF required a file called *manifest.yml* to be in place. This file is the entry point for the deployment.
-
-So the file that we are going to create looks pretty much like [this](https://github.com/mariodavid/cuba-ordermanagement/blob/cloud-foundry/manifest.yml):
+For these kind of information, CF requires a file called *manifest.yml* to be in place. This file is the entry point for the deployment. So the file that we are going to create looks pretty much like [this](https://github.com/mariodavid/cuba-ordermanagement/blob/cloud-foundry/manifest.yml):
 
 {% highlight yaml %}
 ---
@@ -250,6 +248,7 @@ env:
   JBP_CONFIG_OPEN_JDK_JRE: '{jre: { version: 1.8.0_+ }}'
 {% endhighlight %}
 
+Note the service name that is referenced from the app instance. 
 
 **That's it**. Ok, it took a little bit longer than i would like it to be. This is due to the fact that we have done different things here. Not all of them have directly to do with make it cloud ready. Anyway - now we are ready to take the app and deploy it to Cloud Foundry.
 
