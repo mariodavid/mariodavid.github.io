@@ -10,7 +10,7 @@ image:
   
 ---
 
-In this blog post I will [continue](http://www.road-to-cuba-and-beyond.com/put-a-island-into-a-box-how-to-dockerize-your-cuba-app/) surfing the clouds and will have a look at the operations side of things and talk about running the CUBA Platform on the PaaS that gains much momentum these days: [Cloud Foundry](https://www.cloudfoundry.org/).
+In this blog post I will [continue](http://www.road-to-cuba-and-beyond.com/put-a-island-into-a-box-how-to-dockerize-your-cuba-app/) surfing the clouds and will have a look at the operations side of things. It's about running the CUBA Platform on the *Platform as a Service* that gains much momentum these days: [Cloud Foundry](https://www.cloudfoundry.org/).
 
 <!-- more -->
 
