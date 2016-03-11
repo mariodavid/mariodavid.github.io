@@ -10,20 +10,20 @@ image:
   
 ---
 
-In this blog post i will [continue](http://www.road-to-cuba-and-beyond.com/put-a-island-into-a-box-how-to-dockerize-your-cuba-app/) to take a look at the operations side of things and talk about running the CUBA Platform on a PaaS that gains much momentum these days: [Cloud Foundry](https://www.cloudfoundry.org/).
+In this blog post I will [continue](http://www.road-to-cuba-and-beyond.com/put-a-island-into-a-box-how-to-dockerize-your-cuba-app/) surfing the clouds and will have a look at the operations side of things and talk about running the CUBA Platform on the PaaS that gains much momentum these days: [Cloud Foundry](https://www.cloudfoundry.org/).
 
 <!-- more -->
 
-In the [last](http://www.road-to-cuba-and-beyond.com/put-a-island-into-a-box-how-to-dockerize-your-cuba-app/) blog post about Docker i wrote about how to use container technologies. Docker is a great technologie that enables the Road to *infrastructure as code*. 
+In the [last](http://www.road-to-cuba-and-beyond.com/put-a-island-into-a-box-how-to-dockerize-your-cuba-app/) blog post about Docker I highlighted how to use container technologies. Docker is a great technology that enables the road to *infrastructure as code*. 
 
 ### Everything as a Service
-But running Docker is just one possibility when you want to embrace the Cloud mindset. You can create a Amazon EC2 instance, install Docker by yourself. This would be a IaaS approach. In this case, you have to care about different stuff like orchestration, auto scaling, fault tolerance. Amazon also has a more managed approach like [EC2 Container Service](https://aws.amazon.com/documentation/ecs/) and Docker itself tries to open up this market with solutions like [Docker Datacenter](https://www.docker.com/products/docker-datacenter). These alternatives are not really IaaS anymore, but more *Container as a Service (CaaS)*.
+But running Docker is just one option to embrace the Cloud mindset. You can create a Amazon EC2 instance, install Docker on your own - this is a IaaS approach. In this case, you have to care about different stuff like orchestration, auto scaling, fault tolerance. Amazon also has more managed approach like [EC2 Container Service](https://aws.amazon.com/documentation/ecs/) and Docker itself tries to open up this market with solutions like [Docker Datacenter](https://www.docker.com/products/docker-datacenter). These alternatives are not really IaaS anymore, but more *Container as a Service (CaaS)*.
 
-CaaS blurs the lines between classic IaaS and the topic i want to talk about in this article: *Platform as a Service (PaaS)*. 
+CaaS blurs the lines between classic IaaS and the topic I want to talk about in this article: *Platform as a Service (PaaS)*. 
 
 ### Abstracting away your Infrastructure
 
-As you probalby have noticed, it's a little hard to distinguish between the categories, because the lines between them start to blur more and more. To clearify this a little bit, here are two ways of describing the differences in the *\[I\|P\|S\]aaS world*.
+As you have probalby noticed, it's a little hard to distinguish between the categories, because the lines between them are dissolving more and more with time. To clearify this a little bit, here are two ways of describing the differences in the *\[I\|P\|S\]aaS world*.
 
 <figure class="center">
 	<img src="{{ site.url }}/images/cloud-foundry/iaas-paas-saas.png" alt="">
@@ -37,9 +37,9 @@ As you probalby have noticed, it's a little hard to distinguish between the cate
 
 <div style="margin-top:-175px">&nbsp;</div>
 
-What we want to talk about in this article about the third category: Platform as a Service. The differences between what we have seen in the Docker world which is quite similar to IaaS that we have to care about the operating system. 
+What we want to talk about in this article is the third category: Platform as a Service. The difference between PaaS and what we see in the Docker world, which is quite similar to IaaS, is that in Docker we have to care about the operating system.
 
-The application developer knows about and have to care about stuff like filesystem structures, drivers for certain databases, copy files and set system environment variables. (see the Dockerfile for an example).
+The application developer has to know and care about stuff like filesystem structures, drivers for certain databases, copy files and set system environment variables. (see the Dockerfile for an example).
 
 
 {% highlight dockerfile %}
@@ -54,7 +54,7 @@ ENV CATALINA_OPTS="-Dlogback.configurationFile=/opt/cuba_home/logback.xml"
 {% endhighlight %}
 
 
-Additionally you have to care about monitoring, backup, fault-tolerance, orchestration and much more. If you do this with some kind of combination of bash scripts and docker commands, you probably sould consider this:
+Additionally you have to care about monitoring, backup, fault-tolerance, orchestration and many more things. If you do this with some kind of combination of bash scripts and docker commands, you probably sould consider this:
   
 <div style="margin: auto auto 10% 10%; width: 75%">
     <blockquote class="twitter-tweet" data-lang="de"><p lang="en" dir="ltr">Sure, you can choose to build your own <a href="https://twitter.com/hashtag/PaaS?src=hash">#PaaS</a>.. Comparing build your own to a structured platform be like.. <a href="https://t.co/KBW9KINYHn">pic.twitter.com/KBW9KINYHn</a></p>&mdash; Dan Mearls (@DanMearls) <a href="https://twitter.com/DanMearls/status/657961157114875905">24. Oktober 2015</a></blockquote>
@@ -65,7 +65,7 @@ Additionally you have to care about monitoring, backup, fault-tolerance, orchest
 
 <div style="margin-top:-75px">&nbsp;</div>
 
-So when comparing it to a PaaS, you don't have to care about this stuff anymore. Which implies, that you also can't care about this stuff as well (just to keep in mind). The only thing you have to tell your environment is the runtime that you want to use for your application.
+So when comparing it to a PaaS, you don't have to care about this stuff anymore. In fact you are even not able to care about this stuff (just to keep in mind). The only thing you have to tell your environment is the runtime that you want to use for your application.
 
 To get a sense of how that looks like, let's move to Cloud Foundry and try to deploy a CUBA app on this platform.
 
@@ -73,41 +73,41 @@ To get a sense of how that looks like, let's move to Cloud Foundry and try to de
 
 ### Cloud Foundry 
 
-Cloud Foundry is an open-source PaaS solution backed up by a lot of big companies. Initially started at VMWare / Pivotal is has become a solution for different Cloud offerings like IBM Bluemix, HP helios and the Cloud solution from Pivotal itself.
+Cloud Foundry is an open-source PaaS solution backed up by a lot of big companies. Initially started by VMWare / Pivotal and has become the base solution for different Cloud offerings like IBM Bluemix, HP helios and the Cloud solution from Pivotal itself.
 
-When comparing it to other solutions like Heroku, the basic difference is that since CF is open source, you can run it in your own datacenter if you want to. Another possiblity is to the PaaS on AWS or any other IaaS provider on your own.
+When comparing it to other solutions like Heroku, the fundamental difference is that since CF is open source, you can run it in your own datacenter if you want to. Another option is to tun the PaaS on AWS or any other IaaS provider on your own.
 
 //....
 
 
 ### Get ready to go via Pivotal Web Services
-So let's get started with Cloud Foundry. To do so, i have created a free acc. at [Pivotal Web Services](https://run.pivotal.io/), the Pivotal CF Cloud offering, which let's me play with CF for 2 month for free. Selecting PWS for CF is just out of convenience reasons, so if you want to try it in your own datacenter (via OpenStack or VMWare vShpere) or on AWS EC2 instances, feel free to do so.
+So let's get started with Cloud Foundry. To do so, I have created a free account at [Pivotal Web Services](https://run.pivotal.io/), the Pivotal CF Cloud offering, which allowes me to play with CF for 2 month for free. Selecting PWS for CF is just out of convenience reasons, so if you want to try it in your own datacenter (via OpenStack or VMWare vShpere) or on AWS EC2 instances, feel free to do so.
 
-After creating the acc. and installing their [CLI](http://docs.run.pivotal.io/cf-cli/) you are ready to login via the command line:
+After creating the account and their [CLI](http://docs.run.pivotal.io/cf-cli/) installation you are ready to login via the command line:
 
 {% highlight bash %}
 $ cf login -a https://api.run.pivotal.io
 {% endhighlight %}
 
-After doing so your command line is ready to go to push your application. But first, let's have a look at the web UI which allows you to view the running instances. 
+Since you logged in your command line is ready to go to push your application. But first, let's have a look at the web UI which allows you to view the running instances. 
 
 
 <a href="{{ site.url }}/images/cloud-foundry/pws-ui.png"><img style="width: 50%; float:right" src="{{site.url}}/images/cloud-foundry/pws-ui.png"></a>
 
 After a successful [login](https://login.run.pivotal.io/login) you will see a screen similar to this.
 
-First, i created an organisation called "cuba-ordermanagement". This oragnisation contains one *space*. A *space* is an aggregation of services and apps that are scoped via project or an environment. I created a space called "development", which should describe the phase of my imaginary continous delivery pipeline pipeline. 
+First, I created an organisation called "cuba-ordermanagement". This oragnisation contains one *space*. A *space* is an aggregation of services and apps that are scoped via project or an environment. I created a space called "development", which should describe the phase of my imaginary continous delivery pipeline. 
 
-As you see on the right, i already started my cuba app and one service, so let's get started with deploying an app on CF.
+As you can see on the right, I already started my cuba app and one service, so let's get started with deploying an app on CF.
 
 
-### Create a postgres database in Cloud Foundry
+### Create Postgres Database in Cloud Foundry
 
 First of all, we have to create a datastore for our cloud version of the cuba app. In *IaaS world* you would set up a vanilla postgres instance, figure out connection settings and tell your app where to find your datastore.
 
-In Cloud Foundry your database is *just another* service, that the application can depend upon. The Pivotal offering of Cloud Foundry has a couple of services available for stuff like caching, search, (non-) relational datastores, monitoring tools and so on. 
+In Cloud Foundry your database is *just another* service, that the application can depend on. The Pivotal offering of Cloud Foundry has a couple of services available for stuff like caching, search, (non-) relational datastores, monitoring tools and so on. 
 
-When you want to take a look at what are the different offerings, just use the marketplace cmd option.
+When you want to take a look at what the different offerings are, just use the marketplace cmd option.
 
 {% highlight bash %}
 $ cf marketplace
@@ -119,20 +119,20 @@ We will choose a postgres installation for now. You can either use the web UI or
 $ cf create-service elephantsql turtle cuba-ordermanagement-postgres
 {% endhighlight %}
 
-*elephantsql* is the name for the service (Postgres as a Service) and *turtle* the service plan (turtle is the free one). *cuba-ordermanagement-postgres* is the name of the service instance, which we'll need for later reference.
+*elephantsql* is the name for the service (Postgres as a Service) and *turtle* the service plan (turtle is the free one). *cuba-ordermanagement-postgres* is the name for the service instance, which we will need to refer to it later.
 
-Now we have a running postgres db installation. Next thing is that we have to configure our application to use this datastore.
+Now we have the running postgres db installation. Next thing - we have to configure our application to use this datastore.
 
 
 
 ## Make CUBA Cloud-ready &trade;
 
-There are a few things that have to be changed from the traditional deployment model. We'll go through it step by step so you should be able adjust your app right as we go.
+There are a few things that have to be changed from the traditional deployment model. We'll go through these step by step so you should be able to adjust your app right as we go.
 
 
 ### 1. Springs Cloud Connector for DataSource creation
 
-Within the spring ecosystem there are different packages that handle integration with cloud systems in general and PaaS like Cloud Foundry in particular. In the <code>build.gradle</code>, the <code>coreModul</code> needs the following two additional dependencies:
+Within the spring ecosystem there are different packages that handle integration with cloud systems in general and PaaS like Cloud Foundry in particular. In the <code>build.gradle</code> file, <code>coreModule</code> needs two additional dependencies as it is shown below:
 
 {% highlight groovy %}
 
@@ -147,7 +147,7 @@ configure(coreModule) {
 }
 {% endhighlight %}
 
-Next, since we want the the database to be looked up from the cloud, we need to override the creation of the <code>dataSource</code> bean. This can be done via dependency injection. In the <code>spring.xml</code> of the <code>core</code> module we tell Spring to use a Factory bean for the creation of the <code>cubaDataSource</code> bean, which is used throughout the CUBA application. 
+Next, since we want the the database to be looked up from the cloud, we need to override the creation of the <code>dataSource</code> bean. This can be done via dependency injection. In <code>spring.xml</code> of the <code>core</code> module we tell Spring to use the <code>cubaDataSource</code> bean as the Factory bean, which is used throughout the CUBA application. 
 
 
 {% highlight xml %}
@@ -184,13 +184,13 @@ class CloudFoundryDataSourceFactory {
 
 {% endhighlight %}
 
-With this little glue code inplace (i hope you don't mind i used groovy here), the application is ready to connect to the database via a service name instead of DNS names through the cloud platform.
+With this little glue code inplace (hope you don't mind me using groovy here), the application is ready to connect to a database via a service name instead of DNS names through the cloud platform.
 
-The only thing they we have to tell the application is, that we actually want to use *postgres* as the dbms of our choice. When we do this we can additionally put the other required configuration inplace.
+The only thing that we have to tell to the application is that we actually want to use *postgres* as our DBMS. When we do this we can additionally put the other required configuration inplace.
 
-### 2. Set up the *.properties files of the CUBA app
+### 2. Setup the *.properties files of the CUBA app
 
-To tell CUBA that it should use Postgres as the dbms we have to change the <code><a href="https://github.com/mariodavid/cuba-ordermanagement/blob/cloud-foundry/modules/core/src/app.properties">app.properties</a></code> in the core module the following way:
+To tell CUBA that it should use Postgres as the DBMS we have to change the <code><a href="https://github.com/mariodavid/cuba-ordermanagement/blob/cloud-foundry/modules/core/src/app.properties">app.properties</a></code> in the core module in the following way:
 
 {% highlight properties %}
 
@@ -210,7 +210,7 @@ app.home = ..
 
 ### 3. Configure CUBA to be delivered as a single war
 
-To make deployment of the app a little easier, we'll combine the core and the web module as a single war file. This has some benefits but also some drawbacks regarding to scaling and so on. Due to this it's up to you if you want to follow this path.
+To make deployment of the app quite a bit easier, we'll combine the core and the web module into a single war file. This has some benefits but also some drawbacks regarding to scaling and so on. Due to this it's up to you if you want to follow this trail.
 
 If you read the docs about the [single war approach](https://docs.cuba-platform.com/cuba/6.0/manual/en/html-single/manual.html#build.gradle_buildWar) you'll see, that we have to create another web.xml and use it during war building.
 
@@ -250,7 +250,7 @@ env:
 
 Note the service name that is referenced from the app instance. 
 
-**That's it**. Ok, it took a little bit longer than i would like it to be. This is due to the fact that we have done different things here. Not all of them have directly to do with make it cloud ready. Anyway - now we are ready to take the app and deploy it to Cloud Foundry.
+**That's it**. Ok, it took a little bit longer than I would like it to be. This is due to the fact that we have done different things here. Not all of them have directly to do with make it cloud ready. Anyway - now we are ready to take the app and deploy it to Cloud Foundry.
 
 ## Pushing it up
 
@@ -260,7 +260,7 @@ First we need to create the war file that we want to deploy:
 $ ./gradlew buildWar
 {% endhighlight %}
 
-Next we do the actual deployment via the command cf push and point it our manifest file:
+Next, we do the actual deployment via the command cf push and point it our manifest file:
 
 {% highlight bash %}
 $ cf push -f manifest.yml
