@@ -2,7 +2,7 @@
 layout: post
 title: CUBA goes open source with a handful of features
 description: CUBA Platform version 6.1 was released in the beginning of april. In this blog post i'll give you a quick overview about the new features as well as the new license policy
-modified: 2016-03-29
+modified: 2016-04-9
 tags: [cuba, open-source]
 image:
   feature: cuba-6-1/feature.png
