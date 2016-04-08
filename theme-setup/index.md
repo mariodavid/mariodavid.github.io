@@ -1,26 +1,22 @@
 ---
 layout: page
 title: Theme Setup
-description: "Instructions on how to install and customize the modern Jekyll theme HPSTR."
-image:
-  feature: abstract-11.jpg
-  credit: dargadgetz
-  creditlink: http://www.dargadgetz.com/ios-7-abstract-wallpaper-pack-for-iphone-5-and-ipod-touch-retina/
+description: "Instructions on how to install and customize the modern Jekyll theme Neo-HPSTR."
 share: true
 ---
 
-General notes and suggestions for customizing **HPSTR**.
+General notes and suggestions for customizing **Neo-HPSTR**.
 
 ## Basic Setup for a new Jekyll site
 
 1. [Install Bundler](http://bundler.io) `gem install bundler` and then install [Jekyll](http://jekyllrb.com) and all dependencies `bundle install`.
-2. Fork the [HPSTR Jekyll Theme repo](https://github.com/mmistakes/hpstr-jekyll-theme/fork).
+2. Fork the [Neo-HPSTR Jekyll Theme repo](http://github.com/aron-bordin/neo-hpstr-jekyll-theme/fork).
 3. Clone the repo you just forked and rename it.
 4. Edit `_config.yml` to personalize your site.
 5. Check out the sample posts in `_posts` to see examples for pulling in large feature images, assigning categories and tags, and other YAML data.
 6. Read the documentation below for further customization pointers and documentation.
 
-<div markdown="0"><a href="https://github.com/mmistakes/hpstr-jekyll-theme/archive/master.zip" class="btn">Download the Theme</a></div>
+<div markdown="0"><a href="http://github.com/aron-bordin/neo-hpstr-jekyll-theme/archive/master.zip" class="btn">Download the Theme</a></div>
 
 **Pro-tip:** Delete the `gh-pages` branch after cloning and start fresh by branching off `master`. There is a bunch of garbage in `gh-pages` used for the theme's demo site that I'm guessing you don't want on your site.
 {: .notice}
@@ -29,57 +25,126 @@ General notes and suggestions for customizing **HPSTR**.
 
 ## Setup for an Existing Jekyll site
 
-1. Clone the following folders: `_includes`, `_layouts`, '_sass', `assets`, and `images`.
-2. Clone the following folders/files and personalize content as need: `about/`, `posts/`, `tags/`, `feed.xml`. and 'index.html'.
+1. Clone the following folders: `_includes`, `_layouts`, `_sass`, `assets`, and `images`.
+2. Clone the following folders/files and personalize content as need: `posts/`, `tags/`, `feed.xml` and `index.html`.
 3. Set the following variables in your `config.yml` file:
 
 {% highlight yaml %}
-title:            Site Title
+
+title:            Blog Title
 description:      Describe your website here.
-disqus_shortname: shortname
+disqus_shortname: neohpstrtheme # put your disqus here
+reading_time:     true # if true, shows the estimated reading time for a post
+words_per_minute: 200
+logo:             images/logo.png # logo visible in the topbar
 # Your site's domain goes here (eg: //mmistakes.github.io, http://mademistakes.com, etc)
 # When testing locally leave blank or use http://localhost:4000
-url:              //mmistakes.github.io
+# url: http://aronbordin.com/neo-hpstr-jekyll-theme
+
+# draw your top menu here
+# each item must have a title and a url.
+#   To list post categories. use type: 'categories'
+#   To create sub categories. add a submenu item
+# See the example
+menu:
+  - title: 'Home'
+    url: '/'
+  - title: 'Fork'
+    url: 'http://github.com/aron-bordin/neo-hpstr-jekyll-theme'
+  - title: 'Install'
+    url: '/theme-setup/'
+  - title: 'Tags'
+    url: '/tags'
+  - title: 'Categories'
+    url: '/categories'
+    type: 'categories'
+  - title: 'Favorites'
+    url: '#'
+    submenu:
+      - title: 'highlighter'
+        url: '/code-highlighting-post/'
+      - title: 'intro'
+        url: '/readability-post/'
 
 # Owner/author information
 owner:
-  name:           Your Name
-  avatar:         avatar.jpg
+  name:           Your name
+  site:           http://aronbordin.com
+  avatar:         images/avatar.jpg
   bio:            "Your bio goes here. It shouldn't be super long but a good two sentences or two should suffice."
   email:          you@email.com
-  # Social networking links used in footer. Update and remove as you like.
-  twitter:        
-  facebook:       
-  github:         
-  stackexchange:  
-  linkedin:       
-  instagram:      
-  flickr:         
-  tumblr:         
-  # google plus id, include the '+', eg +mmistakes
-  google_plus:    +yourid
+  # Twitter nick for use in Twitter cards and follow button.
+  twitter: aron_bordin # if no twitter in this config, the twitter follow button will be removed
+  # GitHub nick for use in follow button in author block.
+  github: aron-bordin
+
+# Twitter account associated with the site if different from owner/author twitter account.
+# Used in Twitter cards.
+twitter:
+
+# Social networking links used in author block underneath posts. Update and remove as you like.
+social:
+  - title: "github"
+    url: "https://github.com/aron-bordin"
+  - title: "linkedin"
+    url: "https://br.linkedin.com/in/aronbordin"
+  - title: "youtube"
+    url: "https://www.youtube.com/channel/UCfnSek-9HPWOx5e2pH7VFgg"
+# Background image to be tiled on all pages
+background:
 
 # Analytics and webmaster tools stuff goes here
-google_analytics:   
-google_verify:      
+google_analytics:
+google_verify:
 # https://ssl.bing.com/webmaster/configure/verify/ownership Option 2 content= goes here
-bing_verify:         
+bing_verify:
 
 # http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 timezone:    America/New_York
+locale:      en_US
 future:      true
-pygments:    true
+highlighter: pygments
 markdown:    kramdown
+gems:
+  - jekyll-sitemap
+sass:
+  sass_dir: _sass
+  style: compressed
 
-# Amount of posts to show on home page
+# https://github.com/mojombo/jekyll/wiki/Permalinks
+permalink:   /:categories/:title/
+
+# Amount of post to show on home page
 paginate: 5
+
+# if true, shows the floatting share buttons
+float_share: true
+
+kramdown:
+  auto_ids: true
+  footnote_nr: 1
+  entity_output: as_char
+  toc_levels: 1..6
+  use_coderay: true
+
+  coderay:
+    coderay_line_numbers: nil
+    coderay_line_numbers_start: 1
+    coderay_tab_width: 4
+    coderay_bold_every: 10
+    coderay_css: class
+
+include: [".htaccess"]
+exclude: ["lib", "config.rb", "Capfile", "config", "Gemfile", "Gemfile.lock", "README.md", "LICENSE", "log", "Rakefile", "Rakefile.rb", "tmp", "less", "*.sublime-project", "*.sublime-workspace", "test", "spec", "Gruntfile.js", "package.json", "node_modules"]
+
+
 {% endhighlight %}
 
 ---
 
 ## Running Jekyll
 
-If `jekyll build` and `jekyll serve` throw errors you may have to run Jekyll with `bundled exec` instead.
+If `jekyll build` and `jekyll serve` throw errors you may have to run Jekyll with `bundle exec` instead.
 
 > In some cases, running executables without bundle exec may work, if the executable happens to be installed in your system and does not pull in any gems that conflict with your bundle.
 >
@@ -98,15 +163,17 @@ bundle exec jekyll serve
 {% highlight bash %}
 hpstr-jekyll-theme/
 ├── _includes
+|    ├── author.html                # Author panel
 |    ├── browser-upgrade.html       # prompt to upgrade browser on < IE8
+|    ├── disqus_comments.html       # disqus comment panel
 |    ├── footer.html                # site footer
 |    ├── head.html                  # site head
 |    ├── navigation.html            # site navigation
 |    └── scripts.html               # jQuery, plugins, GA, etc
 ├── _layouts
 |    ├── page.html                  # page layout
-|    ├── page.html                  # post-index layout used on home page
-|    └── post.html                  # post layout
+|    ├── post-index.html            # post layout used on home page
+|    └── post.html                  # post layout used on reading
 ├── _posts
 ├── _sass                           # Sass partials
 ├── assets
@@ -118,7 +185,6 @@ hpstr-jekyll-theme/
 |    └── └── vendor                 # jQuery and Modernizr scripts
 ├── images                          # images for posts and pages
 ├── _config.yml                     # Jekyll options
-├── about/                          # about page
 ├── posts/                          # all posts
 ├── tags/                           # all posts grouped by tag
 └── index.html                      # home page with pagination
@@ -140,31 +206,56 @@ comments: false
 
 ### Social Share Links
 
-To enable Facebook, Twitter, and Google+ share links on a post or page, add the following to its front matter:
+To disable Facebook, Twitter, and Google+ share links on a post or page, add the following to its front matter:
 
 {% highlight yaml %}
 share: false
 {% endhighlight %}
 
+### Floating Social Share Links
+
+To enable floating share links on the left of the screen, edit it on `_config.yml`:
+
+{% highlight yaml %}
+float_share: true
+{% endhighlight %}
+
+
 ### Owner/Author Information
 
-Change your name, and avatar photo (200x200 pixels or larger), email, and social networking URLs. If you want to link to an external image on Gravatar or something similar you'll need to edit the path in `head.html` since it assumes it is located in `/images`.
+Change your name, and avatar photo (200x200 pixels or larger), email, and social networking URLs. If you want to link to an external image on Gravatar or something similar you'll need to edit the path in `_includes/author.html` since it assumes it is hosted on your site.
 
 ### Google Analytics and Webmaster Tools
 
 Your Google Analytics ID goes here along with meta tags for [Google Webmaster Tools](http://support.google.com/webmasters/bin/answer.py?hl=en&answer=35179) and [Bing Webmaster Tools](https://ssl.bing.com/webmaster/configure/verify/ownershi) site verification.
 
-### Navigation Links
+### Top Menu - Navigation Links
 
-To add additional links in the drop down menu edit `_data/navigation.yml`. Use the following format to set the URL and title for as many links as you'd like. *External links will open in a new window.*
+To add additional links in the menu edit `_config.yml`. Use the following format to set the URL and title for as many links as you'd like. *External links will open in a new window..* You can create a sub-category using the `submenu` item. Also, you can list your post categories setting the `type: 'categories'`
+
 
 {% highlight yaml %}
-- title: Portfolio
-  url: /portfolio/
-
-- title: Made Mistakes
-  url: http://mademistakes.com  
+menu:
+  - title: 'Home'
+    url: '/'
+  - title: 'Fork'
+    url: 'http://github.com/aron-bordin/neo-hpstr-jekyll-theme'
+  - title: 'Install'
+    url: '/theme-setup/'
+  - title: 'Tags'
+    url: '/tags'
+  - title: 'Categories'
+    url: '/categories'
+    type: 'categories'
+  - title: 'Favorites'
+    url: '#'
+    submenu:
+      - title: 'highlighter'
+        url: '/code-highlighting-post/'
+      - title: 'intro'
+        url: '/readability-post/'
 {% endhighlight %}
+
 
 ---
 
@@ -173,7 +264,7 @@ To add additional links in the drop down menu edit `_data/navigation.yml`. Use t
 While completely optional, I've included Octopress and some starter templates to automate the creation of new posts and pages. To take advantage of it start by installing the [Octopress](https://github.com/octopress/octopress) gem if it isn't already.
 
 {% highlight bash %}
-$ gem install octopress --pre
+$ gem install octopress
 {% endhighlight %}
 
 ### New Post
@@ -187,7 +278,7 @@ $ octopress new post "Post Title"
 Default works great if you want all your posts in one directory, but if you're like me and want to group them into subfolders like `/posts`, `/portfolio`, etc. Then this is the command for you. By specifying the DIR it will create a new post in that folder and populate the `categories:` YAML with the same value.
 
 {% highlight bash %}
-$ octopress new post "New Post Title" --dir posts
+$ octopress new post "New Portfolio Post Title" --dir portfolio
 {% endhighlight %}
 
 ### New Page
@@ -206,28 +297,7 @@ For the most part you can leave these as is since the author/owner details are p
 
 ### Reading Time
 
-On by default. To turn off remove `reading_time` from `_config.yml. Default words per minute is set at 200 and can changed by updating `words_per_minute` in `_config.yml`.
-
-### Feature Images
-
-A good rule of thumb is to keep feature images nice and wide so you don't push the body text too far down. An image cropped around around 1024 x 256 pixels will keep file size down with an acceptable resolution for most devices. If you want to serve these images responsively I'd suggest looking at the [Jekyll Picture Tag](https://github.com/scottjehl/picturefill)[^2] plugin.
-
-The two layouts make the assumption that the feature images live in the *images* folder. To add a feature image to a post or page just include the filename in the front matter like so. 
-
-{% highlight yaml %}
-image:
-  feature: feature-image-filename.jpg
-  thumb: thumbnail-image.jpg #keep it square 200x200 px is good
-{% endhighlight %}
-
-If you want to apply attribution to a feature image use the following YAML front matter on posts or pages. Image credits appear directly below the feature image with a link back to the original source.
-
-{% highlight yaml %}
-image:
-  feature: feature-image-filename.jpg
-  credit: Michael Rose #name of the person or site you want to credit
-  creditlink: http://mademistakes.com #url to their site or licensing
-{% endhighlight %}
+On by default. To turn off remove `reading_time` from `_config.yml`. Default words per minute is set at 200 and can changed by updating `words_per_minute` in `_config.yml`.
 
 #### Post/Page Thumbnails for OG and Twitter Cards
 
@@ -241,10 +311,12 @@ Here's an example of what a tweet to your site could look like if you activate T
 
 Video embeds are responsive and scale with the width of the main content block with the help of [FitVids](http://fitvidsjs.com/).
 
-Not sure if this only effects Kramdown or if it's an issue with Markdown in general. But adding YouTube video embeds causes errors when building your Jekyll site. To fix add a space between the `<iframe>` tags and remove `allowfullscreen`. Example below:
+Adding YouTube video embeds causes errors when building your Jekyll site. To fix wrap the html within `{::nomarkdown}` tags. Example below:
 
 {% highlight html %}
-<iframe width="560" height="315" src="http://www.youtube.com/embed/PWf4WUoMXwg" frameborder="0"> </iframe>
+{::nomarkdown}
+<iframe width="560" height="315" src="http://www.youtube.com/embed/PWf4WUoMXwg" frameborder="0" allowfullscreen></iframe>
+{:/nomarkdown}
 {% endhighlight %}
 
 ### Twitter Cards
@@ -254,6 +326,26 @@ Twitter cards make it possible to attach images and post summaries to Tweets tha
 ### Link Post Type
 
 Link blog like a champ by adding `link: http://url-you-want-linked` to a post's YAML front matter. Arrow glyph links to the post's permalink and the the `post-title` links to the source URL. Here's an [example of a link post]({{ site.url }}/sample-link-post/) if you need a visual.
+
+---
+
+## Style Customization
+
+Here you'll find some useful scss variables to help you to customize your Blog interface. All variables can be found at `_sass/_variables.scss`.
+
+#### Top Navbar Size
+
+To change its size, edit the **`$menu-height`** value. It's recommended a value between 50px and 100px. This variable will automatically update the icon and menu size for you.
+
+#### Top Navbar Colors
+
+The navbar uses two colors, the top color and overflow color. The top color represents the navbar color when the window is not scrolled and the overflow color represents the color when we have a sufficient scroll to change its color.
+
+You can change these colors using the **`$menu-top`** and **`$menu-overflow`** variable values.
+
+#### Top Navbar hover color
+
+The color that you see in the item under the mouse can be changed in the **`$header-margin`** variable.
 
 ---
 
@@ -269,13 +361,15 @@ To modify the site's JavaScript files I setup a Grunt build script to lint/conca
 npm install
 {% endhighlight %}
 
-From the theme's root, use `grunt` concatenate JavaScript files, and optimize .jpg, .png, and .svg files in the `images/` folder. You can also use `grunt dev` in combination with `jekyll build --watch` to watch for updates JS files that Grunt will then automatically re-build as you write your code which will in turn auto-generate your Jekyll site when developing locally.
+From the theme's root, use `grunt` to concatenate JavaScript files and optimize `.jpg`, `.png` and `.svg` files in the `images/` folder.
+
+You can also use `grunt dev` in combination with `bundle exec jekyll serve` to watch for updates in JS files that Grunt will then automatically re-build as you write your code, which will in turn auto-generate your Jekyll site when developing locally.
 
 ---
 
 ## Questions?
 
-Having a problem getting something to work or want to know why I setup something in a certain way? Ping me on Twitter [@mmistakes](http://twitter.com/mmistakes) or [file a GitHub Issue](https://github.com/mmistakes/hpstr-jekyll-theme/issues/new). And if you make something cool with this theme feel free to let me know.
+Having a problem getting something to work or want to know why I setup something in a certain way?  [File a GitHub Issue](http://github.com/aron-bordin/neo-hpstr-jekyll-theme/issues/new). And if you make something cool with this theme feel free to let me know.
 
 ---
 

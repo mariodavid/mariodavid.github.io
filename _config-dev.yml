@@ -41,7 +41,7 @@ bing_verify:
 # http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 timezone:    Germany/Berlin
 future:      true
-highlighter: pygments
+highlighter: rouge
 markdown:    kramdown
 gems:
   - jekyll-sitemap
@@ -60,7 +60,7 @@ kramdown:
   footnote_nr: 1
   entity_output: as_char
   toc_levels: 1..6
-  use_coderay: true
+  enable_coderay: true
 
   coderay:
     coderay_line_numbers: nil
@@ -72,5 +72,5 @@ kramdown:
 include: [".htaccess"]
 exclude: ["lib", "config.rb", "Capfile", "config", "Gemfile", "Gemfile.lock", "README.md", "LICENSE", "log", "Rakefile", "Rakefile.rb", "tmp", "less", "*.sublime-project", "*.sublime-workspace", "test", "spec", "Gruntfile.js", "package.json", "node_modules"]
 
-gems:
-  - jekyll-redirect-from
+
+gems: [jekyll-paginate]

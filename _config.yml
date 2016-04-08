@@ -3,18 +3,27 @@ description:      On this blog you'll find information about the CUBA Platform a
 disqus_shortname: roadtocubaandbeyond
 reading_time:     true
 words_per_minute: 200
-logo:             images/logo.png
+logo:             images/logo.png # logo visible in the topbar
 # Your site's domain goes here (eg: //mmistakes.github.io, http://mademistakes.com, etc)
 # When testing locally leave blank or use http://localhost:4000
-# url: http://aronbordin.com/neo-hpstr-jekyll-theme
 
+url: http://aronbordin.com/neo-hpstr-jekyll-theme
+
+# draw your top menu here
+# each item must have a title and a url.
+#   To list post categories. use type: 'categories'
+#   To create sub categories. add a submenu item
+# See the example
 menu:
   - title: 'Home'
     url: '/'
-  - title: 'About'
-    url: '/about'
+  - title: 'Fork'
+    url: 'http://github.com/aron-bordin/neo-hpstr-jekyll-theme'
+  - title: 'Install'
+    url: '/theme-setup/'
   - title: 'Tags'
     url: '/tags'
+
 
 # Owner/author information
 owner:
@@ -28,6 +37,11 @@ owner:
   github: mariodavid
   stackexchange: mariodavid
 
+# Twitter account associated with the site if different from owner/author twitter account.
+# Used in Twitter cards.
+twitter: 
+
+# Social networking links used in author block underneath posts. Update and remove as you like.
 social:
 # Background image to be tiled on all pages
 background:
@@ -40,8 +54,9 @@ bing_verify:
 
 # http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 timezone:    Germany/Berlin
+locale:      de_DE
 future:      true
-highlighter: pygments
+highlighter: rouge
 markdown:    kramdown
 gems:
   - jekyll-sitemap
@@ -55,12 +70,15 @@ permalink:   /:categories/:title/
 # Amount of post to show on home page
 paginate: 5
 
+# if true, shows the floatting share buttons
+float_share: true
+
 kramdown:
   auto_ids: true
   footnote_nr: 1
   entity_output: as_char
   toc_levels: 1..6
-  use_coderay: true
+  enable_coderay: true
 
   coderay:
     coderay_line_numbers: nil
@@ -69,10 +87,18 @@ kramdown:
     coderay_bold_every: 10
     coderay_css: class
 
+# Octopress
+# Default extensions
+post_ext: md
+page_ext: md
+# Found in _templates/
+post_layout: post
+page_layout: page
+# Format titles with titlecase?
+titlecase: true
+
+url: http://www.road-to-cuba-and-beyond.com
 include: [".htaccess"]
 exclude: ["lib", "config.rb", "Capfile", "config", "Gemfile", "Gemfile.lock", "README.md", "LICENSE", "log", "Rakefile", "Rakefile.rb", "tmp", "less", "*.sublime-project", "*.sublime-workspace", "test", "spec", "Gruntfile.js", "package.json", "node_modules"]
 
-gems:
-  - jekyll-redirect-from
-
-url: http://www.road-to-cuba-and-beyond.com
+gems: [jekyll-paginate]
