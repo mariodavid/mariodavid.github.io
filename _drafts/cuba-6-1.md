@@ -1,20 +1,20 @@
 ---
 layout: post
-title: What is new in CUBA Platform 6.1
-description: 
+title: CUBA goes open source with a handful of features
+description: CUBA Platform version 6.1 was released in the beginning of april. In this blog post i'll give you a quick overview about the new features as well as the new license policy
 modified: 2016-03-29
 tags: [cuba, open-source]
 image:
   feature: cuba-6-1/feature.png
   feature_source: https://pixabay.com/en/long-island-iced-tea-cocktail-drink-880919/
-  background: cuba-6-1/test3.png
+  background: cuba-6-1/bg.png
 ---
 
 Since the latest release from CUBA - Version 6.1 has a fair amout of features and due to the fact that this version of CUBA is the first open source release, here's a quick overview of what has changed.
 
 <!-- more -->
 
-It's been quite a while since CUBA Platform released a minor version of the platform. So i was curious about what Version 6.1 will bring to the table.
+It's been quite a while since CUBA Platform released a minor version of the platform. So I was curious about what Version 6.1 will bring to the table.
 
 ## The framework is from now on Apache 2 License
 
@@ -22,7 +22,7 @@ It's been quite a while since CUBA Platform released a minor version of the plat
 
 Let's start with the first and obvious topic: The license change. With Version 6.1 CUBA platform is no longer under a commercial license but rather choosed the [Apache 2 license](https://github.com/cuba-platform/cuba/blob/master/LICENSE.txt). Some of the features remain commercial but on a developer basis.
 
-This is a fairly large shift and i think it's worth noting. Since going from a license where the customer has to pay per *running instance & entity quantity & concurrent user* to a model where the base variant is free and the commercial part is based as a developer fee, is quite heavy in terms of mindset shift from the people behind CUBA. 
+This is a fairly large shift and I think it's worth noting. Since going from a license where the customer has to pay per *running instance & entity quantity & concurrent user* to a model where the base variant is free and the commercial part is based as a developer fee, is quite heavy in terms of mindset shift from the people behind CUBA. 
 
 But this is only the first part. Going open source where not only the sources are open but the development process as well from the community is another big step further. On the [website](https://www.cuba-platform.com/framework) it says:
 
@@ -36,13 +36,13 @@ Due to the fact that software developers are most familiar with the concept of o
 
 When you look at the size of the resulting community for CUBA Platform that was created since they came up with it for the english speaking world, it seems that it reflects this description.
 
-This all leads to a situation where i think going open source with CUBA Platform makes a whole lot of sense. The amount of potential users will increase dramatically and perhaps there will be contributions from the community that will push everything forward.
+This all leads to a situation where I think going open source with CUBA Platform makes a whole lot of sense. The amount of potential users will increase dramatically and perhaps there will be contributions from the community that will push everything forward.
 
 After adding my two cents to this topic, let's get to the technical changes. I will just go through some of the features from the 6.1 release as well as the 2.1 relase of CUBA Studio. If you want information about all the changes, here you will find the changelogs for the [platform 6.1 release](http://files.cuba-platform.com/cuba/platform/platform-6.1-changelog.html#6.1.1) and for [studio 2.1 release](http://files.cuba-platform.com/cuba/studio/studio-2.1-changelog.html#2.1.1).
 
 ## Built-in Groovy support
 
-The first thing i found was the built-in groovy support in studio 2.1. When you have a look at the project properties of your project, you can activate groovy support. 
+The first thing I found was the built-in groovy support in studio 2.1. When you have a look at the project properties of your project, you can activate groovy support. 
 
 
 <figure class="center">
@@ -95,9 +95,9 @@ After doing so, you will see something similar to the image below. The wizard ha
 
 A thing that suprised me a little, that was added in the latest release of CUBA studio is the ability to directly deploy the application to cloud services.
 
-When you have a look at *cloud provider settings*, you will see some basic information to login. As i looked throuh the provider picker, i literally don't know any provider from the list. It turns out that the list is a list of implementation providers for [Jelastic Cloud](https://jelastic.com/) where you can select different providers that all run Jelastic in their datacenter.
+When you have a look at *cloud provider settings*, you will see some basic information to login. As I looked throuh the provider picker, I literally don't know any provider from the list. It turns out that the list is a list of implementation providers for [Jelastic Cloud](https://jelastic.com/) where you can select different providers that all run Jelastic in their datacenter.
 
-Jelastic is probably not the most obvious choice when the label is "Cloud deployment" in the market of big players like AWS, Azure or Google. But i think it is defenitly a step in the right direction and i personally will give Jelastic a chance. That said, there are a lot of possibilities in the cloud path for CUBA Studio and i'm looking forward on what will come next regarding cloud integration.
+Jelastic is probably not the most obvious choice when the label is "Cloud deployment" in the market of big players like AWS, Azure or Google. But I think it is defenitly a step in the right direction and I personally will give Jelastic a chance. That said, there are a lot of possibilities in the cloud path for CUBA Studio and i'm looking forward on what will come next regarding cloud integration.
 
 
 ## API for export and import of entity graphs
@@ -111,3 +111,17 @@ But if it should be embedded in the workflow or screens you created yourself, yo
 ## Row-level security constraints updates
 
 The last thing that is quite an important change in the new release is the possibilities around the row-level security.
+
+In the [first](https://www.road-to-cuba-and-beyond.com/my-personal-crud-story-or-how-i-came-to-cuba/) blog post, where I talked about the security aspects of the system, one of my examples was:
+
+> Managers in TX (Headquarter) see all customers from all locations, but cannot edit them
+
+It turns out, that actually at this point in time CUBA was not really capable of doing it. With the new possibility of creating constraints with groovy, this exact feature becomes possible to achieve. I'll give you an example of this in the next security blog post, so stay tuned.
+
+To wrap this up, I think there a few very cool features packed into this release. The license change is probably the most important one.
+
+So I encourage you to play with the changes. Just go to the [download](https://www.cuba-platform.com/download) section  and start from there.
+
+
+
+
