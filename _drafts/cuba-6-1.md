@@ -14,13 +14,12 @@ Since the latest release from CUBA - Version 6.1 has a fair amout of features an
 
 <!-- more -->
 
-It's been quite a while since CUBA Platform released a minor version of the platform. So, I was curious about what 6.1 Version will bring to the table.
+It's been quite a while since CUBA Platform released a minor version of the platform. So, I was curious about what 6.1 Version will bring to the table. Let's start with the first and the most straightforward topic, that lies on the surface: The license change.
 
-## The framework is from now on Apache 2 License
+## From now on: Open Source with Apache
 
 <img style="float:right; padding: 10px; width: 200px;" src="{{site.url}}/images/cuba-6-1/open.png">
-
-Let's start with the first and the most straightforward topic, that lies on the surface: The license change. With Version 6.1 CUBA platform is no longer under a commercial license but rather choosed the [Apache 2 license](https://github.com/cuba-platform/cuba/blob/master/LICENSE.txt). Some of the features remain commercial but on a developer basis.
+With Version 6.1 CUBA platform is no longer under a commercial license but rather choosed the [Apache 2 license](https://github.com/cuba-platform/cuba/blob/master/LICENSE.txt). Some of the features remain commercial but on a developer basis.
 
 This is a fairly large shift and I think it's worth noting. Since going from a license where the customer has to pay per *running instance & entity quantity & concurrent user* to a model where the base variant is free and the commercial part is based as a developer fee, is quite heavy in terms of mindset shift from the people behind CUBA. 
 
@@ -34,7 +33,7 @@ My personal opinion is, that although commercial developer tools have their plac
 
 Due to the fact that software developers are most familiar with the concept of open source, it's not suprising that the acceptance for open source is most prominent in this space. Or to put it the other way around: the willing to go for non-open source software tools from developers decreases from year to year.
 
-When you look at the size of the resulting community for CUBA Platform that was created since they came up with it for the english speaking world, it seems that it reflects this description.
+When you look at the size of the resulting community for CUBA Platform that was created since they came up with it for the english speaking world, it seems that it reflects this observation.
 
 This all leads to a situation where I think going open source with CUBA Platform makes a whole lot of sense. The amount of potential users will increase dramatically and perhaps there will be contributions from the community that will push everything forward.
 
@@ -56,9 +55,7 @@ But it's a little more limited as well. For a particular reason i'm not aware of
 
 ## Custom UI elements
 
-One thing that has not been that accessable in the past is how to customize the UI in a way that you can use custom elements.
-
-Before it was possible to pull in Vaadin add-ons to get around that or if a really custom UI is required, to create some hand crafted UI in the portal module.
+One thing that has not been that accessible in the past is how to customize the UI in a way that you can use custom elements. Before it was possible to pull in Vaadin add-ons to get around that or if a really custom UI is required, to create some hand crafted UI in the portal module.
 
 Since Version 6.1 CUBA allows the developer to pull custom elements in three forms: *Vaadin addon*, *Javascript Library* or as a *GWT Component*. Especially the Javascript part is interessting from my point of view, because it opens up CUBA to a very broad set of components.
 
@@ -73,7 +70,7 @@ I will not go through the details of this in here, mostly because the docs have 
 
 The next thing that got my attention is the ability to create an application from an existing database. This is a very interesting approach when you already have a application up and running with a "reasonably normal" database structure. The existing application can be a Java application but it clearly does not have to be one.
 
-Studio will guide you through a wizard that will read the structure from the datasource you configured in the *project properties*. During the process, you can adjust the mapping from the database to the generated models.
+Studio will guide you through a wizard that will read the structure from the database you configured in the *project properties*. During the process, you can adjust the mapping from the database to the generated models.
 
 To get an idea about the model generation wizard, you can try the following:
 
@@ -84,7 +81,7 @@ To get an idea about the model generation wizard, you can try the following:
 5. Execute the downloaded SQL script on the database
 6. Start the Model Generation from Studio (Entities > Generate Model) 
 
-After doing so, you will see something similar to the image below. The wizard has a few steps to adjust the mapping, generate screens finally see and adjust the database migration scripts.
+After doing so, you will see something similar to the image below. The wizard has a few steps to adjust the mapping, generate screens and finally see and adjust the database migration scripts.
 
 <figure class="center">
 	<a href="{{ site.url }}/images/cuba-6-1/generate-model-from-db.png"><img src="{{ site.url }}/images/cuba-6-1/generate-model-from-db.png" alt=""></a>
@@ -93,9 +90,9 @@ After doing so, you will see something similar to the image below. The wizard ha
 
 ## Deploy to cloud services from studio
 
-A thing that suprised me a little is the ability to directly deploy CUBA applications to cloud services.
+A pretty cool thing is the ability to directly deploy CUBA applications to cloud services.
 
-When you have a look at *cloud provider settings*, you will see some basic information to login. As I looked throuh the provider picker, I literally don't know any provider from the list. It turns out that the list is a list of implementation providers for [Jelastic Cloud](https://jelastic.com/) where you can select different providers that all run Jelastic in their datacenter.
+When you have a look at *cloud provider settings*, you will see some basic information to login. As I looked throuh the provider picker, I surprisingly didn't know any provider from the list. It turns out that the list is a list of implementation providers for [Jelastic Cloud](https://jelastic.com/) where you can select different providers that all run Jelastic in their datacenter.
 
 Jelastic is probably not the most obvious choice when the label is "Cloud deployment" in the market of big players like AWS, Azure or Google. But I think it is defenitly a step in the right direction and I personally will give Jelastic a chance. That said, there are a lot of possibilities in the cloud path for CUBA Studio and i'm looking forward on what will come next regarding cloud integration.
 
@@ -104,13 +101,13 @@ Jelastic is probably not the most obvious choice when the label is "Cloud deploy
 
 In order to import or export data it is now possible to use JSON files as the way to go. The <code><a href="https://github.com/cuba-platform/cuba/blob/579360fe491f2c5f14ad9c51a9de78ba063d31b6/modules/global/src/com/haulmont/cuba/core/app/importexport/EntityImportExportService.java">EntityImportExportService</a></code> interface allows you to do exactly this.
 
-Also you can find UI for the feature in a number of screens, for example you can find it in the *Entity inspector* screen, where you can import or export arbitrary data right out of the box.
+Also you can find a UI for this feature in a number of screens, for example the *Entity inspector* screen, where you can import or export arbitrary data right out of the box.
 
-If you would like to embed the same feature in the workflow or screens you created yourself, you can have a look at <code><a href="https://github.com/cuba-platform/cuba/blob/579360fe491f2c5f14ad9c51a9de78ba063d31b6/modules/gui/src/com/haulmont/cuba/gui/app/security/group/browse/GroupBrowser.java">GroupBrowser</a></code> for a running example.
+If you would like to embed the same feature in the workflow or screens you created by yourself, you can have a look at <code><a href="https://github.com/cuba-platform/cuba/blob/579360fe491f2c5f14ad9c51a9de78ba063d31b6/modules/gui/src/com/haulmont/cuba/gui/app/security/group/browse/GroupBrowser.java">GroupBrowser</a></code> for a running example.
 
 ## Row-level security constraints updates
 
-The last thing that is quite an important change in the new release is row-level security.
+The last thing that is quite an important change in the new release is row-level security. There has been row-level security before (as i described in the [cuba-security blog post](https://www.road-to-cuba-and-beyond.com/cuba-security-subsystem-distilled/), but with the new release it has become much more comprehensive.
 
 In the [first](https://www.road-to-cuba-and-beyond.com/my-personal-crud-story-or-how-i-came-to-cuba/) blog post, where I talked about the security aspects of the system, one of my examples was:
 
