@@ -37,7 +37,7 @@ First of, to get a running "production like" environment to test on becomes a O(
 
 The next thing is, that it's **lightning fast**. With a one liner in the shell you can start up a HAProxy in front of two tomcat instances, all backed up by a postgres cluster and a redis key-value store. This all will be up and running in a matter of seconds. If you want to remove this test environment its the exact same effort and you are back in a clean state of your development box without having to maintain different Java versions or Postgres database installations on your OS installation directly by yourself.
 
-The environment i described above is not only fast to create but it is also reproducable. It is so valueable to create a situation where **development environment = production environment**, because a whole category of problems in software development go away. With tools like Docker and again, *infrastructure as code* this goal is at least possible.
+The environment i described above is not only fast to create but it is also reproducable. It is so valuable to create a situation where **development environment = production environment**, because a whole category of problems in software development go away. With tools like Docker and again, *infrastructure as code* this goal is at least possible.
 
 There are some additional advantages i didn't cover in this [DZone article](https://dzone.com/articles/5-key-benefits-docker-ci). So lets get our hands dirty and create a docker image that will contain our app.
 
