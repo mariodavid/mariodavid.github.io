@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Custom front-ends for your CUBA app with the portal module
+title: Custom front-ends for your CUBA app
 description: 
 modified: 2016-04-18
 tags: [cuba, portal, bootstrap]
@@ -36,13 +36,27 @@ To get to this point, let's have at look at the different steps to achieve this.
 
 ### activate portal module
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+First of all, the portal module has to be created in the project. To do this, there is a link in studio within the *Project Properties* section called *Create portal module*. Studio will create the module and a little bit of sample code so that you have a solid starting point. In your project files you'll notice the new module under <code>modules/portal</code>. A few controllers are generated as well. The Controller that handles the root URL "http://localhost:8080/app-portal/" is the <code>PortalController</code>. When you have a look at it it will show something like this:
+{% highlight java %}
 
+@Controller
+public class PortalController {
+
+    @Inject
+    protected DataService dataService;
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String index(Model model) {
+        if (PortalSessionProvider.getUserSession().isAuthenticated()) {
+            LoadContext l = new LoadContext(User.class);
+            l.setQueryString("select u from sec$User u");
+            model.addAttribute("users", dataService.loadList(l));
+        }
+        return "index";
+    }
+}
+
+{% endhighlight %}
 ### create public product catalog
 
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
