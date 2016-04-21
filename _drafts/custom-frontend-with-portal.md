@@ -30,11 +30,13 @@ The addition that we want to achieve is the following:
 
 This will be achieved by creating a [Boostrap](http://getbootstrap.com) based user interface. Here is the result of the UI:
 
-<img src="https://www.road-to-cuba-and-beyond.com/images/2015-12-31-put-your-island-into-a-box/cuba-start.png">
+<figure class="center"><img src="{{ site.url }}/images/custom-ui-portal/portal-product-detail.gif" alt="">
+    <figcaption>All products listed in the view</figcaption>
+</figure>
 
 To get to this point, let's have at look at the different steps to achieve this.
 
-### activate portal module
+### Activate the portal module
 
 First of all, the portal module has to be created in the project. To do this, there is a link in studio within the *Project Properties* section called *Create portal module*. Studio will create the module and a little bit of sample code so that you have a solid starting point. In your project files you'll notice the new module under <code>modules/portal</code>. A few controllers are generated as well. The Controller that handles the root URL "http://localhost:8080/app-portal/" is the <code><a href="https://github.com/mariodavid/cuba-ordermanagement/blob/master/modules/portal/src/com/company/ordermanagement/portal/controllers/PortalController.java">PortalController</a></code>. When you have a look at it it will show something like this:
 {% highlight java %}
@@ -62,7 +64,7 @@ What we see here is a mix of CUBA logic together with Spring MVC glue code. Firs
 
 After this, there is an example on how to get information about the login status of the current user. In case of a authenticated user, all users from the database are added to the model (which will be passed to the view layer). After this brief overview, let's start with our first requirement from above: *List all products in the view*.
 
-### create public product catalog
+### Create a public product catalog
 
 To create product catalog that is publicly accessible, we need to slightly change the example:
 
@@ -115,12 +117,6 @@ I basically iterated over the list of products (given from the controller) and f
 ### Show details of a product
 
 The next step is to improve the the UI in a way that the user can show details of products. This step is more around Bootstrap and a little bit of JQuery. There is nothing particular about the portal module or CUBA.
-
-In order to know where we want to go, here's a quick look at the result:
-
-<figure class="center"><img src="{{ site.url }}/images/custom-ui-portal/portal-product-detail.gif" alt="">
-    <figcaption>All products listed in the view</figcaption>
-</figure>
 
 There are many possible solutions to achieve some kind of this. It would be possible to load the data asynchronously via Ajax and update the DOM. I choosed a solution where all the data is already on the client at inital delivery of the HTML file. With HTML5 we have the possibility to add any metadata to HTML tags through <code>data-*</code> [attributes](http://www.w3schools.com/tags/att_global_data.asp). 
 
@@ -198,18 +194,54 @@ The complete code of the view is available [here](https://github.com/mariodavid/
 
 ### Activate front-end login
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+The last thing that i want to show in this example portal module is the ability to login on this front-end. The generated code already contains all ne neccessary bits go do a full login. So in this case, we will just shuffle it a little bit around so that i fits our UI needs a little better.
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+First of all, as we want to login directly from the main page, there is no LoginController needed to give us the login form. Instead, we just copy the <code>LoginUserCommand</code> in case of a non existing authentication into the <code>PortalController</code> (you already saw that code above).
+
+In the view i craeted a bootstrap form in the navbar template, which uses the <code>LoginUserCommand</code> like this (<a href="https://github.com/mariodavid/cuba-ordermanagement/blob/master/modules/portal/web/WEB-INF/templates/common/navbar.ftl">navbar.ftl</a>):
 
 
+
+{% highlight html %}
+
+<div id="navbar" class="navbar-collapse collapse">
+<#if userSession?? && userSession.authenticated>
+    <ul class="nav navbar-nav navbar-right">
+        <li class="active"><a href="#">${userSession.user.login}</a></li>
+        <li><a href="logout">Logout</a></li>
+    </ul>
+
+<#else>
+    <form 
+    	class="navbar-form navbar-right" 
+    	method="POST" 
+    	action="<@spring.url "/login"/>">
+        <div class="form-group">
+            <@spring.formInput
+                path="loginUserCommand.login"
+                fieldType="text"
+                attributes="class='form-control' placeholder='Username'"/>
+        </div>
+        <div class="form-group">
+            <@spring.formInput
+                path="loginUserCommand.password"
+                fieldType="password"
+                attributes="class='form-control' placeholder='Password'"/>
+        </div>
+        <button type="submit" class="btn btn-success">Sign in</button>
+    </form>
+</#if>
+
+{% endhighlight %}
+
+The navigation menu shows a login form when the user is not login in already. This form does a <code>POST</code> to <code>/login</code> with the form fields <code>login</code> and <code>password</code>. The actual authentication is handled by *Spring Security*. Luckily the generated code already includes an [authentication provider](https://github.com/mariodavid/cuba-ordermanagement/blob/master/modules/portal/src/com/company/ordermanagement/portal/auth/PortalAuthenticationProvider.java) that handles the authentication agains the middle tier of the CUBA application.
+
+In case of a successful login the username is shown in the navbar next to a Logout button. Next we could probably do different stuff for people that are logged in like for example show all orders to that product or change the product description. But i leave it at that for now. It is up to you to come up with something cool for the authenticated users.
+
+## The resonable borders of this approach
+
+Although the sky is the limit here, when i starting fiddling around doing this custom UI and thinking about possible use cases for the authenticated users, i had to take a step back and revisited the purpose of this custom UI. 
+
+Most things i had in mind, like showing all orders for this product, was just stuff i would normally develop in the actual CUBA app. So this portal module just makes sense if you want to reach out to people that are mostly not users of the system or if they have particular requirements. One thing that we got out of this is the possibility to "easily" get all product information on their mobile devices because bootstrap made it mobile ready.
+
+Another possibility that i haven't done here is the ability to create a JSON APi which can be consumed by SPA framework like AngularJS or for native apps. But that might be an interesting topic for a future blog post.
