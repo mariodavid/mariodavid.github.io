@@ -11,6 +11,10 @@ description: "In this article "
 Since docker is really omnipresent in the last few month for very good reasons i want to pick this up for this blog post. I will show how to dockerize a [CUBA](https://www.cuba-platform.com/) app and run it as a container together with the corresponding database. If you are not familiar with the basics of Docker, i additionally will scratch the surface of this technologie a little bit for you.
 <div style="color:red">Überarbeitungswürdig ENDE</div>
 
+Docker is omnipresent in the media and the tech industriy for the last few years. Just recently ThoughtWorks encourages to *adopt* Docker in it's [technology radar](https://www.thoughtworks.com/radar/platforms/docker). This is due to very good reasons. But when hearing about it, one could assume that this piece of technology is mostly relevant for environments with *Microservices*, *Continous Delivery* or *DevOps* inplace. This article will try to show that this is a false assumption. The use cases for Docker are much broader and even in a non-cutting edge environment it can be either benefitial for Development or Operations or both.
+
+In this article a Docker installation with a fairly classical monolithic Java Web application in a Tomcat Server will be created. Additionally a relational Database will be used as the datastore. Before going into the details, there will be a high-level overview on the befefits and the idea behind it. After starting with a how in the 
+
 <!-- more -->
 
 
