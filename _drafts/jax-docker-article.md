@@ -7,42 +7,47 @@ possible-titles:
 description: "In this article "
 ---
 
-<div style="color:red">Überarbeitungswürdig START</div>
-Since docker is really omnipresent in the last few month for very good reasons i want to pick this up for this blog post. I will show how to dockerize a [CUBA](https://www.cuba-platform.com/) app and run it as a container together with the corresponding database. If you are not familiar with the basics of Docker, i additionally will scratch the surface of this technologie a little bit for you.
-<div style="color:red">Überarbeitungswürdig ENDE</div>
-
 Docker is omnipresent in the media and the tech industriy for the last few years. Just recently ThoughtWorks encourages to *adopt* Docker in it's [technology radar](https://www.thoughtworks.com/radar/platforms/docker). This is due to very good reasons. But when hearing about it, one could assume that this piece of technology is mostly relevant for environments with *Microservices*, *Continous Delivery* or *DevOps* inplace. This article will try to show that this is a false assumption. The use cases for Docker are much broader and even in a non-cutting edge environment it can be either benefitial for Development or Operations or both.
 
-In this article a Docker installation with a fairly classical monolithic Java Web application in a Tomcat Server will be created. Additionally a relational Database will be used as the datastore. Before going into the details, there will be a high-level overview on the befefits and the idea behind it. After starting with a how in the 
+In this article a Docker installation with a fairly classical monolithic Java Web application in a Tomcat Server will be created. Additionally a relational database will be used as the datastore. Before going into the details, there will be a high-level overview on the benefits and the idea behind Docker.
 
 <!-- more -->
 
-
-<img style="float:right; padding: 10px; margin-right:-150px;" src="{{site.url}}/images/2015-12-31-put-your-island-into-a-box/container.png">
-
 ## The docker 10,000 feet overview
 
-Docker is a tool that arised about 2013. Since that time it pretty much whirls the industry of IT. It is a way to isolate your server applications. Each application defines their own environment without interfering with other applications. From an isolation point of view it is similar to hypervisor based virtual machine. 
+Docker is a tool that arised about 2013. Since that time it pretty much whirls the industry of IT. It is a way to isolate your server applications. Each application defines its own environment without interfering with other applications. From an isolation point of view it is similar to hypervisor based virtual machine (like VMWare). 
 
-But from a performance angle the approach is quite different. In a hypervisor based virtual machine model the hardware is emulated with an abstraction layer. With Docker this is not the case. Instead the different containers share the Kernel of the Operating System of the host. This implies that no hardware needs to be emulated which means that the processes inside of a container run at native speed.
+But from a performance angle the Docker approach is quite different. In a hypervisor based virtual machine model the hardware is emulated with an abstraction layer. With Docker this is not the case. Instead the different containers share the Kernel of the operating system of the host. This implies that no hardware needs to be emulated which means that the processes inside of a container run at native speed.
 
-Sharing the Kernel of the underlying operating system has some downsides as well. Currently you can only create Docker containers on a host maschine that is running Linux. Actually it's not really virtualization in the traditional sense. It is more a way of segmenting your operating system. Additionally the idea is not new. Where hypervisor based virtualization at least in the x86 world had their beginnings at the end of 1990's, the beginnings of paravirtualization started in the 1970's with IBM's VM/370 on the mainframe.
+This performance improvement drastically increases the packing density on a per server-hardware basis, because of the discontinoued existence of an operating system per virtual server and therefore cuts the operational costs.
 
-## The benefits of putting your CUBA app into a container
+Sharing the Kernel of the underlying operating system has some downsides as well. Currently Docker is more or less related to Linux as the Host OS, although Microsoft is pushing really hard to achieve a really great user experience with Docker on Windows in different shapes like integration into Windows Server 2016 e.g. 
 
-Before showing the different steps to create a running CUBA container i want to emphasize the benefits in doing that. Actually it has nothing to do with CUBA in particular, but nevertheless its worth mentioning.
+The Docker approach, which is called paravirtualization is not virtualization in the sense most people are familiar with. It is more a way of segmenting your operating system. Predecessors of Docker like LXC or Solaris Containers were build on top of the same ideas and so it is fair to say that the idea is not new. In fact, where hypervisor based virtualization at least in the x86 world had their beginnings at the end of 1990's, the beginnings of paravirtualization started in the 1970's with IBM's VM/370 on the mainframe.
 
-First of, to get a running "production like" environment to test on becomes a O(1) alike effort. Why? This is due to the basic principle **infrastructure as code** which is described in depth in this [ThoughtWorks article](https://www.thoughtworks.com/de/insights/blog/infrastructure-code-reason-smile). Scripting the creation of a server installation like you do with a [Dockerfile](https://docs.docker.com/engine/reference/builder/) is a one time effort. This effort is even very little, because in case of docker there is this thing called [Docker Hub](https://hub.docker.com/) which let users share their work in infrastructure scripting like Github does for code.
+So, the main benefits of Docker in comparison to a hypervisor based virtual machine are lower overhead, faster execution and potential immutability.
 
-The next thing is, that it's **lightning fast**. With a one liner in the shell you can start up a HAProxy in front of two tomcat instances, all backed up by a postgres cluster and a redis key-value store. This all will be up and running in a matter of seconds. If you want to remove this test environment its the exact same effort and you are back in a clean state of your development box without having to maintain different Java versions or Postgres database installations on your OS installation directly by yourself.
+## The benefits of running an application in a container
 
-The environment i described above is not only fast to create but it is also reproducable. It is so valuable to create a situation where **development environment = production environment**, because a whole category of problems in software development go away. With tools like Docker and again, *infrastructure as code* this goal is at least possible.
+There are a few worth mentioning benefits for using container technologies as a way to distribute the application.
 
-There are some additional advantages i didn't cover in this [DZone article](https://dzone.com/articles/5-key-benefits-docker-ci). So lets get our hands dirty and create a docker image that will contain our app.
+First of, to get a running "production like" environment to test on becomes a once-off effort. This is due to the basic principle **[infrastructure as code](https://www.thoughtworks.com/de/insights/blog/infrastructure-code-reason-smile)** which Docker fundamentally relies on. Defining the initial state of a server installation has a lot of benefits. It is simply not required any more to install the required software on the system as well as the operation system itself. In fact, in some cases it will be not only seen as a effort saver but not doing it as an [anti-pattern](http://martinfowler.com/bliki/ConfigurationSynchronization.html).
 
-## Create a Container for our CUBA app
+The [Dockerfile](https://docs.docker.com/engine/reference/builder/) is the representation of this principle in the Docker ecosystem. The effort to define a server installation with the required software with these files is pretty low. The reason for this lies in a technical detail: the union filesystem. It allows Docker to define a Docker Image as a set of layers. Due to this, when creating Dockerfile it will be normally based on an existing Docker image (another layer). 
 
-Docker's definition of a container is done via a file called Dockerfile. In this file you normally start with a base image. These images are often stored in [Docker Hub](https://hub.docker.com/). There are plenty of images for operating systems as well as images for application servers, databases and applications. In this case we'll create an image on the basis of the official [Apache Tomcat image](https://hub.docker.com/_/tomcat/). 
+These images can be found on [Docker Hub](https://hub.docker.com/). It is a similar offering for infrastructure code what GitHub is for application code. On Docker Hub there are plenty of predefined images for most popular open source software. From infrastcure images like [Ubuntu](https://hub.docker.com/_/ubuntu/) or [Busybox](https://hub.docker.com/_/busybox/) to applications like [Wordpress](https://hub.docker.com/_/wordpress/), [Jenkins](https://hub.docker.com/_/jenkins/) or [MongoDB](https://hub.docker.com/_/mongo/) can all be found on Docker Hub.
+
+The next benefit is, that creation these defined servers or environments is very fast. For a test environment it is possible to create a HAProxy in front of two tomcat instances, all backed up by a postgres cluster and a redis key-value store. These different servers will be up and running in a matter of seconds and with one line command. To remove this environment its the exact same effort and you are back in a clean state of your development environment without having to maintain different Java versions or Postgres database installations on your OS installation directly by yourself.
+
+The environment i described above is not only fast to create but it is also reproducable. It is so valuable to create a situation where **development environment = production environment**, because a whole category of problems in software development disappear when no one is able to say "it works on my machine" anymore. With tools like Docker and again, *infrastructure as code* this goal is at least possible.
+
+There are some additional advantages i didn't cover here. In this [DZone article](https://dzone.com/articles/5-key-benefits-docker-ci) it goes a little more into depth. 
+
+## Create a Container for our java web application
+
+<div style="color:red">Weitermachen und ein wenig eingehen auf "the rest of us"...</div>
+
+Docker's definition of a container is done via a file called Dockerfile. In this case we'll create an image on the basis of the official [Apache Tomcat image](https://hub.docker.com/_/tomcat/). 
 
 If you wonder what all of this actually means, you can give it a try. 
 
@@ -187,9 +192,3 @@ I hope you get a little insight why docker can be valuable for you. If you have 
 If you look at what i just presented to you, what we did was basically a lot of plumbing. If this blog post had been written at the end of 2013 everthing would be fine. But since its already 2016 and the world of infrastructure automation is moving so fast, a lot of tools around docker or related to this technologie have arisen. Orchestration mechanisms like [docker swarm](https://docs.docker.com/swarm/), [mesosphere](https://mesosphere.com/) or [Kubernetes](http://kubernetes.io/) that are like docker compose with more production environments in mind.
 
 Since the PaaS technology [Cloud Foundry](http://cloudfoundry.org/) got a lot of attraction in the enterprise world in the last few years and was [mentioned](https://www.cuba-platform.com/blog/2015-10-07/446) as a new feature in the CUBA 6 release as beeing supported, i will tackle this topic in another blog post.
-
-
-<img style="float:left; padding: 10px; margin-left:-150px;" src="{{site.url}}/images/2015-12-31-put-your-island-into-a-box/container.png">
-
-
-
