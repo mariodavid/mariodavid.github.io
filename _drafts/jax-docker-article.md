@@ -31,55 +31,53 @@ So, the main benefits of Docker in comparison to a hypervisor based virtual mach
 
 There are a few worth mentioning benefits for using container technologies as a way to distribute the application.
 
-First of, to get a running "production like" environment to test on becomes a once-off effort. This is due to the basic principle **[infrastructure as code](https://www.thoughtworks.com/de/insights/blog/infrastructure-code-reason-smile)** which Docker fundamentally relies on. Defining the initial state of a server installation has a lot of benefits. It is simply not required any more to install the required software on the system as well as the operation system itself. In fact, in some cases it will be not only seen as a effort saver but not doing it as an [anti-pattern](http://martinfowler.com/bliki/ConfigurationSynchronization.html).
+First of, to get a running "production like" environment to test on becomes a once-off effort. This is due to the basic principle **[infrastructure as code](https://www.thoughtworks.com/de/insights/blog/infrastructure-code-reason-smile)** which Docker fundamentally relies on. In this case the installation or configuration of a server is described in a file. Due to this infrastructure can be created automatically and repeatably. Additionally priciples of software engineering can be applied to the world of operations.
+
+Defining the initial state of a server installation has a lot of benefits. It is simply not required any more to install the required software on the system as well as the operation system itself. In fact, in some cases it will be not only seen as a effort saver but not doing it as an [anti-pattern](http://martinfowler.com/bliki/ConfigurationSynchronization.html).
 
 The [Dockerfile](https://docs.docker.com/engine/reference/builder/) is the representation of this principle in the Docker ecosystem. The effort to define a server installation with the required software with these files is pretty low. The reason for this lies in a technical detail: the union filesystem. It allows Docker to define a Docker Image as a set of layers. Due to this, when creating Dockerfile it will be normally based on an existing Docker image (another layer). 
 
 These images can be found on [Docker Hub](https://hub.docker.com/). It is a similar offering for infrastructure code what GitHub is for application code. On Docker Hub there are plenty of predefined images for most popular open source software. From infrastcure images like [Ubuntu](https://hub.docker.com/_/ubuntu/) or [Busybox](https://hub.docker.com/_/busybox/) to applications like [Wordpress](https://hub.docker.com/_/wordpress/), [Jenkins](https://hub.docker.com/_/jenkins/) or [MongoDB](https://hub.docker.com/_/mongo/) can all be found on Docker Hub.
 
-The next benefit is, that creation these defined servers or environments is very fast. For a test environment it is possible to create a HAProxy in front of two tomcat instances, all backed up by a postgres cluster and a redis key-value store. These different servers will be up and running in a matter of seconds and with one line command. To remove this environment its the exact same effort and you are back in a clean state of your development environment without having to maintain different Java versions or Postgres database installations on your OS installation directly by yourself.
+The next benefit is, that creation these defined servers or environments is very fast. For a test environment it is possible to create a something like a HAProxy in front of two tomcat instances, all backed up by a postgres cluster and a redis key-value store as a caching layer. 
+
+These different servers will be up and running in a matter of seconds and with one line command. To remove this environment its the exact same effort and you are back in a clean state of your development environment without having to maintain different Java versions or Postgres database installations on your OS installation directly by yourself.
 
 The environment i described above is not only fast to create but it is also reproducable. It is so valuable to create a situation where **development environment = production environment**, because a whole category of problems in software development disappear when no one is able to say "it works on my machine" anymore. With tools like Docker and again, *infrastructure as code* this goal is at least possible.
 
-There are some additional advantages i didn't cover here. In this [DZone article](https://dzone.com/articles/5-key-benefits-docker-ci) it goes a little more into depth. 
+There are some additional advantages that wasn't covered here. In this [DZone article](https://dzone.com/articles/5-key-benefits-docker-ci) it goes a little more into depth. 
 
-## Create a Container for our java web application
+## Create a Container for a java web application
 
-<div style="color:red">Weitermachen und ein wenig eingehen auf "the rest of us"...</div>
+Before creating the container here is the desired outcome of the application architecture:
 
-Docker's definition of a container is done via a file called Dockerfile. In this case we'll create an image on the basis of the official [Apache Tomcat image](https://hub.docker.com/_/tomcat/). 
+The developed web application is a [order management solution](https://github.com/mariodavid/cuba-ordermanagement). It is based on [CUBA platform](https://www.cuba-platform.com/), a Java application platform for creating business applications. The application will be hosted inside of a Tomcat servlet container. The data will be stored in a PostgreSQL RDBMS. 
 
-If you wonder what all of this actually means, you can give it a try. 
+At the end both servers will be running in a seperate container.
 
-<div class="well">I assume you are on Linux here. If not, check out <a href="https://docs.docker.com/machine/">docker-machine</a>.</div>
+The first container will be the tomcat instace together with our application. The basis of the container is the official [Apache Tomcat image](https://hub.docker.com/_/tomcat/).
 
-Given you have Docker installed [correctly](https://docs.docker.com/engine/installation/), you run an instance of tomcat with the following command:
+To get going, Docker has to be [installed](https://docs.docker.com/engine/installation/). Running Docker on Linux is not necessary required, since Docker runs on Windows or Mac as well via [Docker Machine](https://docs.docker.com/machine/).
+
+As a first impression an emtpy tomcat can be created via the following command:
 
 {% highlight bash %}
 
-docker run -it --rm tomcat:8-jre8 bash
+$ docker run -it --rm tomcat:8-jre8 bash
 
 {% endhighlight %}
 
 
+The first time the image will be downloaded and cached on the computer. After the download is finished, there is a bash prompt (because <code>bash</code> was explicitly set as the command) where a look at the newly created docker container can be taken. Browsing the directory structure, creating and changing config files is possible. After typing <code>exit</code> the bash process will do so and due to the option <code>--rm</code>, the container will be destroyed with all the data in it. 
+
+Executing the same command line once again, a new container will be created (this will just take a few seconds, because the image is already cached). All the changes that were made last time will be gone. This is the default operation mode of a container. If something has to be changed in the container, the Dockerfile is the place for changing the configuration, not the running instance of a container. 
 
 
-The first time the tomcat image will be downloaded and cached on your computer. After this you have a bash were you can look at the newly created docker container. Browse the directory structure, create and change config files, look and the tomcat installation and so on. After typing <code>exit</code> the bash process will do so and due to the option <code>--rm</code>, the container will be destroyed with all the data in it. 
+### The Dockerfile of the tomcat ordermanagement application
 
-Executing the same command line once again, a brand new container will be created (this will instead just take a few seconds, because the image is already downloaded). All the changes you made last time will be gone. If you think this is crazy, well this is how containers normally work. If you want to change something, don't change it in the container itself, but in the Dockerfile that creates it. Otherwise you are back in the old days with [configuration drift](http://kief.com/configuration-drift.html), !(reproduceable environments) and !(insfrastructure as code).
+The [Dockerfile](https://raw.githubusercontent.com/mariodavid/cuba-ordermanagement/master/docker-image/Dockerfile) contains of a few instructions about the creation of the container.
 
-
-### Docker container vs image
-If you wonder why i sometimes talk about *image* and sometimes about *container*, here's a short description:
-
-<p class="well">Containers are the running instances of images. The image is the binary like the war file (or exe) and the container is the running process of this binary.</p>
-
-
-After this brief introduction in image inheritance and container behavior, lets have a look at the dockerfile that decribes our app.
-
-### The Dockerfile of our ordermanagement app
-
-The [example project](https://github.com/mariodavid/cuba-ordermanagement) that i want to dockerize is the ordermanagement app that i created in previous blog posts. Since it is a CUBA 6 app, it will use JRE8 together with Tomcat 8. Lets have a look at the [Dockerfile](https://raw.githubusercontent.com/mariodavid/cuba-ordermanagement/master/docker-image/Dockerfile), that describes our image:
+The first instruction is the name of the base image the image will be based upon. Like above <code>tomcat:8-jre8</code> is used.
 
 {% highlight dockerfile %}
 ### Dockerfile
@@ -90,12 +88,12 @@ FROM tomcat:8-jre8
 # Add tomcat users file for manager app
 ADD container-files/tomcat-users.xml /usr/local/tomcat/conf/
 
+# Add context config file for the application
+ADD container-files/context.xml /usr/local/tomcat/conf/
+
 # Add generated app war files to the webapps directory
 ADD war/app.war /usr/local/tomcat/webapps/
 ADD war/app-core.war /usr/local/tomcat/webapps/
-
-# Add context config file for the application
-ADD container-files/context.xml /usr/local/tomcat/conf/
 
 # copy logback.xml config in the container
 ADD container-files/logback.xml /opt/cuba_home/
@@ -108,11 +106,13 @@ ADD https://jdbc.postgresql.org/download/postgresql-9.3-1101.jdbc41.jar /usr/loc
 
 {% endhighlight %}
 
-First off, you see that the image will be based on the Tomcat 8 image. With *ADD* you can copy files from outside the container into it at build time. In this case, we want to override some configuration files for the tomcat. Next, we add the war files into the webapps directory of the tomcat.
+The *ADD* instruction is used to copy files from outside the container into it at build time. Configuration files will be copied into the container that were created in the [container-files](https://github.com/mariodavid/cuba-ordermanagement/tree/master/docker-image/container-files) directory. Due to the layered filesystem, the layer that this Dockerfile creates overrides the existing files of the base image.
 
-With *ENV* we will create operating system environment variables that tomcat will pick up. In this case we will just point the tomcat to our home directory and the logback config file. 
+Then the actual application war files are copied into the container. 
 
-Since we want to connect to a Postgres DB, we'll add the postgres drivers into the lib directory of the tomcat installation.
+The *ENV* instruction will create operating system environment variables that tomcat will uses as configuration options. 
+
+<div style="color:red">Weitermachen...</div>
 
 ### Build the described image and start the first container
 
