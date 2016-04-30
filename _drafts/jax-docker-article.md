@@ -75,9 +75,7 @@ Executing the same command line once again, a new container will be created (thi
 
 ### The Dockerfile of the tomcat ordermanagement application
 
-The [Dockerfile](https://raw.githubusercontent.com/mariodavid/cuba-ordermanagement/master/docker-image/Dockerfile) contains of a few instructions about the creation of the container.
-
-The first instruction is the name of the base image the image will be based upon. Like above <code>tomcat:8-jre8</code> is used.
+The [Dockerfile](https://raw.githubusercontent.com/mariodavid/cuba-ordermanagement/master/docker-image/Dockerfile) contains of a few instructions about the creation of the container. The first instruction is the name of the base image the image will be based upon. Like above <code>tomcat:8-jre8</code> is used.
 
 {% highlight dockerfile %}
 ### Dockerfile
@@ -110,13 +108,11 @@ The *ADD* instruction is used to copy files from outside the container into it a
 
 Then the actual application war files are copied into the container. 
 
-The *ENV* instruction will create operating system environment variables that tomcat will uses as configuration options. 
-
-<div style="color:red">Weitermachen...</div>
+The *ENV* instruction will create operating system environment variables that tomcat will uses as configuration 
 
 ### Build the described image and start the first container
 
-In the example app, there is the subfolder [docker-image](https://github.com/mariodavid/cuba-ordermanagement/tree/master/docker-image) that contains the Dockerfile as well as the files that are beeing added. If you want to try it out by yourself follow these steps:
+In the application structure the sub directory [docker-image](https://github.com/mariodavid/cuba-ordermanagement/tree/master/docker-image)  contains the Dockerfile as well as the files that are beeing added. To build the Docker image from the Dockerfile, the following steps have to be executed:
 
 {% highlight bash %}
 
@@ -130,9 +126,9 @@ docker build -t cuba-ordermanagement docker-image/
 
 {% endhighlight %}
 
-First, clone the repo and build the war files via gradle. Next we copy the war files into the docker-image folder. After this we create the actual docker container with the Dockerfile above. Additionally we call the image "cuba-ordermanagement" with the option <code>-t</code>, so we can reference it later with docker.
+First, the repository with the application is cloned and the war files are built via gradle. Next the war files are copied into the docker-image directory. After this the actual docker container will be created from the Dockerfile above. Additionally the docker image is called "cuba-ordermanagement" with the option <code>-t</code>, so it is possible to be referenced later.
 
-That's basically it. Now we can create a running instance of this image with the following command:
+With this the build step of the docker image is complete. Now it is possible to create a running instance of this image with the following command:
 
 {% highlight bash %}
 
@@ -140,34 +136,49 @@ docker run -it --rm -p 8080:8080 cuba-ordermanagement
 
 {% endhighlight %}
 
-<code>-p</code> is the option for port mapping. Since we want to connect into the container, we have to tell the docker host (in this case our local computer), that it should map a certain port on our host to the container. Its essentially the exact same idea as [NAT](https://en.wikipedia.org/wiki/Network_address_translation). The syntax is <code>-p outer-port:inner-port</code>.
+<code>-p</code> is the option for port mappings. Docker by default does not expose any ports on the host that is running docker. This is why the port mapping for this container is activated. Its essentially the exact same idea as [NAT](https://en.wikipedia.org/wiki/Network_address_translation). The syntax is <code>-p outer-port:inner-port</code>.
 
-After executing this command, the tomcat will start and chrash wonderfully with a <code>UnknownHostException</code>. Why is this the case? Well, i decided to bake the database connection settings into the image binary. When looking at the [context.xml](https://github.com/mariodavid/cuba-ordermanagement/blob/master/docker-image/container-files/context.xml) from the repo which is used in the Dockerfile, it requires the host <code>postgres</code> to be available. It might think a little strange at first sight to not externalize this parameter. But with this i can show you another tool in the docker ecosystem. It's called [docker compose](https://docs.docker.com/compose/).
+After executing this command, the tomcat server will start and chrash  with a <code>UnknownHostException</code>. This happens due to the database connection settings that have been populated in the [context.xml](https://github.com/mariodavid/cuba-ordermanagement/blob/master/docker-image/container-files/context.xml) from the repository. This file is used in the Dockerfile and it requires the host <code>postgres</code> to be available. 
+
+Normaly this parameters will be externalized via environment variables e.g. But for this demonstration it is acceptable to do, in particular because this allows to go through another tool in the docker ecosystem: [docker compose](https://docs.docker.com/compose/).
 
 ## Orchestrate your containers with docker compose
 
-Docker compose is a tool to create containers and orchestrate them. When you use different features of docker like *Volume mounting* or *container linking* the corresponding command line options become a little tedious. Additionally these settings are not persisted in any way. Docker compose instead uses a configuration file called *docker-compose.yml* that describes the different containers and their relationships.
+Docker compose is a tool to create containers and orchestrate them. When different features of docker like *Volume mounting* or *container linking* are used, the corresponding command line options become long and tedious. Additionally these settings are not persisted in any way. Docker compose instead uses a configuration file called *docker-compose.yml* that describes the different containers, their configuration options and the container relationships.
 
-I created a [docker-compose.yml](https://github.com/mariodavid/cuba-ordermanagement/blob/master/docker-image/docker-compose.yml) file that describes the start of our app as well as a postgres database container:
+The ordermanagement application repository contains a [docker-compose.yml](https://github.com/mariodavid/cuba-ordermanagement/blob/master/docker-image/docker-compose.yml) file that describes the start of the tomcat application server as well as a PostgreSQL database container:
 
+
+<div style="color:red">Docker Compose Example auf docker network umbauen</div>
+
+<div style="color:red">Überarbeiten START</div>
 
 {% highlight yaml %}
+version: '2'
 
-web:
-  image: cuba-ordermanagement
-  ports:
-   - "8080:8080"
-  links:
-   - postgres:postgres
+services:
+  web:
+    image: cuba-ordermanagement
+    ports:
+     - "8080:8080"
+    networks:
+      - ordermanagement-network
+  postgres:
+    image: postgres
+    networks:
+      - ordermanagement-network
 
-postgres:
-  image: postgres
+networks:
+  - ordermanagement-network
 
 {% endhighlight %}
 
-The <code>web</code> container describes the actual tomcat instance. It defines the port mapping and an additional link to another container. This <code>postgres</code> container is another official Docker container (see [here](https://hub.docker.com/_/postgres/)). It runs a standard postgres database with default settings.
+The <code>web</code> container describes the actual tomcat instance. It defines the port mapping and the network it should be placed into. This <code>postgres</code> container is another official Docker container (see [here](https://hub.docker.com/_/postgres/)). It runs a standard postgres database with default settings and is in the <code>ordermanagement-network</code> available as well.
 
-The linking on the web container does a few things. But most importantly it creates an entry in the <code>/etc/hosts</code> file with the ip address of the container and the hostname <code>postgres</code>.
+When both containers are placed into the same network, the containers are able to connect to each other. Name resolution is done via DNS within the network through Docker. The network setting allows the tomcat instace to open the required JDBC connection to the PostgreSQL database.
+
+
+<div style="color:red">Überarbeiten ENDE</div>
 
 To run this, <code>cd</code> into the directory of the <code>docker-compose.yml</code> file and run:
 
@@ -178,17 +189,14 @@ docker-compose up
 
 {% endhighlight %}
 
-After this you should be able to fire up your app at <code>http://localhost:8080/app</code>
+After this both containers are starting up and after a few seconds the application is ready to be used via <code>http://localhost:8080/app</code>.
 
 
 <figure class="center">
 	<img src="{{ site.url }}/images/2015-12-31-put-your-island-into-a-box/cuba-start.png" alt="">
-	<figcaption>The running CUBA app as a docker container</figcaption>
+	<figcaption>The running CUBA application as a docker container</figcaption>
 </figure>
 
 
-I hope you get a little insight why docker can be valuable for you. If you have any questions or notes on this tutorial, please leave a comment below.
-
-If you look at what i just presented to you, what we did was basically a lot of plumbing. If this blog post had been written at the end of 2013 everthing would be fine. But since its already 2016 and the world of infrastructure automation is moving so fast, a lot of tools around docker or related to this technologie have arisen. Orchestration mechanisms like [docker swarm](https://docs.docker.com/swarm/), [mesosphere](https://mesosphere.com/) or [Kubernetes](http://kubernetes.io/) that are like docker compose with more production environments in mind.
-
-Since the PaaS technology [Cloud Foundry](http://cloudfoundry.org/) got a lot of attraction in the enterprise world in the last few years and was [mentioned](https://www.cuba-platform.com/blog/2015-10-07/446) as a new feature in the CUBA 6 release as beeing supported, i will tackle this topic in another blog post.
+## Wrapping up
+... (max three paragraphs)
