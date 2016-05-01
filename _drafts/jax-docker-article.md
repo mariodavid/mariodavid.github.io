@@ -9,7 +9,7 @@ description: "In this article "
 
 Docker is omnipresent in the media and the tech industriy for the last few years. Just recently ThoughtWorks encourages to *adopt* Docker in it's [technology radar](https://www.thoughtworks.com/radar/platforms/docker). This is due to very good reasons. But when hearing about it, one could assume that this piece of technology is mostly relevant for environments with *Microservices*, *Continous Delivery* or *DevOps* inplace. This article will try to show that this is a false assumption. The use cases for Docker are much broader and even in a non-cutting edge environment it can be either benefitial for Development or Operations or both.
 
-In this article a Docker installation with a fairly classical monolithic Java Web application in a Tomcat Server will be created. Additionally a relational database will be used as the datastore. Before going into the details, there will be a high-level overview on the benefits and the idea behind Docker.
+In this article a Docker installation with a fairly classical monolithic Java web application in a tomcat server will be created. Additionally a relational database will be used as the datastore. Before going into the details, there will be a high-level overview on the benefits and the idea behind Docker.
 
 <!-- more -->
 
@@ -198,5 +198,23 @@ After this both containers are starting up and after a few seconds the applicati
 </figure>
 
 
-## Wrapping up
-... (max three paragraphs)
+## Use cases for getting started with Docker for the rest of us
+
+Even if Docker is will not directly lead to production usage in classical environments, the article shows that it does not need microservices or deploying every ten minutes into production at all to be benefitial. 
+
+It might have various technical or organisational reasons that Docker might not be used in production in classical environments (although it is worth considering). It nevertheless makes sense for one of the following scenarions:
+
+* create an standardized environment for running functional tests
+* spin up different isolated environments for manual testing
+* try & test against different infrastructure options, like different datastores or application server configurations
+* let other stakeholders like sales or support create environments on demand
+
+These scenarios can be a good first step to get comfortable with the tool and the idea behind it. 
+
+Although Docker is production ready, to go one step further to a production setup requires other concerns that have not addressed in this article. Docker compose is the first step in this direction, but there is a whole ecosystem around the possibility to orchestrate containers and their hosts. Security, container management, monitoring and logging would be other topics to consider.
+
+
+
+
+
+
