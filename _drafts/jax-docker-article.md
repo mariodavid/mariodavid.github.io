@@ -7,9 +7,9 @@ possible-titles:
 description: "In this article "
 ---
 
-Docker is omnipresent in the media and the tech industriy for the last few years. Just recently ThoughtWorks encourages to *adopt* Docker in it's [technology radar](https://www.thoughtworks.com/radar/platforms/docker). This is due to very good reasons. But when hearing about it, one could assume that this piece of technology is mostly relevant for environments with *Microservices*, *Continous Delivery* or *DevOps* inplace. This article will try to show that this is a false assumption. The use cases for Docker are much broader and even in a non-cutting edge environment it can be either benefitial for Development or Operations or both.
+Docker is omnipresent in the media and the tech industriy for the last few years. Just recently ThoughtWorks encourages to *adopt* Docker in it's [technology radar](https://www.thoughtworks.com/radar/platforms/docker) (Apr. 2016). This is due to very good reasons. But when hearing about it, one could assume that this piece of technology is mostly relevant for environments with *Microservices*, *Continous Delivery* or *DevOps* inplace. This article will try to show that this is a false assumption. The use cases for Docker are much broader and even in a non-cutting edge environment it can be either benefitial for Development or Operations or both.
 
-In this article a Docker installation with a fairly classical monolithic Java web application in a tomcat server will be created. Additionally a relational database will be used as the datastore. Before going into the details, there will be a high-level overview on the benefits and the idea behind Docker.
+In this article a Docker installation will be created that has a fairly classical architecture: a monolithic Java web application in a tomcat server with a relational database as the datastore. Before going into the details, there will be a high-level overview on the benefits and the idea behind Docker.
 
 <!-- more -->
 
@@ -31,6 +31,7 @@ So, the main benefits of Docker in comparison to a hypervisor based virtual mach
 
 There are a few worth mentioning benefits for using container technologies as a way to distribute the application.
 
+### Infrastructure as code
 First of, to get a running "production like" environment to test on becomes a once-off effort. This is due to the basic principle **[infrastructure as code](https://www.thoughtworks.com/de/insights/blog/infrastructure-code-reason-smile)** which Docker fundamentally relies on. In this case the installation or configuration of a server is described in a file. Due to this infrastructure can be created automatically and repeatably. Additionally priciples of software engineering can be applied to the world of operations.
 
 Defining the initial state of a server installation has a lot of benefits. It is simply not required any more to install the required software on the system as well as the operation system itself. In fact, in some cases it will be not only seen as a effort saver but not doing it as an [anti-pattern](http://martinfowler.com/bliki/ConfigurationSynchronization.html).
@@ -38,6 +39,8 @@ Defining the initial state of a server installation has a lot of benefits. It is
 The [Dockerfile](https://docs.docker.com/engine/reference/builder/) is the representation of this principle in the Docker ecosystem. The effort to define a server installation with the required software with these files is pretty low. The reason for this lies in a technical detail: the union filesystem. It allows Docker to define a Docker Image as a set of layers. Due to this, when creating Dockerfile it will be normally based on an existing Docker image (another layer). 
 
 These images can be found on [Docker Hub](https://hub.docker.com/). It is a similar offering for infrastructure code what GitHub is for application code. On Docker Hub there are plenty of predefined images for most popular open source software. From infrastcure images like [Ubuntu](https://hub.docker.com/_/ubuntu/) or [Busybox](https://hub.docker.com/_/busybox/) to applications like [Wordpress](https://hub.docker.com/_/wordpress/), [Jenkins](https://hub.docker.com/_/jenkins/) or [MongoDB](https://hub.docker.com/_/mongo/) can all be found on Docker Hub.
+
+### Clean and fast dev environments
 
 The next benefit is, that creation these defined servers or environments is very fast. For a test environment it is possible to create a something like a HAProxy in front of two tomcat instances, all backed up by a postgres cluster and a redis key-value store as a caching layer. 
 
@@ -149,10 +152,6 @@ Docker compose is a tool to create containers and orchestrate them. When differe
 The ordermanagement application repository contains a [docker-compose.yml](https://github.com/mariodavid/cuba-ordermanagement/blob/master/docker-image/docker-compose.yml) file that describes the start of the tomcat application server as well as a PostgreSQL database container:
 
 
-<div style="color:red">Docker Compose Example auf docker network umbauen</div>
-
-<div style="color:red">Überarbeiten START</div>
-
 {% highlight yaml %}
 version: '2'
 
@@ -165,11 +164,14 @@ services:
       - ordermanagement-network
   postgres:
     image: postgres
+    environment:
+      - POSTGRES_PASSWORD=postgres
     networks:
       - ordermanagement-network
 
 networks:
-  - ordermanagement-network
+  ordermanagement-network:
+
 
 {% endhighlight %}
 
@@ -177,8 +179,6 @@ The <code>web</code> container describes the actual tomcat instance. It defines 
 
 When both containers are placed into the same network, the containers are able to connect to each other. Name resolution is done via DNS within the network through Docker. The network setting allows the tomcat instace to open the required JDBC connection to the PostgreSQL database.
 
-
-<div style="color:red">Überarbeiten ENDE</div>
 
 To run this, <code>cd</code> into the directory of the <code>docker-compose.yml</code> file and run:
 
@@ -198,9 +198,9 @@ After this both containers are starting up and after a few seconds the applicati
 </figure>
 
 
-## Use cases for getting started with Docker for the rest of us
+## Use cases for classic environments
 
-Even if Docker is will not directly lead to production usage in classical environments, the article shows that it does not need microservices or deploying every ten minutes into production at all to be benefitial. 
+Even if Docker is will not directly lead to production usage in classic environments, the article shows that it does not need microservices or deploying every ten minutes into production at all to be benefitial. 
 
 It might have various technical or organisational reasons that Docker might not be used in production in classical environments (although it is worth considering). It nevertheless makes sense for one of the following scenarions:
 
@@ -209,12 +209,6 @@ It might have various technical or organisational reasons that Docker might not 
 * try & test against different infrastructure options, like different datastores or application server configurations
 * let other stakeholders like sales or support create environments on demand
 
-These scenarios can be a good first step to get comfortable with the tool and the idea behind it. 
+To go one step further to a production setup requires other additional concerns that have not addressed in this article. Docker compose is the first step in this direction, but there is a whole ecosystem around the possibility to orchestrate containers and their hosts. Security, container management, monitoring and logging would be other topics to consider.
 
-Although Docker is production ready, to go one step further to a production setup requires other concerns that have not addressed in this article. Docker compose is the first step in this direction, but there is a whole ecosystem around the possibility to orchestrate containers and their hosts. Security, container management, monitoring and logging would be other topics to consider.
-
-
-
-
-
-
+But these scenarios can be a good first step to get comfortable with the tool and the ideas behind it. 
