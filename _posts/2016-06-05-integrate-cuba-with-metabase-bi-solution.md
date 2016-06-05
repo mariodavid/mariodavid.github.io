@@ -1,34 +1,34 @@
 ---
 layout: post
-title: Integrate CUBA with Metabase
+title: Integrate CUBA with Metabase BI solution
 description: 
 modified: 2016-06-01
 tags: [cuba, metabase]
 image:
-  feature: 2015-10-29-my-personal-crud-story/feature.jpg
-  feature_source: https://pixabay.com/de/gliederung-karte-kuba-geographie-322490/
+  feature: integrate-cuba-with-metabase/feature.jpg
+  feature_source: https://pixabay.com/de/netzwerk-flechtwerk-garn-gewebe-440736/
 ---
 
-With CUBA Filters a lot of ad-hoc quiering is possible. But it is olny possible to get meaningful data out of the raw data to a certain degree. In this blog post i want to show you CUBA can be expanded with a powerful business intelligence tool called Metabase.
+With CUBA Filters and aggregation a lot of ad-hoc quiering is possible. But to get meaningful information out of the raw data if only possible to a very limited degree. In this blog post i want to show you how CUBA can be expanded with a powerful business intelligence tool called [Metabase](http://www.metabase.com/).
+
+<!-- more -->
+
+Although i planned to do a blog post about the integration between CUBA and Metabase a long time ago, [this](https://www.cuba-platform.com/support/topic/drill-in-reports-possible) forum topic remebered me about the topic and so i'll pick it up now - so thanks for rembering.
+ 
+## What is metabase and why it's worth considering
+
+[Metabase](http://www.metabase.com/) is a tool i came across a few month ago via the great podcast: [the changelog](https://changelog.com/182/). It is an open source software that fits into the category *business intelligence*. Essentially it provides the ability to connect with a database and let the user *ask questions* to the system. Via a very intuitive user interface the user is able to get ver good answers even it they have never heard of the term *SQL*. Besides traditional relational databases Metabase also provides support for other datastores like MongoDB or Druid.
+
+Besides the "ask question" process another real key benefit of the software that these questions can be stored and the answers can be displayed in various shapes and sized through dashboards.
+
+Before diving into the different possibilities of Metabase - let's start with installing and integrating it with our CUBA app.
 
 
-# What is metabase and why it's worth considering
-
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-
-# How to get started with Metabase for a CUBA app
+## How to get started with Metabase for a CUBA app
 
 The starting point for Metabase to work is to connect it with the running database of the CUBA application. For this tutorial i'll stick to the [cuba-ordermanagement](https://github.com/mariodavid/cuba-ordermanagement) example.
 
-To get up and running i used Docker to create a PostgreSQL instance as well as the Metabase instance.
-
-The following command line creates postgres instance that the cuba-ordermanagement app can connect to:
+To get up and running i used Docker to create a PostgreSQL instance as well as the Metabase instance. The following command line creates postgres instance that the cuba-ordermanagement app can connect to:
 
 
 {% highlight bash %}
@@ -57,7 +57,11 @@ This welcome screen is followed by a few setup steps. One of them is the "add yo
 
 With this settings in place, Metabase is fully configured and able to answer your first question.
 
+
+<img style="float:right; width:64px;" src="{{site.url}}/images/integrate-cuba-with-metabase/orders.png">
+
 ### Show all orders as raw data
+
 A question in metabase is a query definition which is heavily UI based. The first question that we can ask Metabase is to show all Orders, that are not deleted as raw data in a table. 
 
 The first thing to be selected is the base table (after selecting the correct datasource). For now we can select "OM Order" as the base table. The next thing to define are filter that should be applied to this data. In this case we only want to see the data that haven't been deleted which means that the column "deleted_ts" is null. The next section that can be changed is the "view" section. For now we'll stick to "raw data" so we are able to see the columns.
@@ -72,6 +76,9 @@ In the image underneath the filter popup you'll already see the "answer" to the 
 
 At the moment this screen is more or less a database viewer with additional relationship traversal possibility. This is quite powerful but kind of similar to what we know by CUBA. This is why we'll switch gears a little bit for now and ask a little more realistic questions.
 
+
+<img style="float:right; width:64px;" src="{{site.url}}/images/integrate-cuba-with-metabase/top-10.png">
+
 ### Top 10 cities that created most orders
 
 The next question is a little more towards real business questions. In this case we want to get the information which cities have placed most orders. This can either be the case due to the high amount of the customers that live in this city have placed a few orders or a few customers placed many orders.
@@ -79,8 +86,10 @@ The next question is a little more towards real business questions. In this case
 To achieve this we'll take the "Om Order" table as the base data. There is nothing to filter because we don't want to cut any data out here. In the view section instead of selecting "raw data" we'll use "Count of rows". This alone would give us the total count of orders. As we want to group this by the customers' city, we'll select "add a grouping". A popup appears that shows the different attributes of the order entity. 
 
 
-<img style="float:right; width: 400px;" src="{{site.url}}/images/integrate-cuba-with-metabase/metabase-top-10-cities.png">
-
+<figure style="float:right; width: 400px;">
+	<a href="{{site.url}}/images/integrate-cuba-with-metabase/metabase-top-10-cities.png"><img src="{{site.url}}/images/integrate-cuba-with-metabase/metabase-top-10-cities.png" style="width:400px;"></a>
+	<figcaption><a href="{{site.url}}/images/integrate-cuba-with-metabase/metabase-top-10-cities.png" title="Result of the total turnover per product in this year">Result of the total turnover per product in this year</a></figcaption>
+</figure>
 Next to these direct attributes of the order the relation to the customer is shown, which will show all attributes of the customer. Select the "city" attribute.
 
 As the visualisation a pie chart seems pretty resonable, so we'll choose this. On the left you'll see the result of this question.
@@ -88,6 +97,10 @@ As the visualisation a pie chart seems pretty resonable, so we'll choose this. O
 The question can be saved through the button in the upper right. After setting a meaningful name like "Top 10 cities of orders" you're asked if you want to add the question to a dashboard. Dashboards are a powerful feature of Metabase that allow to show answers to your questions in a pretty fancy and accessible way. 
 
 In case you haven't created one before you can create it right now. Next you can put the question as a widget to your selected / created dashboard.
+
+
+
+<img style="float:right; width:64px;" src="{{site.url}}/images/integrate-cuba-with-metabase/dollar.png">
 
 ### Get this years turnover on a per product basis
 
@@ -100,7 +113,7 @@ For this to work we have to take "Om Line Item" as the base data. The filter sec
 	<figcaption><a href="{{ site.url }}/images/integrate-cuba-with-metabase/metabase-turnover-by-product-this-year.png" title="Result of the total turnover per product in this year">Result of the total turnover per product in this year</a></figcaption>
 </figure>
 
-## Enhance the generic data model
+## Enhance the parsed data model
 
 For now the screens show a few columns of the database that are not really relevant for business questions. This is the case because the data model that got's extracted from the database does contain all columns available. In case we don't want to see all these technical columns we can tell Metabase to not display them.
 
@@ -111,9 +124,12 @@ After selecting the table you want to enhance will show different options on thi
 Next to the feature of enhancing your data model there are possibilities to either predefine "Segments" and "Metrics". A segment is basically a filter on a certain table that only segmented the data in a certain way. After saving a segment is displayed next to the direct attributes of the selected data table. The same is true for Metrics. Metrics are a definition on the "View" section of the question. A Metric can either contain only aggregation information or it can be combined with a Segment in order to do the filtering as well.
 
 
-# Find the product categories with the least turnover
 
-The next example of questions is the following: "Metabase: Tell me the !(cash cows) of the portfolio"
+<img style="float:right; width:128px;" src="{{site.url}}/images/integrate-cuba-with-metabase/poor-dog.png">
+
+## Redress the poor dogs
+
+The next example of questions is the following: "Metabase: Tell me the poor dogs of the portfolio" meaning, getting information about the product categories that have the least amount of overall turnover.
 
 When you try to get that done via the user interface you'll probably get stuck. If you don't: tell me, because i got stuck. The reason for this is that i was not able to define such a question.
 
@@ -135,7 +151,17 @@ ORDER BY total_turnover asc limit 3
 
 {% endhighlight %}
 
-The SQL questions can be stored alongside to the ones we created via the user interace. Therefore they are useable in the Dashboard views as well.
-
 The default visualisation for the SQL-Question is "Table", but you can change it to something like a Pie Chart as well (although that does not make much sense in this example).
 
+The SQL questions can be stored alongside to the ones we created via the user interace. Therefore they are useable in the Dashboard views as well.
+
+
+## Integrate dashboard within the CUBA application
+
+For integration both user interfaces there are options on different levels. An example of this would be an embedded type in CUBA that allows you to inlcude other web pages via an IFrame. Currently Metabase will block beeing included via IFrames via a specific HTTP header called 'X-Frame-Options'.
+
+Unfortunately there is no clear way to do the integration. As the product is currenty pre 1.0, there is no public API in order to get information from Metabase yet.
+
+Nevertheless an easy and very powerful integration point are links. So instead of trying to directly embed dashboards of metabase into the CUBA application you can in the main window of the CUBA application create a [Link](https://demo.cuba-platform.com/sampler/open?screen=simple-link) to the corresponding dashboard in Metabase. With this approach it additional is possible to use the powerful dashboard creation feature.
+
+With this i would like to encourage you to take a look at Metabase. Since Metabase makes it so easy to get up and running and with this guide you should have a good starting point to do the integration.
