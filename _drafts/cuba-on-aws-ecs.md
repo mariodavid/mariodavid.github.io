@@ -26,3 +26,30 @@ AWS started as a IaaS platform. Is offers EC2 for compute and S3 / DynamoDB / RD
 At the end of 2014 AWS [announced](https://aws.amazon.com/de/blogs/aws/category/ec2-container-service/) ECS, which is a service that is a layer on top of Docker containers in order to orchestrate and manage containers.
 
 ECS is a offering in a highly competitve market. Docker Swarm, Apache Mesos, Kubernetes etc. are just a few tools to mention. Although ECS is not open source it is mainly build on top of Docker and therefore a good fit for deploying our open source CUBA application [cuba-ordermanagement](https://github.com/mariodavid/cuba-ordermanagement).
+
+
+## AWS building blocks relevant for ECS
+
+* EC2
+* ECR
+* ECS
+* ELB
+* RDS
+* VPC
+
+## Deploying and running CUBA apps on AWS
+
+To give you a general idea of what scenarios will be covered in the following article(s), here's an overview diagram:
+
+<figure class="center">
+	<a href="{{ site.url }}/images/cuba-on-aws-ecs/run-cuba-on-aws-overview.png"><img src="{{ site.url }}/images/cuba-on-aws-ecs/run-cuba-on-aws-overview.png" alt=""></a>
+	<figcaption><a href="{{ site.url }}/images/cuba-on-aws-ecs/run-cuba-on-aws-overview.png" title="run CUBA application of AWS with ECS overview">run CUBA application of AWS with ECS overview</a></figcaption>
+</figure>
+
+The diagram shows the different building blocks of the AWS infrastructure that are relevant for the ECS deployment. I'll describe on a very broad basis the workflow and we'll go into much more details of the different steps afterwards.
+
+First either the developer or your favorite CI system kicks off the deployment process. To do this, the Docker image get build locally and pushed to the central Docker repository. Next the elastic container service (ECS) gets notified to redeploy the newly created Docker image.
+
+Since ECS is just the orchestration layer but not responsible for actually running the Docker containers, pre configured EC2 instances are contacted in order to redeploy.
+
+To ensure fault tolerance on the EC2 instance level as well as the Docker container level, multiple EC2 instances serve the multiple instances of the Docker image. Thus there is a need for a load balacing mechanism that will shield the docker containers from direct internet connection, terminate SSL and balance requests between the instances.
