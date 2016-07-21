@@ -21,7 +21,7 @@ Resuming my blog post series about an overview on the [CUBA Platform](https://ww
 
 <img style="float: right; padding: 10px; width: 300px; margin-right:-10px;" src="{{site.url}}/images/cuba-security-subsystem-distilled/landkarte-dark.jpg">
 
-The story begins with Walter, Jesse, Saul and Mike. They lived in Albuquerque quite happily for sometime. On day, they screw up their "Company" in here, and so they decided to started over again and try their Luck in Cuba. This time they want to make a better job with some serious trading business in place. 
+The story begins with Walter, Jesse, Saul and Mike. They lived in Albuquerque quite happily for sometime. On day, they screw up their "Company" in here, and so they decided to started over again and try their Luck in Cuba. This time they want to make a better job with some serious trading business in place.
 
 The company they started is called *CUBa SeCurity Inc.*, which is selling security goods and widgets all around the US and south america.
 
@@ -31,7 +31,7 @@ To get that going, they selected [cuba-ordermanagement](https://github.com/mario
 
 ### The wide ocean called security
 
-*Security* is a pretty bloated term. Words like encryption, integrity, ACL, TLS, authentication, cerfiticats, OAuth2, SQL Injection, AES, LDAP, PGP, role based access, malware, safety, 2-Factor authentication, Confidentiality and so on are subtopics, implementations or related topics to *security* and stuff that came out of the first requirements meetings with *CUBa SeCurity Inc.*
+*Security* is a pretty bloated term. Words like encryption, integrity, ACL, TLS, authentication, certificates, OAuth2, SQL Injection, AES, LDAP, PGP, role based access, malware, safety, 2-Factor authentication, Confidentiality and so on are subtopics, implementations or related topics to *security* and stuff that came out of the first requirements meetings with *CUBa SeCurity Inc.*
 
 <figure class="center">
 	<img src="{{site.url}}/images/cuba-security-subsystem-distilled/meetings-2.jpg" width="300">
@@ -47,9 +47,9 @@ The meetings revealed that everyone has different things in mind when talking ab
 
 <img style="float: left; margin-left:-280px" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel-8.jpg">
 
-This seems to be the *functional part* of the generally *non-functional requirement: Security*. Then we have the real *non non-functional requirements*. The software should have implementations to protected itself against application security attacks, like a resilience against *SQL Injection* or *cross side scripting* and so on. 
+This seems to be the *functional part* of the generally *non-functional requirement: Security*. Then we have the real *non non-functional requirements*. The software should have implementations to protected itself against application security attacks, like a resilience against *SQL Injection* or *cross side scripting* and so on.
 
-This kind of security will not be part of this article firstly because of the sheer size of this problemspace and secondly because *CUBa SeCurity Inc.* is not interessted in these kinds of things. They tols use, that they are planning to implement their ERP system as an offline application. 
+This kind of security will not be part of this article firstly because of the sheer size of this problemspace and secondly because *CUBa SeCurity Inc.* is not interessted in these kinds of things. They tols use, that they are planning to implement their ERP system as an offline application.
 
 Besides these application security topics, i won't cover the layers below the application layer, like [DNS Spoofing](http://www.windowsecurity.com/articles-tutorials/authentication_and_encryption/Understanding-Man-in-the-Middle-Attacks-ARP-Part2.html), [TCP SYN flooding](http://www.cisco.com/web/about/ac123/ac147/archived_issues/ipj_9-4/syn_flooding_attacks.html) or [ARP attacks](https://en.wikipedia.org/wiki/ARP_spoofing) either. Although it's a very interessting topic, generally it is not something a "normal business software developer" has any impact on. Oftentimes its outside of the scope of the application developer.
 
@@ -57,7 +57,7 @@ So after setting the scene, let's get back to the "functional non-functional sec
 
 <h2>CU<img src="{{site.url}}/images/cuba-security-subsystem-distilled/Ba.png" style="width: 2em;" alt="BA">'s security subsystem</h2>
 
-The possibilities that CUBA's security subsystem implements in this whole area are versitale. But mainly it solves different problems i described above as "functional non-functional security requirements". 
+The possibilities that CUBA's security subsystem implements in this whole area are versitale. But mainly it solves different problems i described above as "functional non-functional security requirements".
 
 <img style="float: right; margin-right:-280px" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel-5.jpg">
 
@@ -75,7 +75,7 @@ To get a better understanding of this pretty generic description, we will go thr
 
 <img style="float: right; padding: 10px; width: 150px;" src="{{site.url}}/images/cuba-security-subsystem-distilled/cuba-login-dark.png">
 
-This one should be pretty straightforward. To achieve it, we've just to start up the app because this feature is enabled by default. 
+This one should be pretty straightforward. To achieve it, we've just to start up the app because this feature is enabled by default.
 
 In the menu <code>Administration > Users</code> you get an extended CRUD mask for users. Besides the obvious ones like setting a password and personal information, you have the possibility to assign roles and *substituted users* to this user. Below, you'll see the management UI for creating a user with the described attributes.
 
@@ -96,7 +96,7 @@ This is Jesse. Jesse is responsible for the master data of the products and thei
 
 To ensure this kind of requirement, we have to create a Role (<code>Administration > Roles</code>) called *Master Data Manager*.
 
-In the entities tab, you are able to search for certain entites that you want to give permissions on. Just uncheck the "Assigned only" flag and click "Apply", which will show all entities. When you select a certain entity, you can grand or deny permissions for this selection. For attribute based security it works exactly the same in the "Attributes" tab. 
+In the entities tab, you are able to search for certain entites that you want to give permissions on. Just uncheck the "Assigned only" flag and click "Apply", which will show all entities. When you select a certain entity, you can grand or deny permissions for this selection. For attribute based security it works exactly the same in the "Attributes" tab.
 
 Since the *Master Data Manager* role has only rights on the two entities *Product* and *Product Category* we'll only enable them for management. On the screen tab, we'll only allow the screen of these two to be shown.
 
@@ -118,16 +118,16 @@ To assign users to this new role, you can either edit the user and add the role,
 
 <img style="float:right; margin-right: -30px; width:150px; padding: 10px;" src="{{site.url}}/images/cuba-security-subsystem-distilled/walter-white.jpg">
 
-From earlier connections to New Hampshire, Walter - the sales guy, is selected to be responsible for the Northeast region of the US market. 
+From earlier connections to New Hampshire, Walter - the sales guy, is selected to be responsible for the Northeast region of the US market.
 
-Due to this, the scope of the data that Walter needs to act upon is basically the customers that are based here. 
-To achieve this kind of requirement, we'll have to take a look at the already mentioned *User Groups* and the constraints that can created for them. 
+Due to this, the scope of the data that Walter needs to act upon is basically the customers that are based here.
+To achieve this kind of requirement, we'll have to take a look at the already mentioned *User Groups* and the constraints that can created for them.
 
-After creating a User account for Walt and a Role called *Sales* which has full permissions on Customers, Orders and read permissions on the Products and Categories, we will create a Access Group (<code>Administration > Access Groups</code>) called "Northeast". We assign Walter to this group. 
+After creating a User account for Walt and a Role called *Sales* which has full permissions on Customers, Orders and read permissions on the Products and Categories, we will create a Access Group (<code>Administration > Access Groups</code>) called "Northeast". We assign Walter to this group.
 
 <img style="float: right; margin-right:-280px" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel-3.jpg">
 
-Next, we will create two contraints that will only allow access to data of the customers and the orders, where the customers *state* attribute is in the northeast of the US. 
+Next, we will create two contraints that will only allow access to data of the customers and the orders, where the customers *state* attribute is in the northeast of the US.
 
 <figure class="center">
 	<a href="{{ site.url }}/images/cuba-security-subsystem-distilled/access-group-northeast.png"><img src="{{ site.url }}/images/cuba-security-subsystem-distilled/access-group-northeast-dark.jpg" alt=""></a>
@@ -140,7 +140,7 @@ With this setting in place, Walt will only be able to see the orders and custome
 
 <h3> » S<img src="{{site.url}}/images/cuba-security-subsystem-distilled/AU.png" style="width: 1.5em;" alt="AU">l can take on business for Walter</h3>
 
-Walter had some problems with its physical condition in the last years. This is why Mike wants Saul, the Head of Sales to take on business for Walter in certain situations. Normally, Saul sales region is the Midwest of the United States, especially Nebraska because *CUBa SeCurity Inc.* has a branch office in Omaha. 
+Walter had some problems with its physical condition in the last years. This is why Mike wants Saul, the Head of Sales to take on business for Walter in certain situations. Normally, Saul sales region is the Midwest of the United States, especially Nebraska because *CUBa SeCurity Inc.* has a branch office in Omaha.
 
 <img style="float: left; margin-left:-280px" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel-7.jpg">
 
@@ -149,13 +149,13 @@ Walter had some problems with its physical condition in the last years. This is 
 </figure>
 
 Instead of giving Saul rights on data for the midwest as well as northeast, we will use *User Substitudion* to achieve this goal.
-A User for Saul is created, Sales Role will be assigned and an addtional Access Group under "US" called "Midwest" next to the "Northeast". 
+A User for Saul is created, Sales Role will be assigned and an addtional Access Group under "US" called "Midwest" next to the "Northeast".
 
 <img style="float: right; width: 300px; padding: 10px;" src="{{site.url}}/images/cuba-security-subsystem-distilled/saul-user-substitution-walter.jpg">
 
 Next up, we'll go into the User details of Saul and create a *User Substition*. The substituted User is Walter in this case. Optionally a substitution can be granted for a given time period (not necessary in this case).
 
-After doing so, Saul can login and see a little select box in the top right corner of the menu where he can change the user to Walt. 
+After doing so, Saul can login and see a little select box in the top right corner of the menu where he can change the user to Walt.
 
 This user switch will lead to the following situation: Before, Saul is able to see all orders and customers from the midwest. After changing the user to Walt, Saul can see the ones in the northeast and actually acting as Walt with all the permissions that are granted to him.
 
@@ -163,8 +163,6 @@ This user switch will lead to the following situation: Before, Saul is able to s
 
 As you see, CUBA Platform comes with a really comprehensive security subsystem. Additional information and best practices on using it can be found in the [docs](https://docs.cuba-platform.com/cuba/6.0/manual/en/html-single/manual.html#chapter_security). The described example with all the required data can be found at the [cuba-ordermanagement](https://github.com/mariodavid/cuba-ordermanagement) (branch: [cuba-security-distilled-1](https://github.com/mariodavid/cuba-ordermanagement/tree/cuba-security-distilled-1)) example app.
 
-With the explained configuration settings, *CUBa SeCurity Inc.* is able to fulfil it's primary requirements regarding security. They can start entering their master data for their security products and start selling their stuff. 
+With the explained configuration settings, *CUBa SeCurity Inc.* is able to fulfil it's primary requirements regarding security. They can start entering their master data for their security products and start selling their stuff.
 
 We agreed upon coming back to futher consulting and customization, when their secondary security requirements like *Auditing* and securing *custom business code programatically* become a first class problem for them.
-
-
