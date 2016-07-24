@@ -5,8 +5,8 @@ description:
 modified: 2016-03-29
 tags: [cuba, crud]
 image:
-  feature: 2015-10-29-my-personal-crud-story/feature.jpg
-  feature_source: https://pixabay.com/de/gliederung-karte-kuba-geographie-322490/
+  feature: cuba-on-aws-ecs/feature.jpg
+  feature_source: https://pixabay.com/de/alaska-gletscher-eis-bergen-810433/
 ---
 
 Going from running Docker in the command line to a production scenario can be quite challenging since there is so much more to cover and so much more possibilities to do it right. One solid way of Docker and the Cloud is AWS.
@@ -15,7 +15,7 @@ In this article i'll go through the different possibilities AWS has to offer esp
 
 <!-- more -->
 
-### A brief history on Cloud land
+### A brief history on cloud land
 
 AWS is Amazons cloud offering. It is a very popular cloud provider and probably one of the oldest ones as well. Not long ago i [read](https://twitter.com/peakscale/status/674278519732486144) the pharse which sets the scene for the cloud market dominance of AWS quite well:
 
