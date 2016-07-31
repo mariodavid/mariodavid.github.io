@@ -87,3 +87,43 @@ First either the developer or your favorite CI system kicks off the deployment p
 Since ECS is just the orchestration layer but not responsible for actually running the Docker containers, pre configured EC2 instances are contacted in order to redeploy.
 
 To ensure fault tolerance on the EC2 instance level as well as the Docker container level, multiple EC2 instances serve the multiple instances of the Docker image. Thus there is a need for a load balacing mechanism that will shield the docker containers from direct internet connection, terminate SSL and balance requests between the instances.
+
+For database access of the CUBA application the deployment uses a postgres RDS instance that is clustered on a cross availability zone basis. An availability zone or a AZ as called in AWS is basically a data-center. The biggest unit of computing on AWS is a region (like eu-west-1: EU Ireland). Within a region there are multiple AZs that are fully isolated but have a high bandwith connection between them (to allow synchron database cluster e.g.). More information can be found at the [AWS AZ docs](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html).
+
+After every part of the diagram has been talked through very slightly, lets have a look at the different steps and how to implement them in order to deploy our CUBA application to ECS.
+
+#### Build image and publish to ECR
+The first step towards this is to actually deploy the docker image to ECR.
+Based on the docker image i created in the initial [docker cuba blog post](https://www.road-to-cuba-and-beyond.com/put-a-island-into-a-box-how-to-dockerize-your-cuba-app/) here's a slightly changed Dockerfile. First of all i in fact created two different Dockerfiles. The reason is that for every application component we want to create a Docker container that we can create and deploy independently. In comparison to the original Dockerfile i created a startup file "/start.sh" that basically ensures certain environment variables are available and copy the values to the tomcat installation so that the CUBA application is configured correctly.
+
+
+{% highlight dockerfile %}
+### Dockerfile
+
+FROM tomcat:8-jre8
+
+RUN rm -rf /usr/local/tomcat/webapps/*
+
+ADD container-files/war/app-core.war /usr/local/tomcat/webapps/ROOT.war
+
+ADD container-files/context.xml /usr/local/tomcat/conf/
+ADD container-files/local.app.properties /usr/local/tomcat/conf/app-core/
+ADD container-files/jgroups.xml /opt/cuba_home/app-core/conf/
+ADD container-files/logback.xml /opt/cuba_home/
+
+ADD container-files/start.sh /start.sh
+RUN chmod +x /start.sh
+
+
+ENV CATALINA_OPTS="${CATALINA_OPTS} -Dlogback.configurationFile=/opt/cuba_home/logback.xml"
+ENV CATALINA_OPTS="${CATALINA_OPTS} -Dapp.home=/opt/cuba_home"
+ENV CATALINA_OPTS="${CATALINA_OPTS} -Djava.net.preferIPv4Stack=true"
+
+ADD https://jdbc.postgresql.org/download/postgresql-9.3-1101.jdbc41.jar /usr/local/tomcat/lib/postgresql.jar
+
+EXPOSE 8080
+
+CMD ["/start.sh"]
+
+
+{% endhighlight %}
