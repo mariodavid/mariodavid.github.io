@@ -1,9 +1,9 @@
 ---
 layout: post
-title: Run CUBA with AWS ECS
+title: Run CUBA on AWS ECS - Part 1
 description:
-modified: 2016-03-29
-tags: [cuba, crud]
+modified: 2016-08-02
+tags: [cuba, AWS, ECR, cloud, ECS]
 image:
   feature: cuba-on-aws-ecs/feature.jpg
   feature_source: https://pixabay.com/de/alaska-gletscher-eis-bergen-810433/
@@ -11,9 +11,16 @@ image:
 
 Going from running Docker in the command line to a production scenario can be quite challenging since there is so much more to cover and so much more possibilities to do it right. One solid way of Docker and the Cloud is AWS.
 
-In this article i'll go through the different possibilities AWS has to offer especially regarding Container as a Service. We will deploy the ordermanagement CUBA app on a ECS cluster and use different features of the AWS cloud to leverage the full cloud potential to CUBA.
+In the next three articles i'll go through the different possibilities AWS has to offer especially regarding Container as a Service. We will deploy the [cuba-ordermanagement](https://github.com/mariodavid/cuba-ordermanagement) CUBA app on an ECS cluster and use different features of the AWS cloud to leverage the full cloud potential to CUBA.
 
 <!-- more -->
+
+The three parts of the article will cover the following content of the overall topic:
+
+1. introduction to AWS services, creating the docker image and pushing it to ECR
+2. creating a simple ECS cluster and running the cuba app on it
+3. using different AWS features to extend the ECS cluster towards HA, cluster the different CUBA layers independently
+
 
 ### A brief history on cloud land
 
@@ -69,11 +76,11 @@ ECR stands for elastic container registry. It is the fully managed solution for 
 
 #### ECS
 
-ECS is the last building block we will use in this article(s). As described above, it is the solution from AWS for Container orchestration. We'll go into much more detail about this topic because we need to configure the different pieces within ECS, but for know it can be seen as the part that automatically deploys Docker containers to existing EC2 instances and cares about the healthiness of the containers.
+ECS is the last building block we will use in this articles. As described above, it is the solution from AWS for Container orchestration. We'll go into much more detail about this topic because we need to configure the different pieces within ECS, but for know it can be seen as the part that automatically deploys Docker containers to existing EC2 instances and cares about the healthiness of the containers.
 
-## Deploying and running CUBA apps on AWS
+## Overview on the deployment process
 
-To give you a general idea of what scenarios will be covered in the following article(s), here's an overview diagram:
+To give you a general idea of what scenarios will be covered in the following articles, here's an overview diagram:
 
 <figure class="center">
 	<a href="{{ site.url }}/images/cuba-on-aws-ecs/run-cuba-on-aws-overview.png"><img src="{{ site.url }}/images/cuba-on-aws-ecs/run-cuba-on-aws-overview.png" alt=""></a>
@@ -90,11 +97,14 @@ To ensure fault tolerance on the EC2 instance level as well as the Docker contai
 
 For database access of the CUBA application the deployment uses a postgres RDS instance that is clustered on a cross availability zone basis. An availability zone or a AZ as called in AWS is basically a data-center. The biggest unit of computing on AWS is a region (like eu-west-1: EU Ireland). Within a region there are multiple AZs that are fully isolated but have a high bandwith connection between them (to allow synchron database cluster e.g.). More information can be found at the [AWS AZ docs](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html).
 
-After every part of the diagram has been talked through very slightly, lets have a look at the different steps and how to implement them in order to deploy our CUBA application to ECS.
+After every part of the diagram has been talked through very slightly, we will have a look at the different steps and how to implement them in order to deploy our CUBA application to ECS in the next articles. In this first article we will build the application and deploy the binaries to ECR. This will be the requirement to take a look at how to create a ECS cluster (second part) so that we are able to deploy the application in the ECS cluster (third part)
 
-#### Build image and publish to ECR
+For this first part we cover the image building and registry configuration and deployment.
+
+### Build cuba-ordermanagement Docker image
+
 The first step towards this is to actually deploy the docker image to ECR.
-Based on the docker image i created in the initial [docker cuba blog post](https://www.road-to-cuba-and-beyond.com/put-a-island-into-a-box-how-to-dockerize-your-cuba-app/) here's a slightly changed Dockerfile. First of all i in fact created two different Dockerfiles. The reason is that for every application component we want to create a Docker container that we can create and deploy independently. In comparison to the original Dockerfile i created a startup file "/start.sh" that basically ensures certain environment variables are available and copy the values to the tomcat installation so that the CUBA application is configured correctly.
+Based on the docker image i created in the initial [docker cuba blog post](https://www.road-to-cuba-and-beyond.com/put-a-island-into-a-box-how-to-dockerize-your-cuba-app/) here's a slightly changed Dockerfile. First of all i in fact created two different Dockerfiles. The reason is that for every application component we want to create a Docker container that we can create and deploy independently.
 
 
 {% highlight dockerfile %}
@@ -102,28 +112,97 @@ Based on the docker image i created in the initial [docker cuba blog post](https
 
 FROM tomcat:8-jre8
 
-RUN rm -rf /usr/local/tomcat/webapps/*
+# ...
 
 ADD container-files/war/app-core.war /usr/local/tomcat/webapps/ROOT.war
 
-ADD container-files/context.xml /usr/local/tomcat/conf/
-ADD container-files/local.app.properties /usr/local/tomcat/conf/app-core/
-ADD container-files/jgroups.xml /opt/cuba_home/app-core/conf/
-ADD container-files/logback.xml /opt/cuba_home/
+# ...
 
 ADD container-files/start.sh /start.sh
 RUN chmod +x /start.sh
 
-
-ENV CATALINA_OPTS="${CATALINA_OPTS} -Dlogback.configurationFile=/opt/cuba_home/logback.xml"
-ENV CATALINA_OPTS="${CATALINA_OPTS} -Dapp.home=/opt/cuba_home"
-ENV CATALINA_OPTS="${CATALINA_OPTS} -Djava.net.preferIPv4Stack=true"
-
-ADD https://jdbc.postgresql.org/download/postgresql-9.3-1101.jdbc41.jar /usr/local/tomcat/lib/postgresql.jar
-
-EXPOSE 8080
+# ...
 
 CMD ["/start.sh"]
 
 
 {% endhighlight %}
+
+This is just a subpart of the Dockerfile. In the [repository](https://github.com/mariodavid/cuba-ordermanagement/blob/cuba-on-aws-ecs/deployment/docker-image/app-core/Dockerfile) you'll find the whole listing. In comparison to the original Dockerfile i created a startup file <code>start.sh</code> that basically ensures certain environment variables are available and copy the values to the tomcat installation so that the CUBA application is configured correctly. This is done via checking for existence of environment variables:
+
+{% highlight bash %}
+
+: ${CUBA_DB_HOST?"CUBA_DB_HOST required (docker run -e 'CUBA_DB_HOST=myHost)'"}
+echo "db.host=${CUBA_DB_HOST}" >> /usr/local/tomcat/conf/catalina.properties
+
+{% endhighlight %}
+
+In case the Docker container is not started with <code>docker run -e CUBA_DB_HOST=dbServer</code> the container will complain about the absense of the variable and stop the server. If the variable is set, the value will be copied to catalina.properties so that the CUBA application is configured via the environment variables.
+
+After the image is described correctly, it can be build locally and deployed to the central AWS Docker registry (ECR) afterwards. To build the Docker image i created the shell script [docker-build.sh](https://github.com/mariodavid/cuba-ordermanagement/blob/cuba-on-aws-ecs/deployment/docker-build.sh) which lets us build both images. It mainly does the following steps (example for the app.war):
+
+{% highlight bash %}
+
+./gradlew buildWar
+cp build/distributions/war/app.war deployment/docker-image/app/container-files/war/
+docker build -t cuba-ordermanagement-app:latest deployment/docker-image/app/
+
+{% endhighlight %}
+
+The script takes three parameters to build the image:
+
+1. the name of the application (cuba-ordermanagement)
+2. the component name (app / app-core / app-portal)
+3. the docker tag / version of the component (latest / 0.1 / 0.2...)
+
+The resulting call from the root of the project for the cuba-ordermanagement application should look like this:
+
+{% highlight bash %}
+
+$ deployment/docker-build.sh cuba-ordermanagement app-core latest
+$ deployment/docker-build.sh cuba-ordermanagement app latest
+
+{% endhighlight %}
+
+After this, the Docker images should be created and listed via <code>docker images</code>:
+{% highlight bash %}
+
+$ docker images
+REPOSITORY                      TAG                 IMAGE ID            CREATED             SIZE
+cuba-ordermanagement-app        latest              e5e0498669dc        2 minutes ago        388.7 MB
+cuba-ordermanagement-app-core   latest              2446085b946a        2 minutes ago        380.8 MB
+
+{% endhighlight %}
+
+### Deploy docker image to ECR
+
+Next up the last step is to actually transfer the Docker image to ECR.
+
+<!--<div class="information">-->
+There have to be a few steps have to be taken before you can communicate with ECR. Detailed information about this can be found in the <a href="http://docs.aws.amazon.com/AmazonECR/latest/userguide/ECR_GetStarted.html">ECR getting started guide</a>. Here are the main points:
+
+1. create a AWS account
+2. follow the <a href="http://docs.aws.amazon.com/AmazonECS/latest/developerguide/get-set-up-for-amazon-ecs.html">ECS setup instrcutions</a>
+3. create a ECR registry for each component (app-core and app)
+4. install the <a href="http://docs.aws.amazon.com/cli/latest/userguide/installing.html">AWS CLI</a>
+5. login to ECR via the Docker CLI: <code>$(aws ecr get-login)</code>
+
+It took qiute some time at least for me to go through the different steps, but this is just a one time effort in order to get going with AWS. Additionally, a lot of steps are requirements for ECS as well.
+
+I created another shell script called [docker-deploy-to-ecr.sh](https://github.com/mariodavid/cuba-ordermanagement/blob/cuba-on-aws-ecs/deployment/ecs/docker-deploy-to-ecr.sh)
+which will to the job for us. Since ECR is quite seamlessly integrated into the normal docker workflow, the script just uses the normal docker commands <code>docker tag</code> and <code>docker push</code> to transfer the images to the repository. It takes the same arguments as the last script but one additional parameter: "ECR_REGISTRY_HOST".
+
+With this commands you will transfer the local docker images to the AWS ECR repository:
+
+{% highlight bash %}
+
+$ deployment/ecs/docker-deploy-to-ecr.sh cuba-ordermanagement app-core latest 123456789101.dkr.ecr.us-east-1.amazonaws.com/cuba-ordermanagement-app-core
+$ deployment/ecs/docker-deploy-to-ecr.sh cuba-ordermanagement app latest 123456789101.dkr.ecr.us-east-1.amazonaws.com/cuba-ordermanagement-app
+
+{% endhighlight %}
+
+When you have a look at your ECR repository list, both repositories should host at least one Docker image now.
+
+With this steps inplace you are ready to take on the next major topic. In this we will take what we have achieved, that our application is available to the ECS environment so that we can now create a ECS cluster that will run the docker containers.
+
+This will be covered in the second part of this three part series about AWS ECS.

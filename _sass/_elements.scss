@@ -154,3 +154,9 @@ figure.center img{
   border: 1px solid $comp-color;
   @include rounded(4px);
 }
+
+.information {
+  padding: 10px;
+  background-color: #fcf8e3;
+  border: 2px solid #faebcc
+}
