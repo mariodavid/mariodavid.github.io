@@ -65,18 +65,201 @@ In the section "advanced details" > "user data" the following script will config
 echo ECS_CLUSTER=cuba-ordermanagement-cluster >> /etc/ecs/ecs.config
 {% endhighlight %}
 
-
+That are the main points. The other settings can be left to the defaults for now. We will change it in the next parts towards a more sophisticated setup, but for the start it is enough.
 If you had problems follow my instructions, you can take a look at the "[Launching a ECS instance](http://docs.aws.amazon.com/AmazonECS/latest/developerguide/launch_container_instance.html)" guide directly from AWS.
 
+After setting up the EC2 image, it can be started. After a couple of seconds the instance should be up and running. Additionally, when you take a look at the ECS cluster details view within the tab "ECS instances" the EC2 instance should be listed.
+
+
+#### ECS task definition
+
+A task definition in the ECS world is very similar to the docker-compose.yml file introduced in the [last Docker blog post](https://www.road-to-cuba-and-beyond.com/put-a-island-into-a-box-how-to-dockerize-your-cuba-app/). A task definition defines how one or many different Docker image should be run. Port mappings can be defined as well as environment variables and volume mountings. In this regard there is no difference to a docker-compose.yml file.
+One difference about the two is there specific AWS features IAM roles or the log configuration for the Containers that are used for certain containers.
+
+In the [repository](
+https://github.com/mariodavid/cuba-ordermanagement/blob/cuba-on-aws-ecs/deployment/ecs/task-definitions/cuba-ordermanagement-task-definition-templage.json) i created a template task definition that looks like this:
+
+{% highlight json %}
+{
+  "family": "cuba-ordermanagement",
+  "containerDefinitions": [
+    {
+      "essential": true,
+      "name": "cuba-ordermanagement-app-core",
+      "image": "1234567890.dkr.ecr.us-east-1.amazonaws.com/cuba-ordermanagement-app-core:%CUBA_VERSION%",
+      "cpu": 340,
+      "environment": [
+        {
+          "name": "CUBA_ECS",
+          "value": "true"
+        },
+        {
+          "name": "CUBA_CLUSTER_ENABLED",
+          "value": "false"
+        },
+        {
+          "name": "CUBA_DB_NAME",
+          "value": "cuba-ordermanagement"
+        },
+        {
+          "name": "CUBA_DB_HOST",
+          "value": "cuba-ordermanagement.xhgs6jjsnl.us-east-1.rds.amazonaws.com"
+        },
+        {
+          "name": "CUBA_DB_PASSWORD",
+          "value": "1234567890"
+        },
+        {
+          "name": "CUBA_DB_USERNAME",
+          "value": "cuba-ordermanagement"
+        },
+        {
+          "name": "CUBA_DB_PORT",
+          "value": "5432"
+        },
+        {
+          "name": "CUBA_WEB_PORT",
+          "value": "80"
+        }
+      ],
+
+    },
+    {
+      "memory": 256,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "name": "cuba-ordermanagement-app",
+      "image": "1234567890.dkr.ecr.us-east-1.amazonaws.com/cuba-ordermanagement-app:%CUBA_VERSION%",
+      "cpu": 340,
+      "environment": [
+        {
+          "name": "CUBA_ECS",
+          "value": "true"
+        },
+        {
+          "name": "CUBA_WEB_PORT",
+          "value": "80"
+        },
+        {
+          "name": "CUBA_CORE_URL_CONNECTION_LIST",
+          "value": "http://cuba-ordermanagement-app-core:8080"
+        }
+      ],
+      "links": [
+        "cuba-ordermanagement-app-core"
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "cuba-ordermanagement-testing-logs-app",
+          "awslogs-region": "us-east-1"
+        }
+      }
+    }
+  ]
+}{
+  "family": "cuba-ordermanagement",
+  "containerDefinitions": [
+    {
+      "memory": 256,
+      "essential": true,
+      "name": "cuba-ordermanagement-app-core",
+      "image": "1234567890.dkr.ecr.us-east-1.amazonaws.com/cuba-ordermanagement-app-core:%CUBA_VERSION%",
+      "cpu": 340,
+      "environment": [
+        {
+          "name": "CUBA_ECS",
+          "value": "true"
+        },
+        {
+          "name": "CUBA_CLUSTER_ENABLED",
+          "value": "false"
+        },
+        {
+          "name": "CUBA_DB_NAME",
+          "value": "cuba-ordermanagement"
+        },
+        {
+          "name": "CUBA_DB_HOST",
+          "value": "cuba-ordermanagement.xhgs6jjsnl.us-east-1.rds.amazonaws.com"
+        },
+        {
+          "name": "CUBA_DB_PASSWORD",
+          "value": "1234567890"
+        },
+        {
+          "name": "CUBA_DB_USERNAME",
+          "value": "cuba-ordermanagement"
+        },
+        {
+          "name": "CUBA_DB_PORT",
+          "value": "5432"
+        },
+        {
+          "name": "CUBA_WEB_PORT",
+          "value": "80"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "cuba-ordermanagement-logs-app-core",
+          "awslogs-region": "us-east-1"
+        }
+      }
+    },
+    {
+      "memory": 256,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "name": "cuba-ordermanagement-app",
+      "image": "1234567890.dkr.ecr.us-east-1.amazonaws.com/cuba-ordermanagement-app:%CUBA_VERSION%",
+      "cpu": 340,
+      "environment": [
+        {
+          "name": "CUBA_ECS",
+          "value": "true"
+        },
+        {
+          "name": "CUBA_WEB_PORT",
+          "value": "80"
+        },
+        {
+          "name": "CUBA_CORE_URL_CONNECTION_LIST",
+          "value": "http://cuba-ordermanagement-app-core:8080"
+        }
+      ],
+      "links": [
+        "cuba-ordermanagement-app-core"
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "cuba-ordermanagement-testing-logs-app",
+          "awslogs-region": "us-east-1"
+        }
+      }
+    }
+  ]
+}
+{% endhighlight %}
 
 
 #### ECS service for cuba-ordermanagement
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-#### ECS task definition
-
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+The last thing to create is the ECS service within the ECS cluster. A service is responsible for running a certain task definition within a ECS cluster.
 
 ## Deploy application to ECS cluster
 
