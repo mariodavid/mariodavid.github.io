@@ -182,7 +182,7 @@ Next up the last step is to actually transfer the Docker image to ECR.
 There have to be a few steps have to be taken before you can communicate with ECR. Detailed information about this can be found in the <a href="http://docs.aws.amazon.com/AmazonECR/latest/userguide/ECR_GetStarted.html">ECR getting started guide</a>. Here are the main points:
 
 1. create a AWS account
-2. follow the <a href="http://docs.aws.amazon.com/AmazonECS/latest/developerguide/get-set-up-for-amazon-ecs.html">ECS setup instrcutions</a>
+2. follow the <a href="http://docs.aws.amazon.com/AmazonECS/latest/developerguide/get-set-up-for-amazon-ecs.html">ECS setup instructions</a>
 3. create a ECR registry for each component (app-core and app)
 4. install the <a href="http://docs.aws.amazon.com/cli/latest/userguide/installing.html">AWS CLI</a>
 5. login to ECR via the Docker CLI: <code>$(aws ecr get-login)</code>

@@ -114,7 +114,7 @@ https://github.com/mariodavid/cuba-ordermanagement/blob/cuba-on-aws-ecs/deployme
           "name": "CUBA_WEB_PORT",
           "value": "80"
         }
-      ],
+      ]
     },
     {
       "memory": 256,
@@ -228,6 +228,10 @@ For doing that i uses the AWS CLI as well as some pretty cool command line tool 
 
 I'll not go into the details of this script, because first of all because there is some error handling and comments going on there which would blow up the listing here. Secondly it would be a little bit too much detail. The main point is that is uses the CLI of the cloud provider in order to automatically deploy your application.
 
+<div class="information">
+To be fair, the script relies on the naming conventions for the different parts. So in case you are stuck executing it, just write a comment below with the error message or open up your vim in order to see where the problem is.
+</div>
+
 Here are the main AWS CLI parts:
 
 {% highlight bash %}
@@ -256,3 +260,20 @@ it should use what is currently the latest Docker image(s) and deploy them strai
 	<img src="{{ site.url }}/images/cuba-on-aws-ecs-part-2/cuba-start.png" alt="">
 	<figcaption>The running CUBA app in a ECS cluster</figcaption>
 </figure>
+
+## Summary
+
+So, what did we achieve in this second part of the article. We created the actual ECS building blocks with the cluster, the task definition and the service. During that we additionaly created the underlying EC2 and RDS insctances in order to have a runtime for the ECS cluster.
+
+We saw the different options on how to communicate with the AWS cloud. In the initial phase we used the management UI to create the resources. Later in the script, we saw that everything that can created via the UI can also be created and edited via the AWS CLI.
+
+The script gave you an easy opportunity to deploy latest release of your application to the alredy existing ECS cluster.
+
+#### What's left?
+
+As i wrote, this is a three part series on AWS and how to create a production like environment with ECS. When we look at the currently implemented cluster, there are a few things that could have been done better. This is what the last part will cover.
+
+We will use ELB in order to load balance traffic to more then one web application. Then we will start to cluster (on a CUBA level) the application parts. There are a few gotchas to hop over when we want to cluster the middleware layer of CUBA on AWS.
+In case you have different security requirements on the different parts of your application, you might also be interested in the different VPC features of AWS and how we can arrange our ECS cluster so that certain parts of the application layers are not internet accessible.
+
+So, with this i would like to close this second part and hope you enjoyed it. If you have any comments, feedback or opinions on the article, please let me know about it.
