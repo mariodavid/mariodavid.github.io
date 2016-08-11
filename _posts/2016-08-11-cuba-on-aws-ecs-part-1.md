@@ -2,7 +2,7 @@
 layout: post
 title: Run CUBA on AWS ECS - Part 1
 description:
-modified: 2016-08-02
+modified: 2016-08-11
 tags: [cuba, AWS, ECR, cloud, ECS]
 image:
   feature: cuba-on-aws-ecs/feature.jpg
@@ -11,13 +11,13 @@ image:
 
 Going from running Docker in the command line to a production scenario can be quite challenging since there is so much more to cover and so much more possibilities to do it right. One solid way of Docker and the Cloud is AWS.
 
-In the next three articles i'll go through the different possibilities AWS has to offer especially regarding Container as a Service. We will deploy the [cuba-ordermanagement](https://github.com/mariodavid/cuba-ordermanagement) CUBA app on an ECS cluster and use different features of the AWS cloud to leverage the full cloud potential to CUBA.
+In the next three articles we'll go through the different possibilities AWS has to offer especially regarding Container as a Service. We will deploy the [cuba-ordermanagement](https://github.com/mariodavid/cuba-ordermanagement) CUBA app on an ECS cluster and use different features of the AWS cloud to leverage the full cloud potential to CUBA.
 
 <!-- more -->
 
 The three parts of the article will cover the following content of the overall topic:
 
-1. introduction to AWS services, creating the docker image and pushing it to ECR
+1. [introduction to AWS services, creating the docker image and pushing it to ECR](https://www.road-to-cuba-and-beyond.com/cuba-on-aws-ecs-part-1)
 2. creating a simple ECS cluster and running the cuba app on it
 3. using different AWS features to extend the ECS cluster towards HA, cluster the different CUBA layers independently
 
@@ -29,11 +29,11 @@ AWS is Amazons cloud offering. It is a very popular cloud provider and probably 
 > Nobody ever got fired for choosing AWS
 
 Reffering to the well known marketing term "[No one ever got fired for buying IBM](http://corporatevisions.com/blog/2007/06/11/no-one-ever-got-fired-for-buying-ibm/)".
-AWS started as a Infrastructure as a Service (IaaS) platform. With EC2 it offers for compute capabilities (bisically virtual machines). For storage there are a few more options: S3 / DynamoDB / RDS address filestorage, non-relational and relational data storage. After that a lot of other services pop up. These were not only in the IaaS space, but in the P/SaaS space as well. Things like Elastic Beanstalk or Amazon Work Mail filled the gap between the low level infrastructure services and alternatives like Heroku.
+AWS started as a Infrastructure as a Service (IaaS) platform. With EC2 it offers compute capabilities (basically virtual machines). For storage there are a few more options: S3 / DynamoDB addresses file storage as well as non-relational and relational data storage (RDS). After that a lot of other services pop up. These were not only in the IaaS space, but in the P/SaaS space as well. Things like Elastic Beanstalk or Amazon Lambda filled the gap between the low level infrastructure services and alternatives like Heroku.
 
 At the end of 2014 AWS [announced](https://aws.amazon.com/de/blogs/aws/category/ec2-container-service/) ECS, which is a service that is a layer on top of Docker containers in order to orchestrate and manage containers.
 
-ECS is a offering in a highly competitve market. Docker Swarm, Apache Mesos, Kubernetes etc. are just a few tools to mention. Although ECS is not open source like the other examples, it is mainly build on top of Docker and therefore a good fit for deploying our open source CUBA application [cuba-ordermanagement](https://github.com/mariodavid/cuba-ordermanagement). On a later stage i'll probably take a look at Kubernetes because it has a fairly user base as well and additionally a lot of services, like [OpenShift](https://www.openshift.com/) from Red Hat or [Rancher](http://rancher.com/) use it as a basis for their solutions.
+ECS is a offering in a highly competitve market. Docker Swarm, Apache Mesos and Kubernetes are just a few tools to mention. Although ECS is not open source like the other examples, it is mainly build on top of Docker and therefore a good fit for deploying our open source CUBA application [cuba-ordermanagement](https://github.com/mariodavid/cuba-ordermanagement). On a later stage we'll probably take a look at Kubernetes because it has a fairly large user base as well. Additionally a lot of services, like [OpenShift](https://www.openshift.com/) from Red Hat or [Rancher](http://rancher.com/) use it as a basis for their solutions.
 
 To get back to the topic of this article, let's have a look at the different services that we'll use throughout the deployment with ECS and AWS.
 
@@ -42,7 +42,7 @@ To get back to the topic of this article, let's have a look at the different ser
 <img style="float:right; padding: 10px; width: 64px;" src="{{site.url}}/images/cuba-on-aws-ecs/ec2-logo.png">
 
 #### EC2
-EC2 is the basis of a lot of AWS services. It is their compute solution. Basically you can create virtual machines on a virtual server that has certain capabilities, like amount of RAM, CPU power, network bandwith and so on. An EC2 instance can go from a VM with 512 mb RAM to a VM with 2 TB of RAM and 128 vCPUs. [Here](https://aws.amazon.com/ec2/instance-types/) is an overview of instance types.
+EC2 is the basis of a lot of AWS services. It is their compute solution. Basically you can create virtual machines. These VMs can be created with different capabilities like amount of RAM, CPU power, network bandwith and so on. An EC2 instance can go from a VM with 512 mb RAM to a VM with 2 TB of RAM and 128 vCPUs. [Here](https://aws.amazon.com/ec2/instance-types/) is an overview of instance types.
 
 
 <img style="float:right; padding: 10px; width: 64px;" src="{{site.url}}/images/cuba-on-aws-ecs/elb-logo.png">
@@ -63,20 +63,20 @@ RDS is another example of a high level service that sits on top of EC2. It is ab
 
 
 #### VPC
-With virtual private cloud: "VPC", AWS allows controlling the different pieces of your infrastructure to be not accessible to everyone in the internet. You can create subnet's within your VPC, connect or disconnect it from the internet, defining security rules about what has access to what within the VPC and so on. Even a dedicated VPN tunnel can be created so that there is no internet access needed at all.
+With virtual private cloud: "VPC", AWS allows controlling the different pieces of your infrastructure to be not accessible to everyone in the internet. You can create subnets within your VPC, connect or disconnect it from the internet, defining security rules about what has access to what within the VPC and so on. Even a dedicated VPN tunnel can be created so that there is no internet connection needed at all.
 
 
 <img style="float:right; padding: 10px; width: 64px;" src="{{site.url}}/images/cuba-on-aws-ecs/ecr-logo.png">
 
 #### ECR
-ECR stands for elastic container registry. It is the fully managed solution for the Docker containers. Basically it is the same thing as Dockerhub for storing your Docker images. But it has tight integration in the full fletched security mechanisms on AWS. Besides that it uses the same protocol as the docker registry does. Due to this, the Docker CLI <code>docker pull tomcat:8-jre</code> will seamlessly work with ECR.
+ECR stands for elastic container registry. It is the fully managed solution for the Docker containers (the binaries). Basically it is the same thing as Dockerhub for storing your Docker images. But it has tight integration in the full fletched security mechanisms on AWS. Besides that it uses the same protocol as the docker registry does. Due to this, the Docker CLI <code>docker pull tomcat:8-jre</code> will seamlessly work with ECR.
 
 
 <img style="float:right; padding: 10px; width: 64px;" src="{{site.url}}/images/cuba-on-aws-ecs/ecs-logo.png">
 
 #### ECS
 
-ECS is the last building block we will use in this articles. As described above, it is the solution from AWS for Container orchestration. We'll go into much more detail about this topic because we need to configure the different pieces within ECS, but for know it can be seen as the part that automatically deploys Docker containers to existing EC2 instances and cares about the healthiness of the containers.
+ECS is the last building block we will use in this articles. As described above, it is the solution from AWS for Container orchestration. We'll go into much more detail about this topic in the second article because we need to configure the different pieces within ECS. For know it can be seen as the part that automatically deploys Docker containers to existing EC2 instances and cares about the healthiness of the containers.
 
 ## Overview on the deployment process
 
@@ -91,20 +91,20 @@ The diagram shows the different building blocks of the AWS infrastructure that a
 
 First either the developer or your favorite CI system kicks off the deployment process. To do this, the Docker image get build locally and pushed to the central Docker repository. Next the elastic container service (ECS) gets notified to redeploy the newly created Docker image.
 
-Since ECS is just the orchestration layer but not responsible for actually running the Docker containers, pre configured EC2 instances are contacted in order to redeploy.
+Since ECS is just the orchestration layer but not responsible for actually running the Docker containers, pre-configured EC2 instances are contacted in order to redeploy.
 
 To ensure fault tolerance on the EC2 instance level as well as the Docker container level, multiple EC2 instances serve the multiple instances of the Docker image. Thus there is a need for a load balacing mechanism that will shield the docker containers from direct internet connection, terminate SSL and balance requests between the instances.
 
 For database access of the CUBA application the deployment uses a postgres RDS instance that is clustered on a cross availability zone basis. An availability zone or a AZ as called in AWS is basically a data-center. The biggest unit of computing on AWS is a region (like eu-west-1: EU Ireland). Within a region there are multiple AZs that are fully isolated but have a high bandwith connection between them (to allow synchron database cluster e.g.). More information can be found at the [AWS AZ docs](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html).
 
-After every part of the diagram has been talked through very slightly, we will have a look at the different steps and how to implement them in order to deploy our CUBA application to ECS in the next articles. In this first article we will build the application and deploy the binaries to ECR. This will be the requirement to take a look at how to create a ECS cluster (second part) so that we are able to deploy the application in the ECS cluster (third part)
+After every part of the diagram has been talked through very slightly, we will have a look at the different steps and how to implement them in order to deploy our CUBA application to ECS in the next articles. In this first article we will build the application and deploy the binaries to ECR. This will be the requirement to take a look at how to create a simple ECS cluster with cuba-ordermanagement (second part) and after that different options to enhance the deployment to even more production scenarions (third part).
 
 For this first part we cover the image building and registry configuration and deployment.
 
 ### Build cuba-ordermanagement Docker image
 
 The first step towards this is to actually deploy the docker image to ECR.
-Based on the docker image i created in the initial [docker cuba blog post](https://www.road-to-cuba-and-beyond.com/put-a-island-into-a-box-how-to-dockerize-your-cuba-app/) here's a slightly changed Dockerfile. First of all i in fact created two different Dockerfiles. The reason is that for every application component we want to create a Docker container that we can create and deploy independently.
+Based on the docker image i created in the initial [docker cuba blog post](https://www.road-to-cuba-and-beyond.com/put-a-island-into-a-box-how-to-dockerize-your-cuba-app/) here's a slightly changed Dockerfile. In fact, there are different Dockerfiles for each application layer so we can create and deploy them independently, but they are quite similar. Below is the Dockerfile for the middlware layer:
 
 
 {% highlight dockerfile %}
@@ -138,6 +138,10 @@ echo "db.host=${CUBA_DB_HOST}" >> /usr/local/tomcat/conf/catalina.properties
 {% endhighlight %}
 
 In case the Docker container is not started with <code>docker run -e CUBA_DB_HOST=dbServer</code> the container will complain about the absense of the variable and stop the server. If the variable is set, the value will be copied to catalina.properties so that the CUBA application is configured via the environment variables.
+
+<div class="information">
+This is done because in comparison to Java with its System properties, in the Docker world the smallest building block for configuring a container is operating system environment variables. Everything that sits on top of Docker like docker-compose or ECS will be aware of this configuration option. This little trick from above will do the translation between these two worlds.
+</div>
 
 After the image is described correctly, it can be build locally and deployed to the central AWS Docker registry (ECR) afterwards. To build the Docker image i created the shell script [docker-build.sh](https://github.com/mariodavid/cuba-ordermanagement/blob/cuba-on-aws-ecs/deployment/docker-build.sh) which lets us build both images. It mainly does the following steps (example for the app.war):
 
@@ -176,10 +180,7 @@ cuba-ordermanagement-app-core   latest              2446085b946a        2 minute
 
 ### Deploy docker image to ECR
 
-Next up the last step is to actually transfer the Docker image to ECR.
-
-<!--<div class="information">-->
-There have to be a few steps have to be taken before you can communicate with ECR. Detailed information about this can be found in the <a href="http://docs.aws.amazon.com/AmazonECR/latest/userguide/ECR_GetStarted.html">ECR getting started guide</a>. Here are the main points:
+The last step for this part is to transfer the Docker image to ECR. There have to be a few steps have to be taken before you can communicate with ECR. Detailed information about this can be found in the <a href="http://docs.aws.amazon.com/AmazonECR/latest/userguide/ECR_GetStarted.html">ECR getting started guide</a>. Here are the main points:
 
 1. create a AWS account
 2. follow the <a href="http://docs.aws.amazon.com/AmazonECS/latest/developerguide/get-set-up-for-amazon-ecs.html">ECS setup instructions</a>
@@ -187,7 +188,7 @@ There have to be a few steps have to be taken before you can communicate with EC
 4. install the <a href="http://docs.aws.amazon.com/cli/latest/userguide/installing.html">AWS CLI</a>
 5. login to ECR via the Docker CLI: <code>$(aws ecr get-login)</code>
 
-It took qiute some time at least for me to go through the different steps, but this is just a one time effort in order to get going with AWS. Additionally, a lot of steps are requirements for ECS as well.
+At least for me it took qiute some time to go through the different steps, but this is just a one time effort in order to get going with AWS. Additionally, a lot of steps are requirements for ECS as well.
 
 I created another shell script called [docker-deploy-to-ecr.sh](https://github.com/mariodavid/cuba-ordermanagement/blob/cuba-on-aws-ecs/deployment/ecs/docker-deploy-to-ecr.sh)
 which will to the job for us. Since ECR is quite seamlessly integrated into the normal docker workflow, the script just uses the normal docker commands <code>docker tag</code> and <code>docker push</code> to transfer the images to the repository. It takes the same arguments as the last script but one additional parameter: "ECR_REGISTRY_HOST".
