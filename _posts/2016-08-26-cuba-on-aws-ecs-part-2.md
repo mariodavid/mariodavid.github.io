@@ -2,7 +2,7 @@
 layout: post
 title: Run CUBA on AWS ECS - Part 2
 description:
-modified: 2016-08-09
+modified: 2016-08-26
 tags: [cuba, AWS, ECR, cloud, ECS]
 image:
   feature: cuba-on-aws-ecs-part-2/feature.jpg
@@ -59,7 +59,7 @@ After setting up the EC2 image, it can be started. A couple of seconds later the
 
 #### ECS task definition
 
-A task definition in the ECS world is very similar to the docker-compose.yml file introduced in the [last Docker blog post](https://www.road-to-cuba-and-beyond.com/put-a-island-into-a-box-how-to-dockerize-your-cuba-app/). A task definition defines how one or many different Docker images should be run. Port mappings can be defined as well as environment variables and volume mountings. In this regard there is no difference to a docker-compose.yml file. 
+A task definition in the ECS world is very similar to the docker-compose.yml file introduced in the [last Docker blog post](https://www.road-to-cuba-and-beyond.com/put-a-island-into-a-box-how-to-dockerize-your-cuba-app/). A task definition defines how one or many different Docker images should be run. Port mappings can be defined as well as environment variables and volume mountings. In this regard there is no difference to a docker-compose.yml file.
 The difference between them is that specific AWS features IAM roles or the log configuration for the Containers that are used for certain containers.
 
 In the [repository](
@@ -263,4 +263,3 @@ As I mentioned, this is a three-part series on AWS and how to create a productio
 We will use ELB in order to load balance traffic to more than one web application. Then we will start to cluster (on a CUBA level) the application parts. There are a few gotchas to hop over when we want to cluster the middleware layer of CUBA on AWS. In case you have different security requirements on the different parts of your application, you might also be interested in the different VPC features of AWS and how we can arrange our ECS cluster so that certain parts of the application layers are not internet accessible.
 
 So, by this I would like to close this second part and hope you enjoyed it. If you have any comments, feedback or opinions on the article, please let me know.
-
