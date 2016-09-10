@@ -159,8 +159,39 @@ After setting up the networking part correctly we can adjust the firewall settin
 When we go to [Security Groups](https://console.aws.amazon.com/vpc/home?region=us-east-1#securityGroups:) via the management UI we can create the following two security groups: *cuba-vpc-middleware-security-group* and *cuba-vpc-web-security-group*.
 In the *Inbound Rules* tab of the middleware security group we can define what traffic is allowed for incoming requests for resources associated with this security group. Let's create the following rules:
 
+<figure class="center">
+	<a href="{{ site.url }}/images/cuba-on-aws-ecs-part-3/middleware-security-groups.png"><img src="{{ site.url }}/images/cuba-on-aws-ecs-part-3/middleware-security-groups.png" style=""></a>
+	<figcaption><a href="{{ site.url }}/images/cuba-on-aws-ecs-part-3/middleware-security-groups.png" title="Security Group definition for the middleware part">Security Group definition for the middleware part</a></figcaption>
+</figure>
+
+The *cuba-vpc-web-security-group* will have access to port 8080 from <code>0.0.0.0/0</code> - the Internet.
+
+## Running EC2 instances in this VPC
+After doing all the heavy lifting regarding the networking structure, we are at the point to re-create out EC2 instances that should run the Docker containers. I'll go only briefly into this topic because we created this configuration for the EC2 instances already in the [second part](https://www.road-to-cuba-and-beyond.com/cuba-on-aws-ecs-part-2/).
+
+We already created the second ECS cluster. Now we can use the EC2 instance wizard to create the following four EC2 instances:
+
+| EC2 instance name                              | security group                     | Auto-assign Public IP | Subnet                        | User data                                     | Network  |
+|------------------------------------------------|------------------------------------|-----------------------|-------------------------------|-----------------------------------------------|----------|
+| cuba-ordermanagement-ec2-instance-middleware-1 | cuba-vpc-middleware-security-group | false                 | cuba-vpc-middleware-subnet-1a | ECS_CLUSTER=cuba-ordermanagement-cluster-core | cuba-vpc |
+| cuba-ordermanagement-ec2-instance-middleware-2 | cuba-vpc-middleware-security-group | false                 | cuba-vpc-middleware-subnet-1b | ECS_CLUSTER=cuba-ordermanagement-cluster-core | cuba-vpc |
+| cuba-ordermanagement-ec2-instance-web-1        | cuba-vpc-web-security-group        | true                  | cuba-vpc-web-subnet-1a        | ECS_CLUSTER=cuba-ordermanagement-cluster      | cuba-vpc |
+| cuba-ordermanagement-ec2-instance-web-1        | cuba-vpc-web-security-group        | true                  | cuba-vpc-web-subnet-1b        | ECS_CLUSTER=cuba-ordermanagement-cluster      | cuba-vpc |
+
+After starting these instances, both ECS clusters should have two instances associated to it.
+
+Before we see a running CUBA cluster we have to make two other steps on both layers:
+
+* enable application middleware cluster on CUBA level
+* creating a load balancer for the web application
+
+These things we will cover in the next sectons.
+
+# Application middleware cluster on CUBA level
+
 
 # Load balance front-end application through ELB
+
 
 
 # Central logging with CloudWatch Logs
