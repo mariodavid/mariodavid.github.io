@@ -189,9 +189,48 @@ These things we will cover in the next sectons.
 
 # Application middleware cluster on CUBA level
 
+As we have created two EC2 instances for our backend we are right now in a situation where the middleware instances would work out of the box. But there are serveral cases where the middleware servers have to communicate with each other in order to synchronize its current state. Examples of this would be Locks, Session information etc. When we look at the CUBA [deployment docs](https://doc.cuba-platform.com/manual-6.2/cluster_mw.html) this scenario is described with two middleware servers (although nothing prevents us from instantiating 5 or 30 servers). In the section ["Configuring Interaction between Middleware Servers"](https://doc.cuba-platform.com/manual-6.2/cluster_mw_server.html) the actual communication mechanism is described.
+
+The middleware synchronization is done via the Java library [JGroups](http://www.jgroups.org/), which is a "relieable multicast" messaging system. So instead of a centralized model to store session information and distribute them between servers through something like Redis or Memcache is uses a P2P approach where the nodes directly communicate with each other.
+
+How does this relate to our AWS EC2 instances implementation you might ask? Well, it turns out that like most P2P communication mechanisms i got to know oftentimes it's a litte bit harder to esablish connections between the nodes. The reason for this is that we live in a world of firewalls and [port 80 syndroms](http://security.stackexchange.com/questions/76755/is-there-any-meaning-in-only-allowing-port-80-and-443-today) while JGroups (as a representment of a P2P network) wants to use multicast with UDP by default.
+
+That said, let's have a look at how to solve this problem. It turns out that JGroups is capable of running in a lot of different  supported [transport protocols](http://www.jgroups.org/manual4/index.html#_transport_protocols). If we had a overlay network (as described above), it would be a little easier, but with the combination of Docker that acts like a NAT router and P2P it didn't really work (if you find a solution to this problem, just write down a comment - i'd love to see it).
+
+This solution in this case is to use the Tunnel protocol together with a Gossip Router (that makes up the centralized part of the communication channel). According to their docs i created a bash script that start the gossip router (which is part of the jgroups distribution jar):
+
+{% highlight bash %}
+
+java \
+  -classpath lib/log4j-api-2.0.2.jar:lib/log4j-core-2.0.2.jar:lib/jgroups-3.6.7.Final.jar \
+  -Dlog4j.configurationFile=file:conf/log4j2.xml \
+  org.jgroups.stack.GossipRouter -port 12001
+
+{% endhighlight %}
+
+and fired that up on two different EC2 T2-nano instances (for fault tolerance).
+
+In the jgroups.xml of the CUBA app-core instance the following adjustments have to be made:
+
+{% highlight xml %}
+<TUNNEL
+        gossip_router_hosts="${jgroups.gossip_router_hosts}"
+        bind_port="7800"
+        bind_addr="GLOBAL"
+        external_addr="${jgroups.external_addr}"
+        external_port="${jgroups.external_port:7800}"
+/>
+{% endhighlight %}
+
+The System property <code>jgroups.gossip_router_hosts</code> has to set through the Docker environment variable: <code>CLOVER_JGROUPS_GOSSIP_HOSTS</code> like i did in the example [task definition](https://github.com/mariodavid/cuba-ordermanagement/blob/cuba-on-aws-ecs-part-3/deployment/ecs/task-definitions/cuba-ordermanagement--middleware-task-definition-templage.json#L51) for the middleware layer.
 
 # Load balance front-end application through ELB
 
+The last thing to mention is on how to enable load balancing for the web layer of the CUBA application. Luckily ECS makes it really easy to enable such featuers through ELB. As described in the [first part](https://www.road-to-cuba-and-beyond.com/cuba-on-aws-ecs-part-1/) ELB balances HTTP requests to different servers. It terminates SSL if necessary and does health checks to dynamically removes unhealty instances from the cluster pool.
+
+<img style="float:right; width: 128px; padding: 5px;" src="{{site.url}}/images/cuba-on-aws-ecs-part-3/configure-elb.png">
+
+To enable ELB we need to re-create our ECS service for the ECS web cluster <code>cuba-ordermanagement-cluster</code> and configure ELB for this service
 
 
 # Central logging with CloudWatch Logs
