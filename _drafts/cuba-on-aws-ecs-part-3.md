@@ -230,9 +230,29 @@ The last thing to mention is on how to enable load balancing for the web layer o
 
 <img style="float:right; width: 128px; padding: 5px;" src="{{site.url}}/images/cuba-on-aws-ecs-part-3/configure-elb.png">
 
-To enable ELB we need to re-create our ECS service for the ECS web cluster <code>cuba-ordermanagement-cluster</code> and configure ELB for this service
+To enable ELB we need to re-create our ECS service for the ECS web cluster <code>cuba-ordermanagement-cluster</code> and configure ELB for this service (you have to create a ELB in the EC2 management console before assigning it to the ECS service).
+
+<div class="information">
+Just recently, AWS <a href="https://aws.amazon.com/de/blogs/aws/new-aws-application-load-balancer/">announced</a> a new style of ELB: the application load balancer. Since it will reduce costs while allowing more flexibility compared to the classic ELB solution, since it works on the application layer, i will not go into details on the ELB integration. Since the AWS documentation is very powerful on both the new <a href="http://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html">application load balancer</a> and the <a href="http://docs.aws.amazon.com/elasticloadbalancing/latest/classic/introduction.html">classic elastic load balancer</a>, this should not be a big deal.
+</div>
 
 
 # Central logging with CloudWatch Logs
 
-Instead of logging into the EC2 instance to get the Docker container logs we will instead use [AWS cloud watch logs](http://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/CWL_GettingStarted.html). ECS has integration to cloud watch logs. It takes STDOUT and STDERR from the Docker container and pushes it into the logging system, where we can easily retrieve the information from Tomcat in a web UI. To get that going the only thing to do is to [create](https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#logs:) a log group in your preferred AWS region. Then you define the name of the log group in the JSON key*awslogs-group*. After that the logs will be sent to the central logging system.
+One additional thing if everything is setup and running in production mode is, that we might want to take a look into the running system. Since the logs are hidden within the container let's think about an option to get these easily accessible.
+
+Instead of logging into the EC2 instance to get the Docker container logs we will use [AWS cloud watch logs](http://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/CWL_GettingStarted.html). ECS has integration to cloud watch logs. It takes STDOUT and STDERR from the Docker container and pushes it into the logging system, where we can easily retrieve the information from Tomcat in a web UI. To get that going the only thing to do is to [create](https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#logs:) a log group in your preferred AWS region. Then you define the name of the log group in the JSON key*awslogs-group* like in the [task definition example](https://github.com/mariodavid/cuba-ordermanagement/blob/cuba-on-aws-ecs-part-3/deployment/ecs/task-definitions/cuba-ordermanagement-web-task-definition-templage.json#L34):
+{% highlight json %}
+"logConfiguration": {
+    "logDriver": "awslogs",
+    "options": {
+        "awslogs-group": "cuba-ordermanagement-testing-logs-app",
+        "awslogs-region": "us-east-1"
+  }
+}
+{% endhighlight %}
+
+After that the logs will be sent to the central logging system and we can view them via a simple UI that not requires anyone to open an ssh terminal and do crazy <code>grep | tail</code> combinations in order to get any signal from your logs.
+
+
+## Summary on AWS ECS for CUBA
