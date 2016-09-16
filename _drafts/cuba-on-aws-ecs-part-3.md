@@ -256,3 +256,9 @@ After that the logs will be sent to the central logging system and we can view t
 
 
 ## Summary on AWS ECS for CUBA
+
+We have gone through a lot of stuff. Probably to much for most readers. Therefore thanks for keeping up until the end. As we have seen in the third article, the world of AWS and topics that come with it are very versatile. Although we covered many topics that are relevant for a production scenario, we've choosen a cerain path in favor of many others.
+
+As i said earlier there is no one way anymore on this level, to get your application up and running (and stay up). Approaches like Docker on Kubernetes are much more in the Container as a Service space. In contrast, in the described AWS ECS approach we always had our hands on the bare metal. Sometimes this makes sense and sometimes it doesn't.
+
+So i hope you had a great time digging into the implementation details on AWS while reading this blog post series. If you have any questions or comments, just write a comment and we can have a conversation about it.
