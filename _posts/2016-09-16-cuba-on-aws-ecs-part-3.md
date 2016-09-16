@@ -2,12 +2,11 @@
 layout: post
 title: Run CUBA on AWS ECS - Part 3
 description:
-modified: 2016-08-09
+modified: 2016-09-16
 tags: [cuba, AWS, cloud, ECS, VPC]
 image:
   feature: cuba-on-aws-ecs-part-3/feature.jpg
   feature_source: https://pixabay.com/de/alaska-gletscher-eis-bergen-810433/
-  feature-top: cuba-on-aws-ecs-part-3/feature.jpg
 ---
 
 In this third part of the ECS article series we'll take a deeper look into the more advanced capabilities of the AWS world in order to enhance our current ECS deployment. Separating the application layers to scale independently is one of the main aspect of this article.
