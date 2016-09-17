@@ -18,8 +18,8 @@ In the next three articles we'll go through the different possibilities AWS has 
 The three parts of the article will cover the following content of the overall topic:
 
 1. [introduction to AWS services, creating the docker image and pushing it to ECR](https://www.road-to-cuba-and-beyond.com/cuba-on-aws-ecs-part-1)
-2. creating a simple ECS cluster and running the cuba app on it
-3. using different AWS features to extend the ECS cluster towards HA, cluster the different CUBA layers independently
+2. [creating a simple ECS cluster and running the cuba app on it](https://www.road-to-cuba-and-beyond.com/cuba-on-aws-ecs-part-2)
+3. [using different AWS features to extend the ECS cluster towards HA, cluster the different CUBA layers independently](https://www.road-to-cuba-and-beyond.com/cuba-on-aws-ecs-part-3)
 
 
 ### A brief history on cloud land
