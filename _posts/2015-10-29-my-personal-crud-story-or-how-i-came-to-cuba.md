@@ -10,7 +10,7 @@ image:
 ---
 
 
-In this blog post i’d like to lay out how i came to the CUBA platform and what the benefits of this tool are. I’ll dig a little into the different phases on my young “business application development” history, just to give you a little context. So let’s start with how i came to the typical CRUD applications to help non-tech people to be a little more productive. 
+In this blog post i’d like to lay out how i came to the CUBA platform and what the benefits of this tool are. I’ll dig a little into the different phases on my young “business application development” history, just to give you a little context. So let’s start with how i came to the typical CRUD applications to help non-tech people to be a little more productive.
 
 <!-- more -->
 
@@ -82,7 +82,7 @@ The problem is, that *domain specific* is a pretty generic term. From the view o
 
 While i was creating mostly CRUD like business applications in these frameworks in the second layer of the diagram, i thought that what if there is a category of frameworks / platforms, that fulfills the requirements for business applications a little better. When we would narrow down the focus a little further towards this subset of applications, perhaps scaffolding can create real usable stuff.
 
-A few months ago, i came across the [CUBA platform](https://www.cuba-platform.com/) via an [article](http://www.javacodegeeks.com/2015/06/cuba-platform-the-new-java-enterprise-applications-framework.html) from java code geeks. CUBA is primarily a commercial “framework”, that advertises itself with the slogan: “A high level Java framework for faster enterprise software development”.
+A few months ago, i came across the [CUBA platform](https://www.cuba-platform.com/) via an [article](http://www.javacodegeeks.com/2015/06/cuba-platform-the-new-java-enterprise-applications-framework.html) from java code geeks. CUBA is primarily a open-source “framework”, that advertises itself with the slogan: “A high level Java framework for faster enterprise software development”.
 
 At a first glance it looked like just another web framework with its common parts. OR-Mapper, Dependency Injection, Scaffolding, UI and so on. Instead of creating all the subparts by itself, it uses a kind of *Meta-framework* approach just like Grails does. The OR-Mapper is JPA (EclipseLink), Spring for DI, Vaadin as a UI Framework.
 
@@ -137,7 +137,3 @@ With that in mind, there is literally no reason to not go up the abstraction let
 What it pretty much boils down to is this “right tool for the job” kind of thing. When you want to create typical enterprise apps (nail) and there comes this CUBA (hammer) – it’s a very good fit. This implication, on the other hand should let nobody think, that everything is a nail.
 
 I absolutely encourage you to check out CUBA and especially the different online demos you’ll find [here](https://www.cuba-platform.com/online-demo).
-
-{% highlight html %}
-[Edit 2015-10-30: added explanation, that CUBA is a commercial product]
-{% endhighlight %}
