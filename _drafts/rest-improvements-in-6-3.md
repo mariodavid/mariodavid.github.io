@@ -11,4 +11,4 @@ Next to the application components, there is another interesting feature that is
 
 <!-- more -->
 
-## Once upon a time, there
+## Once upon a time, there was a was a blog post
