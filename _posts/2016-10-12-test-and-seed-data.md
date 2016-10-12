@@ -2,7 +2,7 @@
 layout: post
 title: Test and seed data in CUBA applications
 description:
-modified: 2016-10-04
+modified: 2016-10-12
 tags: [cuba, test-data]
 image:
   feature: test-and-seed-data/feature.gif
