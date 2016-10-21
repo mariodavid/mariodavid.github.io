@@ -2,7 +2,7 @@
 layout: post-black
 title: Decompose the monolith with CUBA application components
 description:
-modified: 2016-08-09
+modified: 2016-10-21
 tags: [cuba, application components]
 image:
   feature: decompose-the-monolith/feature.gif
@@ -84,7 +84,7 @@ It consists of the following three parts:
 
 * appointments (*Component composition*)- an application component that is a subsystem for managing appointments
 * project-management-platform (*product line platform*) - an application component which provides certain base classes or common shared code
-* project-management-app - the application that has code for managing projects combined with the possibility to add appointments to projects and use shared code from the platform component. 
+* project-management-app - the application that has code for managing projects combined with the possibility to add appointments to projects and use shared code from the platform component.
 First we can take a look at the appointments component.
 
 ### Component composition: appointments
