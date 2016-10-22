@@ -117,7 +117,7 @@ The next component is an example of a application component that falls in the fi
 * MappedSuperclasses for entities
 
 
-For the third approach I don't have a running example. It would probably be something like [extending existing functionality](https://doc.cuba-platform.com/manual-6.2/extension.html). In the case of the appointment component it could be that the project-management-app would define the Appointment entity to add another property "priority".
+For the third approach I don't have a running example. It would probably be something like [extending existing functionality](https://doc.cuba-platform.com/manual-6.3/extension.html). In the case of the appointment component it could be that the project-management-app would define the Appointment entity to add another property "priority".
 
 But I think you should be able to imagine what you can do with this decomposition mechanism. For me at least, coming mainly from the Grails world, it was one important missing piece of the puzzle and I'm very happy it is now included in the platform and easily accessible through Studio.
 
