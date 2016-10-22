@@ -12,3 +12,5 @@ Next to the application components, there is another interesting feature that is
 <!-- more -->
 
 ## Once upon a time, there was a was a blog post
+
+Last year i did a blog post about the REST-API implementation of the CUBA platform. In the current release 6.3 the generic REST API has been redesigned. Due to this, we
