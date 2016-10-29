@@ -72,4 +72,32 @@ First of all, let's take a look at the underlying domain model:
 	<figcaption><a href="{{ site.url }}/images/how-to-deal-with-reference-data/domain-model-temporal-reference-data.png" title="Class diagram of the Alphabet Inc. ordermanagement system">Class diagram of the Alphabet Inc. ordermanagement system</a></figcaption>
 </figure>
 
-You'll find most of the above described entites. All reference entites the common  base class <code>ReferenceEntity</code>. In case of a reference entity with temporal validity information it is specialization <code>TemporalReferenceEntity</code>.
+You'll find most of the above described entites. All reference entites the common  base class <code>ReferenceEntity</code>. In case of a reference entity with temporal validity information it is the specialization <code>TemporalReferenceEntity</code>. <code>PaymentMethod</code> and <code>TaxRate</code> have validity information while <code>CustomerType</code> is a normal reference entity.
+
+
+### Handle deactivated / deleted ReferenceEntity references
+
+The first thing that we have to be aware of is the fact, that reference entites can change over time. New entries get created and other entries get obsolete. Let's look at the fairly easy one: a reference entity gets removed.
+
+The immediate question that comes up then: what happens to the transactional data that has a reference to the ReferenceEntity instance. Let's look at the Order entity for this example: In this case, the reference data would be the Customer (although it in above model Customer does not extends ReferenceEntity, but in this case the Customer can be seen as reference data from a Order point of view). What happens if the Customer gets removed from the system, because (s)he signs out from our online shop.
+
+<img style="float:left; margin-right: 50px;padding: 10px; margin-left:-90px; width:150px;" src="{{site.url}}/images/how-to-deal-with-reference-data/cubes/cube-xz.png">
+
+
+**There are the main options:**
+
+
+
+1. Remove the orders from the system
+2. Remove the reference to the customer for all these orders
+3. Soft-delete the customer and let the order references untouched
+
+For transactional data, it might not even be relevant, but if you start thinking about statistics and historical information it is absolutely crucial that these transactional data stay intact.
+
+When you have a statistic that gives you the total turon over for all ordres in 2015 and in 2016 you remove the main customer with all its orders, the turn over value will decrease the next time you exeute the statistic. Therefore removing all orders like in 1. will not work out. Depending on the type of statistic 2. would not work as well. Let's imagine we want total turn overs only for a certain customer region. In this case, the statistics would be changed as well.
+
+
+### Filter only for currenty valid TemporalReferenceEntities
+
+### Display only allowed CustomerTypes per tenant
+CustomerType additionally is associated indirect relation to tenants which demonstrates the
