@@ -152,9 +152,9 @@ For this to work i created a common superclass for the controllers of the browse
     abstract String getEntityName();
 {% endhighlight%}
 
-With this, the datasource filter query changed to show only the entries that are valid at the given reference data. The subclasses of this are only required to define the datasource and the entity name with the corresponding abstract methods (see [PaymentMethodBrowse](https://github.com/mariodavid/cuba-example-temporal-reference-data/blob/master/modules/web/src/com/company/cetrd/web/reference/paymentmethod/PaymentMethodBrowse.groovy) for more details).
+With this, the datasource filter query is changed to show only the entries that are valid at the given reference date. The subclasses of this are only required to define the datasource and the entity name with the corresponding abstract methods (see [PaymentMethodBrowse](https://github.com/mariodavid/cuba-example-temporal-reference-data/blob/master/modules/web/src/com/company/cetrd/web/reference/paymentmethod/PaymentMethodBrowse.groovy) for more details).
 
-To pass the order data as the reference data to the lookup screen, take a look at the [OrderEditor](https://github.com/mariodavid/cuba-example-temporal-reference-data/blob/master/modules/web/src/com/company/cetrd/web/order/OrderEdit.groovy#L33), which does exactly that:
+To pass the order date as the reference date to the lookup screen, take a look at the [OrderEditor](https://github.com/mariodavid/cuba-example-temporal-reference-data/blob/master/modules/web/src/com/company/cetrd/web/order/OrderEdit.groovy#L33), which does exactly that:
 
 {% highlight groovy %}
 protected void activatePickerField(PickerField pickerField, Date validReferenceDate) {
@@ -170,20 +170,20 @@ protected void activatePickerField(PickerField pickerField, Date validReferenceD
 With this, the exact same behavior from above is achieved.
 When a new order gets created, it will show only the payment methods that are valid at the given order date. If the reference data change (an entry gets deactivated), it will remain in the reference for existing orders.
 
-Depeding on the use case, the reference data might not be a particular data within an entity. There is another example of this in the application: The customer can have a preffered payment method that should be used. In this case, there is no reference date like the orderDate, so in this case the current date is used to get only the currently valid options (see the [CustomerEditor for details](https://github.com/mariodavid/cuba-example-temporal-reference-data/blob/master/modules/web/src/com/company/cetrd/web/customer/CustomerEdit.groovy#L33))
+Depeding on the use case, the reference date might not be a particular date within an entity. There is another example of this in the application: The customer can have a preferred payment method that should be used by default. In this case, there is no reference date like the orderDate, so the current calendar date is used to get only the currently valid options (see the [CustomerEditor for details](https://github.com/mariodavid/cuba-example-temporal-reference-data/blob/master/modules/web/src/com/company/cetrd/web/customer/CustomerEdit.groovy#L33)).
 
 ### Display only allowed CustomerTypes per tenant
 
 As a third example, that is only partly related but nevertheless very interesting is the following situation:
 
-Let's imagine we are in a multi-tenant environment (like in the [cuba-sample-saas](https://github.com/cuba-platform/sample-saas) example). In this case, we have the ordermanagement for Alphabet Inc. Since this holding has different companies that are part of it, the application needs to have distinct ordermanagement systems for each company (tenant). A tenant on it's own is allowed to define which customer types are relavant in it's company.
+Let's imagine we are in a multi-tenant environment (like in the [cuba-sample-saas](https://github.com/cuba-platform/sample-saas) example). In this case, we have the ordermanagement for Alphabet Inc. Since this holding has different companies that are part of it, the application needs to have distinct ordermanagement systems for each company (tenant). A tenant on it's own is allowed to define which customer types are relavant in the company.
 
 <img style="float:right; padding: 10px; margin-right:-90px; width:150px;" src="{{site.url}}/images/how-to-deal-with-reference-data/cubes/cube-pk.png">
 
 
 The first option to solve this issue is to let every company create their own entries for CustomerType - this would definitivly get the job done. CustomerType would be a subclass of <code>TenantEntity</code> and there we go.
 
-But let's imagine, there are so many CustomerTypes and it is required that it is possible to make statistics over the customers of all companies within the holding. In this case, let every company define their own CustomerTypes wouldn't work.
+But let's imagine it is required to make statistics over the customers of all companies within the holding. In this case, *let every company define their own CustomerTypes* wouldn't work.
 
 So we take another approach. We will share the CustomerTypes for the whole holding. The companies are only allowed to blacklist some of the entries so that they will not get displayed since it might not make sense in their business to have such customer types.
 
@@ -200,8 +200,12 @@ Next, we have will create a Security Group constraint that will kick out every C
 </figure>
 
 
-<img style="float:left; padding: 10px; margin-left:-90px; margin-top:150px; width:150px;" src="{{site.url}}/images/how-to-deal-with-reference-data/cubes/cube-da.png">
 
 Now, when we login as a specific tenant (google:google or fiber:fiber), we will only see and be able to assign references to non-blacklisted CustomerTypes.
 
-With this, we have finished our three requirements for the Alphabet Inc. Ordermanagement system regarding reference data. 
+With this, we have finished our three requirements for the Alphabet Inc. Ordermanagement system regarding reference data.
+
+
+<img style="float:left; padding: 10px; margin-left:-90px; margin-top:150px; width:150px;" src="{{site.url}}/images/how-to-deal-with-reference-data/cubes/cube-da.png">
+
+As always you'll find the example application with the described solutions on Github: [mariodavid/cuba-example-temporal-reference-data](https://github.com/mariodavid/cuba-example-temporal-reference-data)
