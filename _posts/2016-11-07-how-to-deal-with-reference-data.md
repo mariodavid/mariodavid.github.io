@@ -2,7 +2,7 @@
 layout: post
 title: How to deal with reference data
 description:
-modified: 2016-09-25
+modified: 2016-11-07
 tags: [cuba, reference data]
 image:
   feature: how-to-deal-with-reference-data/feature.png
