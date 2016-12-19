@@ -44,7 +44,21 @@ On the other end of the spectrum of the granularity there would be something lik
 
 Such a test treats a system as it is, meaning that is normally uses the exposed interface to interact with it. This means that a system has to be up and running completely as well as potential dependent systems. As the size of the system under test increases, the setup costs as well as the brittleness of the test execution increase as well. On the other hand a succeeding functional test gives you much higher level of confidence compared to a unit test.
 
-#### Testing pyramide
+#### Orthogonal testing dimensions
+
+Also the granularity dimension for classifying tests is the most relevant, there are some other aspects that don't really fit into this category. I'll name a few of them but don't go into further details about it:
+
+**acceptance / behavior tests** differ in the sense that they look at the topic from the users angle. Oftentimes, a acceptance tests directly related to a user story in the agile world. Nevertheless, an acceptance test can be implemented as a functional API test as well as a unit test.
+
+**load tests** are an example of tests that target the goals of non-functional requirements. **Security tests** are the same in this sense. Oftentimes security tests are just automated to a certain degree, because it requires more creativity of the tester, just like **exploratory functional testing**.
+
+#### Testing pyramid
+
+Getting back to the granularity dimension, something that is very prominent in the testing space is the testing pyramid. This analogy is used to express the amount of tests that each category should contain. More precisely it expresses a reasonable ratio between the amount of unit / integration / functional tests.
+
+As described above functional tests are generally slower to write & execute, harder to maintain, more brittle but more realistic and meaningful. Unit tests are fast, easy to write and setup but less realistic.
+
+Therefore a realistic ratio is very advisable. More information about the test pyramid and the impact can be found at the [description from Mike Cohn](https://www.mountaingoatsoftware.com/blog/the-forgotten-layer-of-the-test-automation-pyramid) or at the [de facto standard software blog](http://martinfowler.com/bliki/TestPyramid.html).
 
 #### TDD
 
