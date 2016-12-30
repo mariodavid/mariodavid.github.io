@@ -13,6 +13,8 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 
 # Testing CUBA artefact types
 
+## Mocking
+
 #### Entities
 
 #### Services

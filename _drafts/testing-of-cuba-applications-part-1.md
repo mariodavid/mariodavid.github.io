@@ -35,12 +35,25 @@ Because the first approach has quite a few downsides, we'll take a closer look a
 
 When we look at general options on how to test a software in an automated fashion, normally there are different kinds of testing. One dimension is the granularity of the test and the system under test (SUT).
 
+
+<img style="float: right; width:100px; padding: 10px;" src="{{site.url}}/images/testing-of-cuba-applications-part-1/unit-test.png">
+
+
 Starting with *unit testing*, which is the testing style with the smallest scope. In a unit test, a unit is tested in isolation. In a object orientated language a unit oftentimes means a class, but this one to one mapping is not necessary. It could be a method or a package as well, depending on your definition of a "unit", but for now we can stick to the "unit = class" mapping.
 In order to test a unit in isolation it is required to cut off the dependent units. This is normally done through a technique called *Mocking* or *Stubbing*.
+
+
+<img style="float: left; width:100px; padding: 10px;" src="{{site.url}}/images/testing-of-cuba-applications-part-1/integration-test.png">
+
 
 The next granularity step would be an *integration test*. In an integration a unit is not tested in isolation anymore, but instead different units are combined together. The resulting system of the different units are tested in conjunction. Multiple units can be something like multiple spring beans or classes, but it can also mean the database access code in the application server together with a real database.
 
 In comparison to a unit test, where the dependencies are stubbed out, the real dependent units are used. This normally leads to a more "real" test scenario. On the other hand it will make a test slower and more brittle, because of more moving parts that are involved. Additionally it makes it a bit harder to reason about, because if a test shows that a certain feature does not work, it is harder to break down the problem to the actual unit with the bug.
+
+
+
+<img style="float: right; width:100px; padding: 10px;" src="{{site.url}}/images/testing-of-cuba-applications-part-1/functional-test.png">
+
 
 On the other end of the spectrum of the granularity there would be something like a functional test. Functional tests (or sometimes called "system tests", "UI tests" or "end-to-end tests") normally differ from the first two options in that it treats the system under test as a black box, meaning that there doesn't need to be information about internal structures of the system in order to setup or execute the test.
 
@@ -54,7 +67,7 @@ Also the granularity dimension for classifying tests is the most relevant, there
 
 **Load tests** are an example of tests that target the goals of non-functional requirements. **Security tests** are the same in this sense. Oftentimes security tests are just automated to a certain degree, because it requires more creativity of the tester, just like **exploratory functional testing**.
 
-<img style="float: right; width: 250px; padding: 10px;" src="{{site.url}}/images/testing-of-cuba-applications-part-1/test-pyramid.png">
+<img style="float: right; width: 300px; padding: 10px;" src="{{site.url}}/images/testing-of-cuba-applications-part-1/test-pyramid.png">
 
 #### Testing pyramid
 
@@ -75,7 +88,7 @@ Let's leave this pretty general and theoretical topic for now and have a look at
 
 ## How to do unit testing
 
-So let's have a look on how to do unit testing in general. As i said before, the point of a unit test is to test a particular unit (let's assume a class) in isolation. The reason is, that we want to control the external world of this object in order to check certain behavior with eliminating the possibility that any other external situation of the environment is causing the expected result or interferes with our unit under test. This allows us, just like in a lot of other science experiments, "proove" a certain behavior of our code.
+So let's have a look on how to do unit testing in general. As I said before, the point of a unit test is to test a particular unit (let's assume a class) in isolation. The reason is, that we want to control the external world of this object in order to check certain behavior with eliminating the possibility that any other external situation of the environment is causing the expected result or interferes with our unit under test. This allows us, just like in a lot of other science experiments, "proove" a certain behavior of our code.
 
 Here's the basic example that we will use for now (actually it is form [my original groovy blog post](https://www.road-to-cuba-and-beyond.com/groovify-cuba-app-integrate-with-cuba/)).
 
@@ -107,13 +120,13 @@ With this business code, it is possible to write a unit test for the customer cl
 But how and what tool to use? Well, generally in the Java world the de-facto standard is JUnit. It's the most dominant unit testing library in the field. But although it is a very good unit testing library, it has some downsides. One of them is, that a normal JUnit test has only a limited possibility to let the writer express the intend of the unit test. Most of these restrictions come from the Java language and some are directly related to JUnit.
 Since the expressiveness of a unit test is probably even more important than it is in production code, this is not a very good starting point.
 
-Therefore i will use the [spock framework](http://spockframework.org/) as the unit testing framework of my choice for this article series.
+Therefore I will use the [spock framework](http://spockframework.org/) as the unit testing framework of my choice for this article series.
 
 Spock is based on groovy, which allows it to create a expressiveness for tests that is quite fascinating. It uses things like power assertions and strings as methods that will lift up the average unit test expressiveness very much. Next to this very important feature we will see different other benefits like integrated mocking down the road.
 
-Since we are in the CUBA world for now, i created a sample cuba application: [cuba-example-spock](https://github.com/mariodavid/cuba-example-spock) that already has the dependency to spock included as well as the following unit tests included.
+Since we are in the CUBA world for now, I created a sample cuba application: [cuba-example-spock](https://github.com/mariodavid/cuba-example-spock) that already has the dependency to spock included as well as the following unit tests included.
 
-In the [build.gradle](https://github.com/mariodavid/cuba-example-spock/blob/master/build.gradle) file of the example project, i added the spock dependency to the application like [this](https://github.com/mariodavid/cuba-example-spock/blob/master/build.gradle#L58):
+In the [build.gradle](https://github.com/mariodavid/cuba-example-spock/blob/master/build.gradle) file of the example project, I added the spock dependency to the application like [this](https://github.com/mariodavid/cuba-example-spock/blob/master/build.gradle#L58):
 
 {% highlight groovy %}
 configure([globalModule, coreModule, guiModule, webModule]) {
@@ -159,7 +172,7 @@ If you are using IDEA as your IDE and have imported the project as a gradle proj
 
 #### Creating our first unit test
 
-So this is the time, we create our first unit test. Let's get back to the Customer class i showed you earlier. When we think of a possible path through the code, the most obvious one is what is often called the "happy path". This means that we write a test that will check if the positive situation of the code that we want to test is executed correctly. In our case, where we want to unit test the <code>isGoodCustomer</code> method of the customer class, this would be:
+So this is the time, we create our first unit test. Let's get back to the Customer class I showed you earlier. When we think of a possible path through the code, the most obvious one is what is often called the "happy path". This means that we write a test that will check if the positive situation of the code that we want to test is executed correctly. In our case, where we want to unit test the <code>isGoodCustomer</code> method of the customer class, this would be:
 
 * A customer is good if there a at least one related order
 
@@ -214,7 +227,7 @@ def 'A customer is not good if there are no related orders'() {
 }  
 {% endhighlight %}
 
-Note, that i used the combination of "given" and "expect", instead of "given", "when", "then". This is mostly a different style regarding the documentation of the test case. I use it from time to time when i test a method with a boolean return value that can be evaluated in place. Spocks power assertions allows us to write the last line like this <code>!mario.isGoodCustomer()</code> and forget about the assert keyword. For more information about power assertions, you can have a look at this blog post [Spocklight: Assert magic](http://mrhaki.blogspot.de/2010/07/spock-spotlight-assert-magic.html).
+Note, that I used the combination of "given" and "expect", instead of "given", "when", "then". This is mostly a different style regarding the documentation of the test case. I use it from time to time when I test a method with a boolean return value that can be evaluated in place. Spocks power assertions allows us to write the last line like this <code>!mario.isGoodCustomer()</code> and forget about the assert keyword. For more information about power assertions, you can have a look at this blog post [Spocklight: Assert magic](http://mrhaki.blogspot.de/2010/07/spock-spotlight-assert-magic.html).
 
 
 So here's the fully fletched unit test.
@@ -262,9 +275,38 @@ class CustomerSpec extends Specification {
 }
 {% endhighlight %}
 
-In this case, i pushed the initialization of the customer in the <code>setup</code> method. This method gets called before each test case is executed. Putting the common setup parts in the corresponding method normally leads to a better readability of the actual test cases.
+In this case, I pushed the initialization of the customer in the <code>setup</code> method. This method gets called before each test case is executed. Putting the common setup parts in the corresponding method normally leads to a better readability of the actual test cases.
 
-#### mocking
+When you execute the tests you'll notice that the last test is not green. In this case, I set orders to null and executed the method. Unfortunately we got a NullPointerException. This situation oftentimes happens, because you encountered an edge case through different inputs that was not handled in the application code. One could argue that this is not a case that has to be caught, since the orders array is initialized already on object creation. But as the fix only requires a single character, let's just make that happen.
+
+This change will make the test green again:
+
+{% highlight groovy %}
+class Customer {
+    // ...
+    boolean isGoodCustomer() {
+        orders?.size() > 0
+    }
+}
+{% endhighlight %}
+
+The null-safe operator <code>?</code> will evaluate <code>orders.size() > 0</code> to null instead of throwing a <code>NullPointerException</code>. Since it is evaluated to a boolean as the method return value requires, null is false in groovy --> the customer is not good. This is probably the behavior we want to achieve.
+
+With this we are ready with our first unit test. Let's look at what we already discussed and what are the next steps.
+
+### Summary and outlook
+
+In this article we learned about test automation. Its different categories which all have their different reasons to exists. After that we looked at Spock as the testing tool and explored our first unit test with a simple class under test.
+
+As we probably already reached the point where the last reader close the browser tab since the blog post is already too long, we will shift the interesting topics to the next blog post(s).
+
+In the second part of the "Desert of Testing" series, we will take our CUBA glasses back on and go through the different artifacts of a common CUBA application like Entities, Services and Controllers and try to tests these. With it we will explore more testing techniques like Mocking.
+
+In the third part, we will try different testing types in the CUBA application and try to especially look at functional testing.
+
+I hope you enjoyed the longish article and get back to me with feedback or questions about this topic.
+
+
 
 
 

@@ -31,6 +31,7 @@ comments: false
     {% else %}
       <h1 class="entry-title"><a href="{{ site.url }}{{ post.url }}" rel="bookmark" title="{{ post.title }}" itemprop="url">{{ post.title }}</a></h1>
     {% endif %}
+    {% if post.subtitle %}<h2 class="entry-subtitle">{{ post.subtitle }}</h2>{% endif %}
   </header>
   <div class="entry-content">
     {% if post.content contains "<!-- more -->" %}
@@ -43,4 +44,3 @@ comments: false
 {% endfor %}
 
 {% include pagination.html %}
-
