@@ -167,9 +167,9 @@ The first test checks the happy path "getCaption combines the first name and the
 
 ### One assertion per test
 
-As you might have noticed, instead of checking the whole String "Jones, Jack (LOYAL)" i decided to split the assertions into two tests. The first checks if the names have been combined correctly and the second test case checks if the type is printed in parentheses at the end of it.
+As you might have noticed, instead of checking the whole String "Jones, Jack (LOYAL)" I decided to split the assertions into two tests. The first checks if the names have been combined correctly and the second test case checks if the type is printed in parentheses at the end of it.
 
-It could have been done in one test, but i like the idea of doing [one assertion in one test](http://programmaticallyspeaking.com/one-assertion-per-test-please.html), because these assertion contains two different parts.
+It could have been done in one test, but I like the idea of doing [one assertion in one test](http://programmaticallyspeaking.com/one-assertion-per-test-please.html), because these assertion contains two different parts.
 
 Imagine what would happen if used the initial stated test case "getCaption combines the first name and the last name as well as the type" which would look like this:
 
@@ -239,7 +239,7 @@ public String getCaption() {
 }
 {% endhighlight %}
 
-This is pretty common. The reason is that when you think about the edge cases in the test case creation phase, you probably do more so compared to the implementation phase (at least i did). This is another indicator why TDD is a good think, but that's another story.
+This is pretty common. The reason is that when you think about the edge cases in the test case creation phase, you probably do more so compared to the implementation phase (at least I did). This is another indicator why TDD is a good think, but that's another story.
 
 With this, we have seen a fairly common method in an entity. But sometimes it's not only a calculation on local attributes. Therefore let's expand the requirement so that it will get a little bit more complicated.
 
@@ -312,7 +312,7 @@ This is the very nature of Dependency Injection. The dependencies get injected i
 
 #### Dependency Injection to the rescue?
 
-In the [original groovy blog post](https://www.road-to-cuba-and-beyond.com/groovify-cuba-app-integrate-with-cuba/) i created the following example about mocking:
+In the [original groovy blog post](https://www.road-to-cuba-and-beyond.com/groovify-cuba-app-integrate-with-cuba/) I created the following example about mocking:
 
 {% highlight groovy %}
 
@@ -363,18 +363,18 @@ def 'When an order is placed, the order placement sytem will get notified'() {
 
 In the constructor of the customer, the orderPlacementServiceMock got injected which is a <code>Mock(OrderPlacementService)</code>.
 
-<div class="information">Note that the customer class in this example is not the same as we use in the earlier examples. As i mentioned above, DI in CUBA Entities doesn't work. In this example it can be seen as any POJO that would have DI enabeld in the running application.</div>
+<div class="information">Note that the customer class in this example is not the same as we use in the earlier examples. As I mentioned above, DI in CUBA Entities doesn't work. In this example it can be seen as any POJO that would have DI enabeld in the running application.</div>
 
 Using <code>Mock(MyDependency)</code> creates a Proxy through the Spock framework in order to capture interactions with this object. More information about Mocks can be found in the [interaction-based testing docs](http://spockframework.org/spock/docs/1.0/interaction_based_testing.html) of spock. In the above example expressed our expectation, that the customer class sends a particular message to the orderPlacementServiceMock exactly once like this:
 <code>1 * orderPlacementServiceMock.placeOrder(order)</code>. If this expectation is fulfilled, the test will pass, otherwise it will fail.
 
-<div class="information">When you want more information about what i just said about messages that get's send, take a look this <a href="http://softwareengineering.stackexchange.com/questions/140602/what-is-message-passing-in-oo">Question on StackExchange</a>. A really good book about this topic is <a href="https://www.amazon.com/Practical-Object-Oriented-Design-Ruby-Addison-Wesley/dp/0321721330/ref=sr_1_1?s=books-intl-de&ie=UTF8&qid=1483526200&sr=1-1&keywords=practical+object-oriented+design+in+ruby">Practical Object-Oriented Design in Ruby</a> by Sandi Metz. It goes in much more detail on this and related topics.</div>
+<div class="information">When you want more information about what I just said about messages that get's send, take a look this <a href="http://softwareengineering.stackexchange.com/questions/140602/what-is-message-passing-in-oo">Question on StackExchange</a>. A really good book about this topic is <a href="https://www.amazon.com/Practical-Object-Oriented-Design-Ruby-Addison-Wesley/dp/0321721330/ref=sr_1_1?s=books-intl-de&ie=UTF8&qid=1483526200&sr=1-1&keywords=practical+object-oriented+design+in+ruby">Practical Object-Oriented Design in Ruby</a> by Sandi Metz. It goes in much more detail on this and related topics.</div>
 
 So although this information might help us in the case where dependency injection is available, how does it help is with our Entity? Not directly. But as we need Mocking in the next blog posts, it's good to know about it.
 
 #### Encapsulate dependencies and subclass
 
-Right know, we have to add another trick that i learned from the book <a href="https://www.amazon.com/Working-Effectively-Legacy-Robert-Martin/dp/0131177052/ref=sr_1_1?ie=UTF8&qid=1483527057&sr=8-1&keywords=legacy+code">Working effectively with legacy code</a>. It's called <a href="https://blog.pivotal.io/labs/labs/test-after-in-java-subclass-and-override">Subclass and override method</a>.
+Right know, we have to add another trick that I learned from the book <a href="https://www.amazon.com/Working-Effectively-Legacy-Robert-Martin/dp/0131177052/ref=sr_1_1?ie=UTF8&qid=1483527057&sr=8-1&keywords=legacy+code">Working effectively with legacy code</a>. It's called <a href="https://blog.pivotal.io/labs/labs/test-after-in-java-subclass-and-override">Subclass and override method</a>.
 
 To do that we have to encapsulate the dependency in a method that we will override in the test later.
 
@@ -452,10 +452,10 @@ First we create a Stub for Messages and use it to pass it into the messages attr
 
 That's it. With this we injected the messages object into the Customer class although it might otherwise would be able to do so.
 
-You may asked, why i used a Stub instead of a Mock. Well, Mocks are usually used to test interactions between the object (like in the example with the OrderPlacementService). When you just want to stub out certain functionality, you'll probably use Stubs. More information about the distinction can be found at Martin Fowlers article about [Stubs and Mocks](http://martinfowler.com/articles/mocksArentStubs.html).
+You may asked, why I used a Stub instead of a Mock. Well, Mocks are usually used to test interactions between the object (like in the example with the OrderPlacementService). When you just want to stub out certain functionality, you'll probably use Stubs. More information about the distinction can be found at Martin Fowlers article about [Stubs and Mocks](http://martinfowler.com/articles/mocksArentStubs.html).
 
 
-With this i would like to close this topic for now. As you have seen it is quite easy to test entities in CUBA (and probably in JPA in general). Only the last part was a little bit more advanced where we used mocking in order to Stub out certain functionality of the Customer class, in order to test the actual method.
+With this I would like to close this topic for now. As you have seen it is quite easy to test entities in CUBA (and probably in JPA in general). Only the last part was a little bit more advanced where we used mocking in order to Stub out certain functionality of the Customer class, in order to test the actual method.
 
 In the next article we will focus on the next artifacts.
 
