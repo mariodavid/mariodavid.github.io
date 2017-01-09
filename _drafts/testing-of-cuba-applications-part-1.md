@@ -16,9 +16,9 @@ One of the main parts of today's application development that is not very promin
 
 ### The story about automated testing
 
-Automated testing of software has a pretty long history. Since there is a general need to know if a certain program does what it is supposed to do, the producer of the program might either test the result manually or, through another program that does the job.
+Automated testing of software has a pretty long history. Since there is a general need to know if a certain program does what it is supposed to do, the producer of the program might either test the result manually or through another program that does the job.
 
-Programmers are normally lazy since this is the very nature of their craft and the results of their craft are things that enable other people to be lazy as well (we normally call these programs "productivity tools" but they could also be seen as "laziness tools"), it is not a big surprise that doing manual testing of the resulting program is not a very good fit.
+Programmers are normally lazy since this is the very nature of their craft and the results of their craft are things that enable other people to be lazy as well (we normally call these programs "productivity tools" but they could also be regarded as "laziness tools"), it is not a big surprise that doing manual testing of the resulting program is not a very good fit.
 
 The problem of ensuring that the resulting program does its job right can be tackled from two different angles.
 
@@ -26,7 +26,7 @@ The first is to delegate this task to other persons. This approach has been done
 
 The second approach is to leave the responsibility for QA at the developers. This leads (since the above described laziness) to automation of this task.
 
-*This is obviously a highly over simplified description of the situation and therefore should be treated with a ;)*
+*This is obviously a highly oversimplified description of the situation and therefore should be treated with a ;)*
 
 Because the first approach has quite a few downsides, we'll take a closer look at the second approach to the problem: How can we test the software we wrote in an automated fashion?
 
@@ -39,8 +39,8 @@ When we look at general options on how to test a software in an automated fashio
 <img style="float: right; width:100px; padding: 10px;" src="{{site.url}}/images/testing-of-cuba-applications-part-1/unit-test.png">
 
 
-Starting with *unit testing*, which is the testing style with the smallest scope. In a unit test, a unit is tested in isolation. In a object orientated language a unit oftentimes means a class, but this one to one mapping is not necessary. It could be a method or a package as well, depending on your definition of a "unit", but for now we can stick to the "unit = class" mapping.
-In order to test a unit in isolation it is required to cut off the dependent units. This is normally done through a technique called *Mocking* or *Stubbing*.
+Starting with *unit testing*, which is the testing style with the smallest scope. In a unit test, a unit is tested in isolation. In an object oriented language a unit oftentimes means a class, but this one-to-one mapping is not necessary. It could be a method or a package as well, depending on your definition of a "unit", but for now we can stick to the "unit = class" mapping.
+In order to test a unit in isolation, it is required to cut off the dependent units. This is normally done through a technique called *Mocking* or *Stubbing*.
 
 
 <img style="float: left; width:100px; padding: 10px;" src="{{site.url}}/images/testing-of-cuba-applications-part-1/integration-test.png">
@@ -48,49 +48,49 @@ In order to test a unit in isolation it is required to cut off the dependent uni
 
 The next granularity step would be an *integration test*. In an integration a unit is not tested in isolation anymore, but instead different units are combined together. The resulting system of the different units are tested in conjunction. Multiple units can be something like multiple spring beans or classes, but it can also mean the database access code in the application server together with a real database.
 
-In comparison to a unit test, where the dependencies are stubbed out, the real dependent units are used. This normally leads to a more "real" test scenario. On the other hand it will make a test slower and more brittle, because of more moving parts that are involved. Additionally it makes it a bit harder to reason about, because if a test shows that a certain feature does not work, it is harder to break down the problem to the actual unit with the bug.
+In comparison to a unit test, where the dependencies are stubbed out, for integration tests the real dependent units are used. This normally leads to a more "real" test scenario. On the other hand, it will make a test slower and more brittle, because of more moving parts that are involved. Additionally it makes it a bit harder to reason about, because if a test shows that a certain feature does not work, it is harder to break down the problem to the actual unit with the bug.
 
 
 
 <img style="float: right; width:100px; padding: 10px;" src="{{site.url}}/images/testing-of-cuba-applications-part-1/functional-test.png">
 
 
-On the other end of the spectrum of the granularity there would be something like a functional test. Functional tests (or sometimes called "system tests", "UI tests" or "end-to-end tests") normally differ from the first two options in that it treats the system under test as a black box, meaning that there doesn't need to be information about internal structures of the system in order to setup or execute the test.
+On the other end of the spectrum of granularity there would be something like a functional test. Functional tests (sometimes called "system tests", "UI tests" or "end-to-end tests") normally differ from the first two options in that as they treat the system under test as a black box, meaning that there is no need of information about internal structures of the system in order to setup or execute the test.
 
-Such a test treats a system as it is, meaning that is normally uses the exposed interface to interact with it. This means that a system has to be up and running completely as well as potential dependent systems. As the size of the system under test increases, the setup costs as well as the brittleness of the test execution increase as well. On the other hand a succeeding functional test gives you much higher level of confidence compared to a unit test.
+Such test treats a system as it is, meaning that it normally uses the exposed interface to interact with it. This means that a system has to be up and running completely as well as potential dependent systems. As the size of the system under test increases, the setup costs as well as the brittleness of the test execution increase as well. On the other hand, a succeeding functional test gives you much higher level of confidence compared to a unit test.
 
 #### Orthogonal testing dimensions
 
-Also the granularity dimension for classifying tests is the most relevant, there are some other aspects that don't really fit into this category. I'll name a few of them but don't go into further details about it:
+Although the granularity dimension for classifying tests is the most relevant, there are some other aspects that don't really fit into this category. I'll name a few of them but will not go into further details about it:
 
-**Acceptance / behavior tests** differ in the sense that they look at the topic from the users angle. Oftentimes, a acceptance tests directly related to a user story in the agile world. Nevertheless, an acceptance test can be implemented as a functional API test as well as a unit test.
+**Acceptance / behavior tests** differ in the sense that they look at the topic from the users angle. Oftentimes, acceptance tests are directly related to a user story in the agile world. Nevertheless, an acceptance test can be implemented as a functional API test as well as a unit test.
 
-**Load tests** are an example of tests that target the goals of non-functional requirements. **Security tests** are the same in this sense. Oftentimes security tests are just automated to a certain degree, because it requires more creativity of the tester, just like **exploratory functional testing**.
+**Load tests** are an example of tests that target the goals of non-functional requirements. **Security tests** are the same in this sense. Oftentimes security tests are only automated to a certain degree, because it requires more creativity of the tester, just like **exploratory functional testing**.
 
 <img style="float: right; width: 300px; padding: 10px;" src="{{site.url}}/images/testing-of-cuba-applications-part-1/test-pyramid.png">
 
 #### Testing pyramid
 
 
-Getting back to the granularity dimension, something that is very prominent in the testing space is the testing pyramid. This analogy is used to express the amount of tests that each category should contain. More precisely it expresses a reasonable ratio between the amount of unit / integration / functional tests.
+Getting back to the granularity dimension, something that is very prominent in the testing space is the testing pyramid. This analogy is used to express the amount of tests that each category should contain. More precisely, it expresses a reasonable ratio between the amount of unit / integration / functional tests.
 
-As described above functional tests are generally slower to write & execute, harder to maintain, more brittle but more realistic and meaningful. Unit tests are fast, easy to write and setup but less realistic.
+As described above, functional tests are generally slower to write & execute, harder to maintain, more brittle but more realistic and meaningful. Unit tests are fast, easy to write and setup but less realistic.
 
 Therefore a realistic ratio is very advisable. More information about the test pyramid and the impact can be found at the [description from Mike Cohn](https://www.mountaingoatsoftware.com/blog/the-forgotten-layer-of-the-test-automation-pyramid) or at the [de facto standard software blog](http://martinfowler.com/bliki/TestPyramid.html).
 
 #### TDD
 
-Another topic is the question about when to write a test. Test driven development aka TDD is a pretty straight forward technique that shifts the test creation before the actual implementation. This way the implementation flows naturally alongside your test cases that will drive the design of the API of the unit. Test driven development has it's roots in the early extreme programming days and is already around for about fifteen years.
+Another topic is the question about when to write a test. Test driven development aka TDD is a pretty straightforward technique that shifts the test creation before the actual implementation. This way the implementation flows naturally alongside your test cases that will drive the design of the API of the unit. Test driven development has its roots in the early extreme programming days and is already around for about fifteen years.
 
-I won't go into much more detail on this topic as this is a complete blog post on itself. Also there is much information already out there about this topic. As a starting point you can look at "the" [TDD book](https://www.amazon.com/Test-Driven-Development-Kent-Beck/dp/0321146530) by the inventor himself. But as always TDD is not a silver bullet. There are some negative thoughts on it in the community as well lately like the famous ["TDD is dead"](http://david.heinemeierhansson.com/2014/tdd-is-dead-long-live-testing.html) article by the Rails creator DHH.
+I won't go into much more detail on this topic, as this is a complete blog post on itself. Also there is a lot of information already out there about this topic. As a starting point you can look at "the" [TDD book](https://www.amazon.com/Test-Driven-Development-Kent-Beck/dp/0321146530) by the inventor himself. But as always, TDD is not a silver bullet. There are some negative thoughts on it in the community as well lately like the famous ["TDD is dead"](http://david.heinemeierhansson.com/2014/tdd-is-dead-long-live-testing.html) article by the Rails creator DHH.
 
 Let's leave this pretty general and theoretical topic for now and have a look at some basic examples to get into this testing thing a little bit more...
 
 ## How to do unit testing
 
-So let's have a look on how to do unit testing in general. As I said before, the point of a unit test is to test a particular unit (let's assume a class) in isolation. The reason is, that we want to control the external world of this object in order to check certain behavior with eliminating the possibility that any other external situation of the environment is causing the expected result or interferes with our unit under test. This allows us, just like in a lot of other science experiments, "proove" a certain behavior of our code.
+So let's have a look on how to do unit testing in general. As I said before, the point of a unit test is to test a particular unit (let's assume a class) in isolation. The reason is, that we want to control the external world of this object in order to check certain behavior with eliminating the possibility that any other external situation of the environment is causing the expected result or interferes with our unit under test. This allows us, just like in a lot of other science experiments, to "proove" a certain behavior of our code.
 
-Here's the basic example that we will use for now (actually it is form [my original groovy blog post](https://www.road-to-cuba-and-beyond.com/groovify-cuba-app-integrate-with-cuba/)).
+Here's the basic example that we will use for now (actually it is from [my original groovy blog post](https://www.road-to-cuba-and-beyond.com/groovify-cuba-app-integrate-with-cuba/)).
 
 
 {% highlight groovy %}
@@ -122,7 +122,7 @@ Since the expressiveness of a unit test is probably even more important than it 
 
 Therefore I will use the [spock framework](http://spockframework.org/) as the unit testing framework of my choice for this article series.
 
-Spock is based on groovy, which allows it to create a expressiveness for tests that is quite fascinating. It uses things like power assertions and strings as methods that will lift up the average unit test expressiveness very much. Next to this very important feature we will see different other benefits like integrated mocking down the road.
+Spock is based on groovy, which allows it to create a expressiveness for tests that is quite fascinating. It uses things like power assertions and strings as methods that will lift up the average unit test expressiveness very much. Next to this very important feature we will see other different benefits like integrated mocking down the road.
 
 Since we are in the CUBA world for now, I created a sample cuba application: [cuba-example-spock](https://github.com/mariodavid/cuba-example-spock) that already has the dependency to spock included as well as the following unit tests included.
 
@@ -172,11 +172,11 @@ If you are using IDEA as your IDE and have imported the project as a gradle proj
 
 #### Creating our first unit test
 
-So this is the time, we create our first unit test. Let's get back to the Customer class I showed you earlier. When we think of a possible path through the code, the most obvious one is what is often called the "happy path". This means that we write a test that will check if the positive situation of the code that we want to test is executed correctly. In our case, where we want to unit test the <code>isGoodCustomer</code> method of the customer class, this would be:
+So this is the time, we create our first unit test. Let's get back to the Customer class I've shown you earlier. When we think of a possible path through the code, the most obvious one is what is often called the "happy path". This means that we write a test that will check if the positive situation of the code that we want to test is executed correctly. In our case, where we want to unit test the <code>isGoodCustomer</code> method of the customer class, this would be:
 
-* A customer is good if there a at least one related order
+* A customer is good if there is at least one related order
 
-So let's try to implement this behavior. First we have to create a Customer and further setup the system under test (the user). The next thing is, that we actually execute the method we want to check. After that we check the outcome of the execution. This pattern is called [AAA (Arrange Act Assert)](http://wiki.c2.com/?ArrangeActAssert) and is fairly common in the testing space.
+So let's try to implement this behavior. First we have to create a Customer and further setup the system under test (the user). The next thing is that we actually execute the method we want to check. After that we check the outcome of the execution. This pattern is called [AAA (Arrange Act Assert)](http://wiki.c2.com/?ArrangeActAssert) and is fairly common in the testing space.
 
 Spock has some keywords for the AAA pattern, called "given", "when" and "then". These can be used together with a comment as you can see below. This is very useful because it describes the code within the block that is sometimes a little bit complicated when using mocks etc.
 
@@ -205,7 +205,7 @@ For the happy path test, we have to create a customer instance. Next we add an O
 
 So, to determine the next test case there is a technique called [equivalence partitioning](https://en.wikipedia.org/wiki/Equivalence_partitioning). When you think about what inputs can be passed into the test case (in the orders list in this case), there are different options. The orders list could be filled with zero orders, with one order, with three orders, or fifteen orders. Then it could be more edge based cases like empty list, null, list with a null element. Since the class is groovy this my case, orders could be a String.
 
-I'll not go into much detail about this topic, but it basically means, that we can treat different similar inputs like the same, e.g. 5, 8 and 14 elements, because we know that this will not make a significant difference. Therefore one test with multiple elements will probably be enough. Instead we schould make different classes of inputs that are different. Therefore let's look at the "normal" negative case where:
+I'll not go into much detail about this topic, but it basically means, that we can treat different similar inputs like the same, e.g. 5, 8 and 14 elements, because we know that this will not make a significant difference. Therefore one test with multiple elements will probably be enough. Instead we should make different classes of inputs that are different. Therefore let's look at the "normal" negative case where:
 
 * A customer is not good if there are no related orders
 
@@ -304,7 +304,7 @@ In the second part of the "Desert of Testing" series, we will take our CUBA glas
 
 In the third part, we will try different testing types in the CUBA application and try to especially look at functional testing.
 
-I hope you enjoyed the longish article and get back to me with feedback or questions about this topic.
+I hope you have enjoyed the longish article and will get back to me with feedback or questions about this topic.
 
 
 
