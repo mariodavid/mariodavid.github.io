@@ -3,7 +3,7 @@ layout: post
 title: Testing of CUBA applications
 subtitle: Part 1 - Introduction to Test automation
 description:
-modified: 2017-01-03
+modified: 2017-01-09
 tags: [cuba, Testing]
 image:
   feature: testing-of-cuba-applications-part-1/feature.jpg
