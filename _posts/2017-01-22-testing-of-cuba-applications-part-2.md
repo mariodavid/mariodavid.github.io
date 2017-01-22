@@ -45,7 +45,7 @@ When we look at a typical CUBA application, we will see different artifact types
 
 ## Testing CUBA Entities
 
-Testing Entities is easy and problematic at the same time. It is easy because normally there is not much to test in Entities.
+Testing Entities is easy and problematic at the same time. It is easy because normally there is not much to test in Entities. On the other hand, since there is no dependency injection available for Entities, it can sometimes be a little harder to extract out the usages of other beans.
 
 Let's look at how a normal Entity looks like when it get's generated via studio:
 
@@ -239,7 +239,7 @@ public String getCaption() {
 }
 {% endhighlight %}
 
-This is pretty common. The reason is that when you think about the edge cases in the test case creation phase, you probably do more so compared to the implementation phase (at least I did). This is another indicator why TDD is a good thing, but that's another story.
+This is pretty common. The reason is that when you think about the edge cases in the test case creation phase, you probably do more so compared to the implementation phase. This is another indicator why TDD is a good thing, but that's another story.
 
 With this, we have seen a fairly common method in an entity. But sometimes it's not only a calculation on local attributes. Therefore let's expand the requirement so that it will get a little bit more complicated.
 
@@ -292,7 +292,7 @@ The resounding slap is not far away:
 When we look at Line 61 of AppBeans where the NullPointerException occurs, we see the problem:
 <code>AppContext.getApplicationContext().getBean(name, beanType)</code>
 
-#### Missing application context in unit tests
+#### The missing spring application context in unit tests
 
 The reason is we have no application context. In a unit test environment the Spring application context is not created. Therefore we can't use the AppBeans in the unit test. We could go on, read the docs about [middleware integration testing](https://doc.cuba-platform.com/manual-6.3/integration_tests_mw.html) and use the approach to start up the Spring application context for our unit test, but let's step back a little bit for now.
 
