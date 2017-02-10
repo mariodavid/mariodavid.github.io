@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Testing of CUBA applications
-subtitle: Part 3 - Services & other middleware components
+subtitle: Part 3 - Services & Integration Tests
 description:
 modified: 2016-12-19
 tags: [cuba, Testing]
@@ -11,7 +11,7 @@ image:
 
 
 The next part of this series is designated towards the other elements of the middleware.
-We'll look at how to test services and other beans. While doing that we will try to climb
+We'll look at how to test services and other middleware components. While doing that we will try to climb
 the testing pyramid and try to create integration tests as an alternative to the unit tests we saw in the second part.
 
 <!-- more -->
@@ -215,3 +215,134 @@ Nontheless, for now we assume that these tests are too much detailed and don't f
 
 # Integration tests in middleware
 One way of going back to a test description that reads more like the first one is to create integration tests for that purpose. Why? Because then we will set up the infrastructure beforehand, then we create the real customer instance etc. and run the system much more like in a real world scenario, where the `dataManager` is in place and does its job against a real database.
+
+So let's take a look on how we can create a Integration Test in CUBA.
+
+In a middleware integration test in CUBA the following things are available:
+
+* access to a real database
+* CUBA platform spring beans as well as your own spring beans and services are available
+
+#### Create a integration test runtime environment
+
+First of all we need a little runtime environment that starts the Spring application context and creates the database.
+The [official docs on middleware integration testing](https://doc.cuba-platform.com/manual-6.4/integration_tests_mw.html) go into this in detail, but we will go through that to some extend.
+
+In our tests, we create an object called `container` that is responsible for the runtime environment. This container is a subclass of [TestContainer](https://github.com/cuba-platform/cuba/blob/master/modules/core/test/com/haulmont/cuba/testsupport/TestContainer.java). I called it [IntegrationTestContainer](https://github.com/mariodavid/cuba-example-testing-artifacts/blob/master/modules/core/test/com/company/ceta/service/integration/container/IntegrationTestContainer.groovy) and it basically looks like this:
+
+{% highlight groovy %}
+class IntegrationTestContainer extends TestContainer {
+
+    // ...
+
+    IntegrationTestContainer() {
+        super()
+        appPropertiesFiles = Arrays.asList(
+                // List the files defined in your web.xml
+                // in appPropertiesConfig context parameter of the core module
+                'cuba-app.properties',
+                'app.properties',
+                'ceta-test-app.properties'
+        )
+
+        dbDriver = 'org.hsqldb.jdbcDriver'
+        dbUrl = 'jdbc:hsqldb:mem:cetaTestDb'
+        dbUser = 'sa'
+        dbPassword = ''
+    }
+
+    // ...
+}
+{% endhighlight %}
+
+It is just a configuration of the application properties files that i want to include as well as the database configuration. In this case i choosed to create a in memory hsqldb instead of a persistent database as described in the docs. It removes the burden of having to call `gradlew createTestDb` before running the test, but on the other hand it is not possible to have a look at the database after test execution for debugging purposes.
+
+
+#### Common integration test superclass
+
+Next, in the actual test case we need to create an instance of this container. In order to not create a new container for every test case, i used the idea of the Singleton pattern of the docs. The reference of that container instance is shared across all specs in spock via the `@Shared` annotation (see also the [whole class](https://github.com/mariodavid/cuba-example-testing-artifacts/blob/master/modules/core/test/com/company/ceta/service/integration/container/ContainerIntegrationSpec.groovy)):
+
+{% highlight groovy %}
+class ContainerIntegrationSpec extends Specification {
+
+    @Shared
+    IntegrationTestContainer container = IntegrationTestContainer.Common.INSTANCE
+
+    // ...
+
+}
+{% endhighlight %}
+
+
+The `ContainerIntegrationSpec` is going to be our superclass of our test cases to reduce boilerplate code in the tests.
+
+So let's have a look at an [actual integration test](https://github.com/mariodavid/cuba-example-testing-artifacts/blob/master/modules/core/test/com/company/ceta/service/integration/OrderInformationServiceBeanIntegrationSpec.groovy):
+
+{% highlight groovy %}
+class OrderInformationServiceBeanSpec extends ContainerIntegrationSpec {
+
+    OrderInformationService service
+
+    def setup() {
+        service = AppBeans.get(OrderInformationService)
+    }
+
+    def "findLatestOrder returns the order with the latest orderDate"() {
+        given:
+        Customer customer = metadata.create(Customer)
+        def todaysOrder = metadata.create(Order)
+        customer.setOrders([todaysOrder] as Set)
+
+        when:
+        Order latestOrder = service.findLatestOrder(customer)
+        then:
+        latestOrder == todaysOrder
+    }
+
+}
+{% endhighlight %}
+
+
+What we see here is that we are pretty close to the actual unit test implementation. The only difference is that we use the entity manager to persist the instances and instead of creating the service via new, the real service instance is used.
+
+With this, we are able to generally execute code in a fairly real world like scenario. The execution time of the integration tests is obviously higher, because it has to create the spring application context and start the database. But as we use the Singleton approach for our container instance, it will only effect the first integration test that get's executed, so it will take something like 100ms instead of 1ms to run it. The next integration test though are usually run within something like 1-10ms depending on what is done in the test.
+
+
+##  The right balance between Unit and Integration tests
+Since a integration tests seems more appropriate in this case, it is not always the case. Do you remember the [testing pyramid from the first blog post](https://www.road-to-cuba-and-beyond.com/testing-of-cuba-applications-part-1/)? I talked about the ratio between the different test phases a little. Before we go and test everything that has to do with the database in an integration test, it might be valuable to look at alternatives. The above described problem, that we needed to much mocking in the unit test might be a sign that we have a design problem.
+
+It may be (and in fact i would argue in this case it is), that we need an abstraction layer between the CUBA APIs and our own business logic. Michael Feathers talks about this in his book "Working effectively with legacy code" about the fact that "my whole application is all API calls". The idea to prevent that situation of too much mocking entirly is to create an abstraction of the interface with some kind of a [wrapper](http://svengrand.blogspot.de/2008/05/new-xunit-test-pattern.html) which additionaly get's optimised for unit testing.
+
+Let's have a look at what that would look like. The wrapper might have the following imaginary interface:
+
+{% highlight groovy %}
+public interface AppDataManager {
+
+    String NAME = "ceta_AppDataManager";
+
+    <E extends BaseUuidEntity> E loadByReference(Class<E> entityClass, String propertyPath, BaseUuidEntity reference, Map<String, String> orderBy);
+}
+{% endhighlight %}
+
+The method `loadByReference` not only wrapps the API, but it puts a common use case on top of it. With this, the the `OrderInformationService` implementation implodes like this:
+
+{% highlight groovy %}
+@Service(OrderInformationService.NAME)
+public class OrderInformationServiceBean implements OrderInformationService {
+
+    @Inject AppDataManager appDataManager
+
+    @Override
+    Order findLatestOrder(Customer customer) {
+        appDataManager.loadByReference(Order, 'customer', customer, ['orderDate': 'desc'])
+    }
+
+}
+{% endhighlight %}
+
+Now it is very easy to go back to an unit test, that will mock the `appDataManager` and tracks it's call.
+With that we can push the integration test part into the underlying db access layer (AppDataManager) and with that are not forced to do integrateion test for the whole business logic.
+
+This solution might seem to be a little overkill, and probably it is, but i hope you got the point of what i'm trying to say.
+
+With that we have been through the most of the middleware integration test scenarios as well as how to test services in general. I hope you enjoyed it. It you have any questions or have different opinions around that topic, just leave a comment below.
