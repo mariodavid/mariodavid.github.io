@@ -18,8 +18,8 @@ the testing pyramid and try to create integration tests as an alternative to the
 
 # Testing services
 
-The first question that comes up when thinking about how to test services might be, what is different to
-testing Entities? The basic answer is simple: nothing. When we want to test services in a unit test, there is nothing special about it. In fact it is even a little bit easier to do so, because Dependency Injection in services works like a charme.
+The first question that comes up when thinking about how to test services might be: what is different to
+testing Entities? The basic answer is simple: nothing. When we want to test services in a unit test, there is nothing special about it. In fact it is even a little bit easier to do so, because Dependency Injection in services works like a charm.
 
 Let's look at a [simple case](https://github.com/mariodavid/cuba-example-testing-artifacts/blob/88ed9db13ed37698de751b3d60df6046adb7e958/modules/core/test/com/company/ceta/service/OrderInformationServiceBeanSpec.groovy):
 
@@ -66,9 +66,9 @@ class OrderInformationServiceBeanSpec extends Specification {
 
 This implementation is a simple case, because the service doesn't do anything special. It has no dependencies. Therefore it's easy to test. Instead of fetching the order information from the Database it assumes that the orders are already filled within the Customer instance.
 
-So let's have another look how it would work if we want to retrieve the data from the database and let the database do the job.
+So let's have another look on how it would work if we want to retrieve the data from the database and let the database do the job.
 
-The implementation of this would probably look like this:
+The implementation of this case would probably look like this:
 
 {% highlight groovy %}
 
@@ -99,7 +99,7 @@ public class OrderInformationServiceBean implements OrderInformationService {
 The `DataManager` from CUBA is used to trigger the database. Instead of iterating over the orders collection in groovy,
 we would create the equivalent SQL string and create a `LoadContext` for this that will be passed to the `dataManager` instance.
 
-In this case we definitivly need to adjust the unit test. When we run the test again, we see the following:
+In this case we definitely need to adjust the unit test. When we run the test again, we see the following:
 
 {% highlight java %}
 java.lang.NullPointerException
@@ -113,11 +113,11 @@ java.lang.NullPointerException
 It is pretty much the same situation as we've seen in the [last](https://www.road-to-cuba-and-beyond.com/testing-of-cuba-applications-part-2/) blog post where we tried to use `AppBeans.get()` directly in the code of the Customer.
 
 ### Mocking through subclass and dependency injection
-So what can we do in this case? Upps, did I above said: DI works like a charme in services? Right, so for `dataManager` this is true, but we have another dependency here: `LoadContext.create()`. This one is not created through DI, therefore we are at the same situation as in the entites case.
+So what can we do in this case? Upps, did I above said: DI works like a charm in services? Right, so for `dataManager` this is true, but we have another dependency here: `LoadContext.create()`. This one is not created through DI, therefore we are in the same situation as in the entities case.
 
 To solve this, we can use both approaches: Mock through DI (the `dataManager`) as well as the Subclass (the `LoadContext`).
 
-In order to allow that we have to change the implementation slightly to enable useful and minimally invasive subclassing.
+In order to allow that, we have to change the implementation slightly to enable useful and minimally invasive subclassing.
 
 
 {% highlight groovy %}
@@ -193,7 +193,7 @@ I mocked the loadContext through the subclass. In the test I can define expectat
 So it pretty much reads like this:
 "the setQuery method of the loadContext gets called once with a query parameter, that has a query string which looks like this: 'select ...'"
 
-When you look at the [whole test class](https://github.com/mariodavid/cuba-example-testing-artifacts/blob/d9d9b09287a8b7a38254bb671e2aad2ae607eb3a/modules/core/test/com/company/ceta/service/OrderInformationServiceBeanSpec.groovy) you will notice that the test are totally different kind than we saw in the first example. Here are just the descriptions of the test cases:
+When you look at the [whole test class](https://github.com/mariodavid/cuba-example-testing-artifacts/blob/d9d9b09287a8b7a38254bb671e2aad2ae607eb3a/modules/core/test/com/company/ceta/service/OrderInformationServiceBeanSpec.groovy) you will notice that the tests are of totally different kind than we saw in the first example. Here are just the descriptions of the test cases:
 
 {% highlight groovy %}
 def "findLatestOrder passes the correct SQL query to the loadContext"()  { /*...*/ }
@@ -205,18 +205,18 @@ def "findLatestOrder uses the loadContext to pass it into the dataManager"() { /
 Instead of checking anything about the customer and it's order, I created interaction descriptions of the OrderInformationService with its dependencies.
 
 ### The problem with too much mocking
-When you look at the tests descriptions, it actually reads no that well. Everything I described there is true, but it is on a different level compared to the first test that we created before doing it via the database: `findLatestOrder returns the order with the latest orderDate`. This test, from it's description, was more like a black-box test, where the implementation is totally irrellevant to the test.
+When you look at the tests descriptions, it actually reads not that well. Everything I described there is true, but it is on a different level compared to the first test that we created before doing it via the database: `findLatestOrder returns the order with the latest orderDate`. This test, from its description, was more like a black-box test, where the implementation is totally irrellevant to the test.
 
-The unit tests with the `DataManager` are more like a white-box tests where the test is totally aware of the internals of the implementation of the service. Generally it is a good idea to not care about the internals of the implementation in the test. But are these really internals? Some of them are, but a lof of them are actually interactions with other dependencies.
+The unit tests with the `DataManager` are more like a white-box tests where the test is totally aware of the internals of the implementation of the service. Generally it is a good idea not to care about the internals of the implementation in the test. But are they really internals? Some of them are, but a lof of them are actually interactions with other dependencies.
 
-What it boils down to is somewhat related to the distinction between [Chicago and London style of TDD](http://softwareengineering.stackexchange.com/questions/123627/what-are-the-london-and-chicago-schools-of-tdd). I will not go into details of this, but it basically says: Where the Chicago style prefers more the hide implementation part (simplified) the London style sees the interaction of the dependencies as the description of the behavior of the system. You can think of a OO program as a set of cells that are interacting with each other. The description of the cell system can be derived from the communication between the cells, meaning that your tests can describe the messages between the objects instead of the result of a certain cell.
+What it boils down to is somewhat related to the distinction between [Chicago and London style of TDD](http://softwareengineering.stackexchange.com/questions/123627/what-are-the-london-and-chicago-schools-of-tdd). I will not go into details of this, but it basically says: Where the Chicago style prefers more the hidden implementation part (simplified), the London style sees the interaction of the dependencies as the description of the behavior of the system. You can think of a OO program as a set of cells that are interacting with each other. The description of the cell system can be derived from the communication between the cells, meaning that your tests can describe the messages between the objects instead of the result of a certain cell.
 
 Nontheless, for now we assume that these tests are too much detailed and don't fulfil a particular purpose they were intended to, which is: [unit test should serve as documentation](http://softwareengineering.stackexchange.com/questions/154615/are-unit-tests-really-used-as-documentation) (because the test descriptions tell how the method works, but not what it does). So how can we get out of it?
 
 # Integration tests in middleware
 One way of going back to a test description that reads more like the first one is to create integration tests for that purpose. Why? Because then we will set up the infrastructure beforehand, then we create the real customer instance etc. and run the system much more like in a real world scenario, where the `dataManager` is in place and does its job against a real database.
 
-So let's take a look on how we can create a Integration Test in CUBA.
+So let's take a look on how we can create an Integration Test in CUBA.
 
 In a middleware integration test in CUBA the following things are available:
 
@@ -255,7 +255,7 @@ class IntegrationTestContainer extends TestContainer {
 }
 {% endhighlight %}
 
-It is just a configuration of the application properties files that I want to include as well as the database configuration. In this case I choosed to create a in memory hsqldb instead of a persistent database as described in the docs. It removes the burden of having to call `gradlew createTestDb` before running the test, but on the other hand it is not possible to have a look at the database after test execution for debugging purposes.
+It is just a configuration of the application properties files that I want to include as well as the database configuration. In this case I choosed to create an in-memory hsqldb instead of a persistent database as described in the docs. It removes the burden of having to call `gradlew createTestDb` before running the test, but on the other hand it is not possible to have a look at the database after test execution for debugging purposes.
 
 
 #### Common integration test superclass
@@ -305,13 +305,13 @@ class OrderInformationServiceBeanSpec extends ContainerIntegrationSpec {
 
 What we see here is that we are pretty close to the actual unit test implementation. The only difference is that we use the entity manager to persist the instances and instead of creating the service via new, the real service instance is used.
 
-With this, we are able to generally execute code in a fairly real world like scenario. The execution time of the integration tests is obviously higher, because it has to create the spring application context and start the database. But as we use the Singleton approach for our container instance, it will only effect the first integration test that get's executed, so it will take something like 100ms instead of 1ms to run it. The next integration test though are usually run within something like 1-10ms depending on what is done in the test.
+With this, we are able to generally execute code in a fairly real world like scenario. The execution time of the integration tests is obviously higher, because it has to create the spring application context and start the database. But as we use the Singleton approach for our container instance, it will only affect the first integration test that gets executed, so it will take something like 100ms instead of 1ms to run it. The next integration test though are usually run within something like 1-10ms depending on what is done in the test.
 
 
 ##  The right balance between Unit and Integration tests
-Since a integration tests seems more appropriate in this case, it is not always the case. Do you remember the [testing pyramid from the first blog post](https://www.road-to-cuba-and-beyond.com/testing-of-cuba-applications-part-1/)? I talked about the ratio between the different test phases a little. Before we go and test everything that has to do with the database in an integration test, it might be valuable to look at alternatives. The above described problem, that we needed to much mocking in the unit test might be a sign that we have a design problem.
+Since integration tests seem more appropriate in this case, it is not always the case. Do you remember the [testing pyramid from the first blog post](https://www.road-to-cuba-and-beyond.com/testing-of-cuba-applications-part-1/)? I talked about the ratio between the different test phases a little. Before we go and test everything that we have to do with the database in an integration test, it might be valuable to look at the alternatives. The above described problem, that we needed too much mocking in the unit test, might be a sign that we have a design problem.
 
-It may be (and in fact I would argue in this case it is), that we need an abstraction layer between the CUBA APIs and our own business logic. Michael Feathers talks about this in his book "Working effectively with legacy code" about the fact that "my whole application is all API calls". The idea to prevent that situation of too much mocking entirly is to create an abstraction of the interface with some kind of a [wrapper](http://svengrand.blogspot.de/2008/05/new-xunit-test-pattern.html) which additionaly get's optimised for unit testing.
+It may be (and in fact I would argue in this case it is), that we need an abstraction layer between the CUBA APIs and our own business logic. Michael Feathers talks about this in his book "Working effectively with legacy code" about the fact that "my whole application is all API calls". The idea to prevent that situation of too much mocking entirly is to create an abstraction of the interface with some kind of a [wrapper](http://svengrand.blogspot.de/2008/05/new-xunit-test-pattern.html) which additionaly gets optimised for unit testing.
 
 Let's have a look at what that would look like. The wrapper might have the following imaginary interface:
 
@@ -324,7 +324,7 @@ public interface AppDataManager {
 }
 {% endhighlight %}
 
-The method `loadByReference` not only wrapps the API, but it puts a common use case on top of it. With this, the the `OrderInformationService` implementation implodes like this:
+The method `loadByReference` not only wrapps the API, but also it puts a common use case on top of it. With this, the the `OrderInformationService` implementation implodes like this:
 
 {% highlight groovy %}
 @Service(OrderInformationService.NAME)
@@ -340,9 +340,9 @@ public class OrderInformationServiceBean implements OrderInformationService {
 }
 {% endhighlight %}
 
-Now it is very easy to go back to an unit test, that will mock the `appDataManager` and tracks it's call.
-With that we can push the integration test part into the underlying db access layer (AppDataManager) and with that are not forced to do integrateion test for the whole business logic.
+Now it is very easy to go back to a unit test, that will mock the `appDataManager` and track its call.
+With that we can push the integration test part into the underlying db access layer (AppDataManager) and with that are not forced to do integration test for the whole business logic.
 
 This solution might seem to be a little overkill, and probably it is, but I hope you got the point of what I'm trying to say.
 
-With that we have been through the most of the middleware integration test scenarios as well as how to test services in general. I hope you enjoyed it. It you have any questions or have different opinions around that topic, just leave a comment below.
+With that we have gone through the most of the middleware integration test scenarios as well as how to test services in general. I hope you enjoyed it. If you have any questions or different opinions around that topic, just leave a comment below.
