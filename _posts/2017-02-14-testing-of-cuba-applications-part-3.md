@@ -288,14 +288,22 @@ class OrderInformationServiceBeanSpec extends ContainerIntegrationSpec {
     }
 
     def "findLatestOrder returns the order with the latest orderDate"() {
-        given:
-        Customer customer = metadata.create(Customer)
-        def todaysOrder = metadata.create(Order)
-        customer.setOrders([todaysOrder] as Set)
 
-        when:
+        given: "there are two orders"
+        def todaysOrder = new Order(orderDate: new Date(), customer: customer)
+        def yesterdaysOrder = new Order(orderDate: new Date() - 1, customer: customer)
+
+        and: "the orders belong to that customer"
+        customer.orders = [todaysOrder, yesterdaysOrder] as Set
+
+        and: "the entities are persisted in the database"
+        persist(customer, todaysOrder, yesterdaysOrder)
+
+
+        when: "the latest order of the customer is requested"
         Order latestOrder = service.findLatestOrder(customer)
-        then:
+
+        then: "the latest order is todays order"
         latestOrder == todaysOrder
     }
 
@@ -303,7 +311,7 @@ class OrderInformationServiceBeanSpec extends ContainerIntegrationSpec {
 {% endhighlight %}
 
 
-What we see here is that we are pretty close to the actual unit test implementation. The only difference is that we use the entity manager to persist the instances and instead of creating the service via new, the real service instance is used.
+What we see here is that we are pretty close to the actual unit test implementation. The only difference is that we use the entity manager (hidden in the persist method) to persist the instances and instead of creating the service via new, the real service instance is used.
 
 With this, we are able to generally execute code in a fairly real world like scenario. The execution time of the integration tests is obviously higher, because it has to create the spring application context and start the database. But as we use the Singleton approach for our container instance, it will only affect the first integration test that gets executed, so it will take something like 100ms instead of 1ms to run it. The next integration test though are usually run within something like 1-10ms depending on what is done in the test.
 
