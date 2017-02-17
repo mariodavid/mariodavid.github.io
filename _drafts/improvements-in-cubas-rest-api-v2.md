@@ -2,7 +2,7 @@
 layout: post
 title: Improvements in CUBAs REST API v2
 description:
-modified: 2016-09-25
+modified: 2017-02-20
 tags: [cuba, REST]
 image:
   feature: improvements-in-cubas-rest-api-v2/feature.png
