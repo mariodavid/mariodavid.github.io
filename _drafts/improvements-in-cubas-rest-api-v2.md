@@ -8,15 +8,15 @@ image:
   feature: improvements-in-cubas-rest-api-v2/feature.png
 ---
 
-Next to the application components, there is another interesting feature that is part of the 6.3 release of the CUBA platform. It deals with the REST API feature. In this blog post we will have a deeper look into it and see where are the differens and potential benefits of it.
+Next to the application components, there is another interesting feature that is a part of the 6.3 release of the CUBA platform. It deals with the REST API feature. In this blog post we will have a deeper look into it and see where are the differences and potential benefits of it.
 
 <!-- more -->
 
 ## Once upon a time, there was a blog post
 
-Last year I did a [blog post about the REST-API implementation of the CUBA platform](https://www.road-to-cuba-and-beyond.com/cubas-rest-api-if-only-roy-would-knew-about-it/). In the current release 6.3 the generic REST API has been more or less redesigned completely. Due to the massive changes, it worth taking another look into it.
+Last year I did a [blog post about the REST-API implementation of the CUBA platform](https://www.road-to-cuba-and-beyond.com/cubas-rest-api-if-only-roy-would-knew-about-it/). In the current release 6.3 the generic REST API has been more or less redesigned completely. Due to the massive changes, it is worth taking another look into it.
 
-Just to give you a quick recap on what the old (v1) REST API was all about here's a little list of features that have been included:
+Just to give you a quick recap on what the old (v1) REST API was all about, here's a small list of features that have been included:
 
 * (API-)user authentication
 * CRUD on single entity instances
@@ -25,13 +25,13 @@ Just to give you a quick recap on what the old (v1) REST API was all about here'
 * up- / download files from file storage
 * create views to customize entity representation retrival
 
-In the new implementation the feature list pretty much stayed the same, but the way to execute the different features changed quite a bit.
+In the new implementation, the feature list pretty much remains the same, but the way to execute the different features changed quite a bit.
 
 So let's look at the things that have changed.
 
 ## Changes on CUBAs REST API
 
-The authentication mechanism has changed to OAuth2 machanism. Next is that the CRUD operations on the entity level has become much more "RESTful" towards a [de-facto standard resource naming](http://www.restapitutorial.com/lessons/restfulresourcenaming.html) which is implemented by most of the major web application frameworks. This also includes usage of the most common HTTP verbs.
+The authentication mechanism has changed to OAuth2 mechanism. Next is that the CRUD operations on the entity level have become much more "RESTful" towards a [de-facto standard resource naming](http://www.restapitutorial.com/lessons/restfulresourcenaming.html) which is implemented by most of the major web application frameworks. This also includes usage of the most common HTTP verbs.
 
 ### Authenticate via OAuth2
 
@@ -39,7 +39,7 @@ The first major change concerns the login mechanism. The v1 based login mechanis
 
 The API client sends a POST request to the server to get an access token. In order to accept the request, it has to be executed with basic auth in place (client:secret). These hard coded client secrets can be configured in the app.properties of the CUBA application (cuba.rest.client.id and cuba.rest.client.secret). In the body a form is send with the actual credentials of the user.
 
-The result is a JSON with a `access_token` in it. This token has be used for further requests in the `Authorization` header like this: `'Authorization:Bearer abc315c8-2790-4d5a-8ca9-7e9c9922e168'`.
+The result is a JSON with a `access_token` in it. This token has to be used for further requests in the `Authorization` header like this: `'Authorization:Bearer abc315c8-2790-4d5a-8ca9-7e9c9922e168'`.
 
 Here is the full example:
 
@@ -59,7 +59,7 @@ Content-Type: application/json;charset=UTF-8
 
 
 ### CRUD operations on entites
-With the acces token we are able consume the REST API by passing the token to every request. One example of this is that we can create a request that will list all customers that the user is allowed to see (you can download the example app from [github](https://github.com/mariodavid/cuba-example-6-3-rest-api)).
+With the acces token we are able to consume the REST API by passing the token to every request. One example of this is that we can create a request that will list all customers that the user is allowed to see (you can download the example app from [github](https://github.com/mariodavid/cuba-example-6-3-rest-api)).
 
 {% highlight bash %}
 $ http localhost:8080/app/rest/v2/entities/cesdra\$Customer 'Authorization:Bearer abc315c8-2790-4d5a-8ca9-7e9c9922e168'
@@ -92,7 +92,7 @@ Content-Type: application/json;charset=UTF-8
 ]
 {% endhighlight %}
 
-This structure is basically the same that all of the major web frameworks support nowadays. CUBA offers a [swagger API description](http://files.cuba-platform.com/swagger/#/) which is a very cool feature to get familiar with the API sturcture.
+This structure is basically the same that all of the major web frameworks support nowadays. CUBA offers a [swagger API description](http://files.cuba-platform.com/swagger/#/) which is a very cool feature to get familiar with the API structure.
 
 <figure class="center">
 	<a href="http://files.cuba-platform.com/swagger/"><img src="{{ site.url }}/images/improvements-in-cubas-rest-api-v2/entity-rest-crud.png" alt=""></a>
@@ -103,11 +103,11 @@ This structure is basically the same that all of the major web frameworks suppor
 
 ### Predefined queries instead of per-request-JPQL
 
-One thing that changed dramatically is the feature to execute abitrary JPQL queries. In the v1 version the client could create a request that has a JPQL in it which should get executed. This exposure of the database query language in the API is something that might be valuable for integration purposes, where you control the sender as well as the receiver. But from a API point of view it is like exposing detailed information about the implementation structure to the outside world.
+One thing that changed dramatically is the feature to execute arbitrary JPQL queries. In the v1 version the client could create a request that had a JPQL in it which should get executed. This exposure of the database query language in the API is something that might be valuable for integration purposes, where you control the sender as well as the receiver. But from a API point of view, it is like exposing detailed information about the implementation structure to the outside world.
 
-Since the v2 of the API moves much more towards a public facing API facility, this feature was removed. The replacement for that is that you can defined something that is very similar to [Named queries](http://www.objectdb.com/java/jpa/query/named) in te JPA world for the API on the server. These named queries act as the abstraction machanism to the API consumer. This way the customer is not forced to know about the interal entity structure. Instead it only has to know about the name of the query and the parameter that this query might have.
+Since the v2 of the API moves much more towards a public facing API facility, this feature was removed. The replacement for that is that you can define something that is very similar to [Named queries](http://www.objectdb.com/java/jpa/query/named) in the JPA world for the API on the server. These named queries act as the abstraction machanism to the API consumer. This way the customer is not forced to know about the internal entity structure. Instead, it only has to know about the name of the query and the parameter that this query might have.
 
-Here's a little example of that definition:
+Here's a small example of that definition:
 
 {% highlight xml %}
 <queries xmlns="http://schemas.haulmont.com/cuba/rest-queries.xsd">
@@ -142,7 +142,7 @@ Another thing to notice is that it is not possible to make a bulk import out of 
 
 In the commitInstances array a list of entities can be created and inserted into the database within one database transaction.
 
-Due to the change towards the de-facto standard REST URI resource pattern, this is no longer possible, because the instances are treated like resources. When an instance is created you'll get back a HTTP response <code>201 - created</code> with a corresponding <code>Location</code> Header that points to this newly created resource (in this case - the entity). Something like this is hardly possible in a batch mode, because the response can't point to the created resource. Also it would be problematic to handle validation errors in this case (which have got included in 6.4 with bean validation).
+Due to the change towards the de-facto standard REST URI resource pattern, this is no longer possible, because the instances are treated like resources. When an instance is created, you'll get back an HTTP response <code>201 - created</code> with a corresponding <code>Location</code> Header that points to this newly created resource (in this case - the entity). Something like this is hardly possible in a batch mode, because the response can't point to the created resource. Also it would be problematic to handle validation errors in this case (which have been included in 6.4 with bean validation).
 
 So this is just a thing to know. It would be possible to create a service that brings back this feature of doing bulk create, but with that you would get back to the RPC based approach of the API (which is exactly the point of the v2 API to drift away from that, at least in my understanding of it).
 
@@ -150,7 +150,7 @@ So this is just a thing to know. It would be possible to create a service that b
 
 There are several [examples in the docs](https://doc.cuba-platform.com/manual-6.3/rest_api_v2_usage_example.html) on how to communicate with the new API. Therefore I will not go into detail about the different CRUD operations, Service invocations etc.
 
-Instead I would like to show you two little tools that I found quite appealing to deal with the API on a day to day basis. Above we already saw the command line based tool called [httpie](https://httpie.org/). Httpie is just like [cURL](https://curl.haxx.se/) but optimized for ease of use. cURL has the downside that certain operations on HTTP (like form submit) are fairly verbose when you want to type them.
+Instead I would like to show you two little tools that I found quite appealing to deal with the API on a day-to-day basis. Above we have already seen the command line based tool called [httpie](https://httpie.org/). Httpie is just like [cURL](https://curl.haxx.se/) but optimized for ease of use. cURL has the downside that certain operations on HTTP (like form submit) are fairly verbose when you want to type them.
 
 This is where Httpie kicks in. Let's look at the Login process in cURL:
 
@@ -164,7 +164,7 @@ With Httpie it changes to this:
 http --form --auth client:secret  POST localhost:8080/app/rest/v2/oauth/token grant_type=password username=admin password=admin
 {% endhighlight %}
 
-It just gives you a fairly nicer tool to do the easy HTTP things. But for some people fiddling around with the command line all the time is not the preferred way of doing it (including myself), so there is one other tool i used lately.
+It just gives you a fairly nicer tool to do the easy HTTP things. But for some people fiddling around with the command line all the time is not the preferred way of doing it (including myself), so there is one other tool I used lately.
 
 ### Explore your API with Postman
 
@@ -185,7 +185,7 @@ To get you an easy start with the tool, I created the [postman collection](https
 
 One very interesting thing that I noticed is, that it is possible to not only use this for debugging purposes and manual communication with the API, but for test automation as well. For this there is a Test tab in the UI where you can do asserts on the response with javascript. I'll probably go into more detail on that topic in an extra blog post.
 
-Within the shared collection I used it not for automated testing, but instead used the scripting facility to do some kind of automation. When you look at the Tests tabs of the Login request, you will find that I programmatically create an environment variable within postman called 'access_token':
+Within the shared collection I used it not for automated testing, but instead used the scripting facility to do some kind of automation. When you look at the Tests tabs of the Login request, you will find that I've programmatically created an environment variable within postman called 'access_token':
 
 {% highlight javascript %}
 if (isResponseOk()) {
@@ -215,9 +215,9 @@ function isResponseOk() {
 function getJson() { return JSON.parse(responseBody) }
 {% endhighlight %}
 
-This script basically checks if the response is valid and if it is, it will set the environment variable like this: <code>postman.setEnvironmentVariable("access_token", access_token);</code>.
+This script basically checks if the response is valid, and if it is, it will set the environment variable like this: <code>postman.setEnvironmentVariable("access_token", access_token);</code>.
 
-With that everywhere in Postman the variable can be used just by using the double-curly braces notation (like shown below in the Authoriation header).
+With that everywhere in Postman the variable can be used just by using the double-curly braces notation (like shown below in the Authorisation header).
 
 <figure class="center">
 <img src="{{ site.url }}/images/improvements-in-cubas-rest-api-v2/access-token-usage.png" >
@@ -225,6 +225,6 @@ With that everywhere in Postman the variable can be used just by using the doubl
 
 
 #### Using Swagger description in Postman
-If you want to try out all features of the v2 API in Postman, there is even an easier way to do so instead of creating all the requests by hand. Postman is able to import not only the collection in their format, but read the Swagger format as well. With this, you can just point Postman to the URL of the yaml description of CUBA which is: [http://files.cuba-platform.com/swagger/cuba-rest-api-v2.yaml](http://files.cuba-platform.com/swagger/cuba-rest-api-v2.yaml)
+If you want to try out all features of the v2 API in Postman, there is even an easier way to do so, instead of creating all the requests by hand. Postman is able to import not only the collections in their format, but read the Swagger format as well. With this, you can just point Postman to the URL of the yaml description of CUBA which is: [http://files.cuba-platform.com/swagger/cuba-rest-api-v2.yaml](http://files.cuba-platform.com/swagger/cuba-rest-api-v2.yaml)
 
 With that you have imported the whole description of Swagger into your app and can start uploading files, do service requests etc.
