@@ -39,7 +39,7 @@ The first major change concerns the login mechanism. The v1 based login mechanis
 
 The API client sends a POST request to the server to get an access token. In order to accept the request, it has to be executed with basic auth in place (client:secret). These hard coded client secrets can be configured in the app.properties of the CUBA application (cuba.rest.client.id and cuba.rest.client.secret). In the body a form is send with the actual credentials of the user.
 
-The result is a JSON with a `access_token` in it. This token has to be used for further requests in the `Authorization` header like this: `'Authorization:Bearer abc315c8-2790-4d5a-8ca9-7e9c9922e168'`.
+The result is a JSON with a <code>access_token</code> in it. This token has to be used for further requests in the <code>Authorization</code> header like this: <code>'Authorization:Bearer abc315c8-2790-4d5a-8ca9-7e9c9922e168'</code>.
 
 Here is the full example:
 
