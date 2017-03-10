@@ -2,7 +2,7 @@
 layout: post
 title: Improvements in CUBAs REST API v2
 description:
-modified: 2017-02-20
+modified: 2017-03-10
 tags: [cuba, REST]
 image:
   feature: improvements-in-cubas-rest-api-v2/feature.png
@@ -14,7 +14,7 @@ Next to the application components, there is another interesting feature that is
 
 ## Once upon a time, there was a blog post
 
-Last year I did a [blog post about the REST-API implementation of the CUBA platform](https://www.road-to-cuba-and-beyond.com/cubas-rest-api-if-only-roy-would-knew-about-it/). In the current release 6.3 the generic REST API has been more or less redesigned completely. Due to the massive changes, it is worth taking another look into it.
+Last year I did a [blog post about the REST-API implementation of the CUBA platform](https://www.road-to-cuba-and-beyond.com/cubas-rest-api-if-only-roy-would-knew-about-it/). In the release 6.3 the generic REST API has been more or less redesigned completely. Due to the massive changes, it is worth taking another look into it.
 
 Just to give you a quick recap on what the old (v1) REST API was all about, here's a small list of features that have been included:
 
