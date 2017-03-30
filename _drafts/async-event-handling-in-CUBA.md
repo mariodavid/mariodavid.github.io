@@ -5,7 +5,8 @@ description:
 modified: 2017-03-15
 tags: [cuba, events, spring, notifications]
 image:
-  feature:
+  feature: async-event-handling-in-cuba/feature.jpg
+  feature_source: https://pixabay.com/de/briefkasten-post-karibik-guadeloupe-1682944/
 ---
 
 Event handling in an asynchronous fashion oftentimes leads to an architecture that is more flexible and decoupled.
