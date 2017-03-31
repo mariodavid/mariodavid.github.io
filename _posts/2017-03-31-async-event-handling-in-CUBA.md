@@ -2,7 +2,7 @@
 layout: post
 title: Asynchronous event handling in CUBA
 description:
-modified: 2017-03-15
+modified: 2017-03-31
 tags: [cuba, events, spring, notifications]
 image:
   feature: async-event-handling-in-cuba/feature.jpg
