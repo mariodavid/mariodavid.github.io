@@ -27,21 +27,30 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 
 ## Constraint examples
 
-### All users can only edit "not closed" orders
-1. Solution:
+### 1. All users can only edit "not closed" orders
 
-Constraint:
-  entityName: cesc$order"
-  operationType: "Update"
-  CheckType: Check in memory
-  Groovy Script: ""{E}.status != com.company.cesc.entity.OrderStatus.CLOSED"
+#### 1.1. Solution:
+
+Create a constraint:
+{% highlight json %}
+{
+  "entityName": "cesc$Order",
+  "operationType": "Update",
+  "checkType": "Check in memory",
+  "groovyScript": "{E}.status != com.company.cesc.entity.OrderStatus.CLOSED"
+}
+{% endhighlight %}
 
 Order-browse.xml:
-              <action id="edit" constraintOperationType="update"/>
+{% highlight xml %}
+  <action id="edit" constraintOperationType="update"/>
+{% endhighlight %}
 
-This works. The already closed orders a no longer capable of beeing edited. Problem: An order, that is currently not closed can't be changed to "orderStatus: closed", because when trying to change the instance to closed, the constraint gets applied, because the constraint only checks what is currently in memory. It would need some kind of that: old({E}.status != OrderStatus.CLOSED)
+This works. The already closed orders a no longer capable of beeing edited.
 
-2. Solution:
+Problem: An order, that is currently not closed can't be changed to "orderStatus: closed", because when trying to change the instance to closed, the constraint gets applied, because the constraint only checks what is currently in memory. It would need some kind of that: <code>old({E}).status != OrderStatus.CLOSED</code> (see 3. Solution for this)
+
+#### 1.2. Solution:
 - create another attribute: "closed: boolean" to the order class.
 - create a OrderEntityListener that looks like this:
 
@@ -71,41 +80,109 @@ public class OrderEntityListener implements BeforeInsertEntityListener<Order>, B
 }
 {% endhighlight %}
 
-- create an Constraint:
-  entityName: cesc$order"
-  operationType: "Update"
-  CheckType: Check in memory
-  Groovy Script: ""!{E}.closed"
+Constraint:
+{% highlight json %}
+{
+  "entityName": "cesc$Order",
+  "operationType": "Update",
+  "checkType": "Check in memory",
+  "groovyScript": "!{E}.closed"
+}
+{% endhighlight %}
 
 Here, we switched the check to the closed boolean flag. There the above problem does not occur.
 
-### "walther" can only edit the orders created by himself in the Northeast area, not the ones created by "saul" in Northeast
+
+
+#### 1.3. Solution:
+- reload the entity from db, to get the current persistent entity
 
 Constraint:
-  Access Group: Northeast
-  entityName: cesc$order"
-  operationType: "Update"
-  CheckType: Check in memory
-  Groovy Script: "{E}.createdBy == userSession.user.login"
-
-### "walther" can only create orders for new customers if payment method is "CREDIT_CARD" or "PAYPAL"  
---> wizard generat:
-(({E}.customer.type == value(com.company.cesc.entity.CustomerType.class, 'NEW') && {E}.paymentMethod in CREDIT_CARD,PAYPAL) || {E}.customer.type != value(com.company.cesc.entity.CustomerType.class, 'NEW'))
-
---> richtig wäre:
-(
-    {E}.customer.type == com.company.cesc.entity.CustomerType.NEW
-    &&
-    (
-        {E}.paymentMethod com.company.cesc.entity.OrderStatus.CREDIT_CARD ||
-        {E}.paymentMethod com.company.cesc.entity.OrderStatus.PAYPAL
-    )
-) 
-||
-{E}.customer.type != com.company.cesc.entity.CustomerType.NEW
+{% highlight json %}
+{
+  "entityName": "cesc$Order",
+  "operationType": "Update",
+  "checkType": "Check in memory",
+  "groovyScript": "see below"
+}
+{% endhighlight %}
 
 
-### "saul" can create orders for new customers independent of the payment method
+Groovy Script:
+{% highlight groovy %}
+def dataManager = com.haulmont.cuba.core.global.AppBeans.get(com.haulmont.cuba.core.global.DataManager)
+def currentPersistedEntity = dataManager.reload({E},"_local")
+def closedStatus = com.company.cesc.entity.OrderStatus.CLOSED
+
+if ({E}.status != closedStatus) {
+    return true
+}
+else if (currentPersistedEntity.status != closedStatus && {E}.status == closedStatus) {
+    return true
+}
+else if (currentPersistedEntity.status == closedStatus && {E}.status != closedStatus) {
+    return true
+}
+else {
+    return false
+}
+{% endhighlight %}
+
+In this case, we reloaded the entity in order to be able to check more conditions: not only the current state of the entity is important, but also the values that were in the database before.
+
+### 2. "walther" can only edit the orders created by himself in the Northeast area, not the ones created by "saul" in Northeast
+
+Constraint:
+{% highlight json %}
+{
+  "accessGroup": "Northeast",
+  "entityName": "cesc$Order",
+  "operationType": "Update",
+  "checkType": "Check in memory",
+  "groovyScript": "{E}.createdBy == userSession.user.login"
+}
+{% endhighlight %}
+
+### 3. "walther" can only create orders for new customers if payment method is "CREDIT_CARD" or "PAYPAL"  
+
+Constraint:
+{% highlight json %}
+{
+  "accessGroup": "Northeast",
+  "entityName": "cesc$Order",
+  "operationType": "Create",
+  "checkType": "Check in memory",
+  "groovyScript": "see below"
+}
+{% endhighlight %}
+
+Groovy Script:
+{% highlight groovy %}
+def newCustomer = com.company.cesc.entity.CustomerType.NEW
+com.haulmont.cuba.core.global.PersistenceHelper.checkLoaded(__originalEntity__, 'paymentMethod')
+com.haulmont.cuba.core.global.PersistenceHelper.checkLoaded(__originalEntity__.customer, 'type')
+if ({E}.customer.type == newCustomer) {
+    if ({E}.paymentMethod == com.company.cesc.entity.PaymentMethod.CREDIT_CARD || {E}.paymentMethod == com.company.cesc.entity.PaymentMethod.PAYPAL) {
+        return true
+    }
+    else {
+        return false
+    }
+}
+else {
+    return true
+}
+{% endhighlight %}
+
+In this groovy script we check the above mentioned condition.
+
+To make this work, the view of the order in the order editor has to match with the things that are used in the groovy script (e.g. {E}.customer.type).
+To check that the attributes are actually in the view (through <code>PersistenceHelper.checkLoaded</code>) on the entity it is required to use the magic variable <code>__originalEntity__</code> that gets passed into the script via <code>SecurityConstraintExtensionImpl</code>.
+
+
+### 4. "saul" can create orders for new customers independent of the payment method
+
+As the security constraint only gets applied to the Northeast access group, saul will not be effected by this restriction. Therefore he is capable of creating orders independent of the customers customer type.
 
 ### All users can only "deliver" orders (via a button in the editor of the order), if there is at least one lineItem
 
