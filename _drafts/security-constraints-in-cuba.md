@@ -1,6 +1,6 @@
 ---
 layout: post-dark
-title: CUBA Security Subsystem Distilled - Part 2
+title: Security constraints in CUBA
 description: "In this blog post, we will discover the insights of CUBA's Security subsystem and how different business security requirements can be achieved."
 modified: 2017-04-15
 tags: [cuba, security]
@@ -8,7 +8,7 @@ image:
   feature: cuba-security-subsystem-distilled/feature-2.jpg
 ---
 
-CUBA Security Inc. is still around and just recently wants to benefit from the CUBA even further. The ERP-software should support different requirements regarding security constrains. In order to fulfil reguilatory requirements the software needs to do audit logging. In this blog post we will try to implement the requirements and with this have a look at how the parts of the security subsystem work in CUBA.
+CUBA Security Inc. is still around and just recently wants to benefit from the CUBA even further. The ERP-software should support different requirements regarding security constrains. In this blog post we will implement the requirements and compare the compile time and runtime approaches for this problem.
 
 <!-- more -->
 
@@ -18,7 +18,9 @@ CUBA Security Inc. is still around and just recently wants to benefit from the C
 
 ### Picking up where we left off
 
-In the [last blog post](https://www.road-to-cuba-and-beyond.com/cuba-security-subsystem-distilled/) about the whole security subsystem in CUBA i wrote that i might write another blog post to describe additional examples of CUBAs security relates features. Although it took quite some time, it finally arrived. This time, it is mostly about interacting with the security system in a (semi-)programmatic way. Additionally  we will take a slight look at the auditing options of the platform.
+In the [last blog post](https://www.road-to-cuba-and-beyond.com/cuba-security-subsystem-distilled/) about the whole security subsystem in CUBA i mentioned that i might write another blog post to describe additional examples of CUBAs security relates features. Although it took quite some time, it finally arrived.
+
+This time, it is mostly about interacting with the security system in a (semi-)programmatic way. Additionally  we will take a slight look at the auditing options of the platform.
 
 If you are not fimilar with the basic building blocks of the security features of CUBA, i would encourange you to read about it in the [first part](https://www.road-to-cuba-and-beyond.com/cuba-security-subsystem-distilled/).
 
@@ -29,19 +31,21 @@ If you are not fimilar with the basic building blocks of the security features o
 
 ## Extended business-related security constraints
 
-Currently the security constraints that are applied in the software are mostly done through CUBAs Role system as well as the constraints that get applied the different access groups.
+Currently the security constraints that are applied in the software are mostly done through CUBAs role system as well as the database constraints that get applied the different access groups.
 
-Besides the existing ones there are a number of additional requirements. We will go through the list one by one and try to implement them. Mostly this is possible not through coding but a semi-programmatic way where we use the feature of the access group constraints and combine it with custom groovy scripts. Let's take a look.
+Besides the existing ones there are a number of additional requirements. We will go through the list one by one and try to implement them. Mostly this is possible not through coding but a semi-programmatic way where we use the feature of the access group constraints and combine it with custom groovy scripts.
+
+But before doing that, let's try to implement the first requirement in a programmatic way. This way we can look at the benefits and drawbacks a compile time solution has.
 
 You can find all examples in the example application: [cuba-example-security-constraints](https://github.com/mariodavid/cuba-example-security-constraints) on github.
 
-### Security at build time vs. runtime
+## Security at compile time
 
 To get a slow start into this topic, let's take a look at what solutions are possible in case we don't know anything about the platform security features. We will use the first requirement (that we will see below in more detail) as a basis for that:
 
 *All users can only edit "not closed" orders*
 
-One obvious solution would be in the order editor controller, to do a check in the <code>preCommit</code> action. Here is an example of such a solution:
+Since the only possible choice we have is to develop a piece of software that cares about this check, we will do it programmatically at compile time. One solution is to do a check in the <code>preCommit</code> action of the Order Editor controller. Here is an example that:
 
 {% highlight groovy %}
 class OrderEdit extends AbstractEditor<Order> {
@@ -62,7 +66,7 @@ class OrderEdit extends AbstractEditor<Order> {
 }
 {% endhighlight %}
 
-This works. Here are a few of the benefits:
+Here are a few of the benefits that come with this solution:
 
 * code is at the place you expect it to be - a error message on a screen is defined in the corresponding screen controller
 * embedded in the source code of the software - runtime configurations can't accidentily disable security constaints
@@ -74,7 +78,6 @@ Unfortunately some major drawbacks as well:
 * no seperation of concerns - UI button logic will sit right next to security constraint logic
 * embedded in the source code of the software - not changeable on a per installation basis
 
-
 We will care about all those drawbacks in this blog post, but let's start with the first one. Although the UI might be a big player in terms of data entry, in most cases it is not the only one.
 
 Sometimes you have a REST API (like the CUBA built-in REST API) where you can add data to the system. Or you do a batch import of some kind through another screen. Or think of the [BulkEditor](https://doc.cuba-platform.com/manual-6.4/gui_BulkEditor.html) in CUBA - all of those possibilities are not aware of your logic in the controller. Therefore the security constraints will not get applied.
@@ -83,15 +86,20 @@ For some of those you can copy over the logic (e.g. other screens) to replicate 
 
 Basically this is a show stopper for most of the applications. So lets think about another solution that is a little bit more lower level: *Bean Validation*.
 
-#### Bean Validation as a global way of enforcing security / business rules
+### Bean Validation as a global way of enforcing security / business rules
 
 In the 6.4 release CUBA added support for [Bean Validation](http://beanvalidation.org/). When you look at the website of this, it says: *"Constrain once, validate everywhere"* - that's what we want right? Fine.
 
-So it basically is a Java standard that gives you the possibility to define validation rules on Java classes. CUBA executes those validation rules in the UI and in other parts of the system (e.g. the REST API). With this we have a much better position to do those kinds of checks globally.
+<img style="float: right; margin-right:-280px" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel-5.jpg">
+
+It basically is a Java standard that gives you the possibility to define validation rules on Java classes. CUBA executes those validation rules in the UI and in other parts of the system (e.g. the REST API). With this we have a much better position to do those kinds of checks globally.
 
 So how can a solution to this look like? First we have to create a custom constraint and apply it in the order entity. Detailed information on that can be found in the [docs](https://doc.cuba-platform.com/manual-6.4/bean_validation_constraints.html).
 
+
+
 In this example, we will create an annotation called <a href="https://github.com/mariodavid/cuba-example-security-constraints/blob/2976edfb041bd4a1330a099e7cb334b4f7ad9d87/modules/global/src/com/company/cesc/entity/validation/CheckOrderNotClosed.java"><code>CheckOrderNotClosed</code></a> with a corresponding validation class called <a href="https://github.com/mariodavid/cuba-example-security-constraints/blob/2976edfb041bd4a1330a099e7cb334b4f7ad9d87/modules/global/src/com/company/cesc/entity/validation/OrderNotClosedValidator.java"><code>OrderNotClosedValidator</code></a>.
+
 
 The Order entity is annotated with the new Annotation like this:
 
@@ -115,13 +123,28 @@ public class OrderNotClosedValidator implements ConstraintValidator<CheckOrderNo
 }
 {% endhighlight %}
 
+Compared with the first example, this variant of checking security constraints is much better. It is a seperation between the screen logic and the the security checking. Additionally it will be used throughout the whole application and has to be defined only once and not for every UI screen.
+
+Nevertheless, it is defined in the source code. This might either be a good thing or a bad thing, depending on your needs.
+
+
+## Security at runtime
+
+In order to give you another tool into your hands, let's take a look at the other general approach for doing security. This is "implementing security at runtime" through the CUBAs built-in features. Mainly it is the feature called [access group constraints](https://doc.cuba-platform.com/manual-6.5/constraints.html) we already discovered as part of the [first blog post](https://www.road-to-cuba-and-beyond.com/cuba-security-subsystem-distilled/).
+
+As described earlier here are some examples that we can go through and try to implement it mainly through runtime configuration of the constraints.
+
 ### 1. All users can only edit "not closed" orders
 
 The first requirements deals with the fact that although orders can be updated only when the order is not already in status "closed".
 
-#### 1.1. Solution:
+I will show the solution as the to parts `Constraint` and `Groovy script` that have to be created in the corresponding access group. After that i will describe the solution and potential problems.
 
-Create a constraint:
+For this requirement there are three possible solutions:
+
+#### 1.1. Solution: simple constraint check
+
+`Constraint`
 {% highlight json %}
 {
   "entityName": "cesc$Order",
@@ -131,16 +154,17 @@ Create a constraint:
 }
 {% endhighlight %}
 
-Order-browse.xml:
+`order-browse.xml`
 {% highlight xml %}
   <action id="edit" constraintOperationType="update"/>
 {% endhighlight %}
 
-This works. The already closed orders a no longer capable of beeing edited.
+The already closed orders a no longer editedable.
 
-Problem: An order, that is currently not closed can't be changed to "orderStatus: closed", because when trying to change the instance to closed, the constraint gets applied, because the constraint only checks what is currently in memory. It would need some kind of that: <code>old({E}).status != OrderStatus.CLOSED</code> (see 3. Solution for this)
+But the are some problems with this solution:
+An order, that is currently not closed can't be changed to "orderStatus: closed", because when trying to change the instance to closed, the constraint gets applied, because the constraint only checks what is currently in memory. It would need some kind of that: <code>old({E}).status != OrderStatus.CLOSED</code> (see 3. Solution for this)
 
-#### 1.2. Solution:
+#### 1.2. Solution: solving the issue through another flag
 - create another attribute: "closed: boolean" to the order class.
 - create a OrderEntityListener that looks like this:
 
@@ -170,7 +194,7 @@ public class OrderEntityListener implements BeforeInsertEntityListener<Order>, B
 }
 {% endhighlight %}
 
-Constraint:
+`Constraint`
 {% highlight json %}
 {
   "entityName": "cesc$Order",
@@ -183,11 +207,13 @@ Constraint:
 Here, we switched the check to the closed boolean flag. There the above problem does not occur.
 
 
+<img style="float: right; margin-right:-280px" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel-3.jpg">
 
-#### 1.3. Solution:
-- reload the entity from db, to get the current persistent entity
 
-Constraint:
+#### 1.3. Solution: reloading the entity through dataManager
+In this solution we will reload the entity from database, to get the current persistent entity. Then we will compare the persisted entity in order to solve the above mentioned problem.
+
+`Constraint`
 {% highlight json %}
 {
   "entityName": "cesc$Order",
@@ -198,7 +224,7 @@ Constraint:
 {% endhighlight %}
 
 
-Groovy Script:
+`Groovy Script`
 {% highlight groovy %}
 def dataManager = com.haulmont.cuba.core.global.AppBeans.get(com.haulmont.cuba.core.global.DataManager)
 def currentPersistedEntity = dataManager.reload({E},"_local")
@@ -222,11 +248,15 @@ In this case, we reloaded the entity in order to be able to check more condition
 
 ### 2. "walter" can only edit his own orders in Northeast
 
-In this example, we want the user walter to constraint in such a way, that the set of orders he is allowed to edit will reduce futher. Currently he can see (and edit) all orders that are placed by customers in the Northeast area. Now we want that, although he can see all of those orders, editing is only possible for a subset of those. In this case, he should be allowed to edit only orders that created by himself.
 
-Here's the corresponding constraint for that requirement:
+<img style="float:right; margin-right: -30px; width:150px; padding: 10px;" src="{{site.url}}/images/cuba-security-subsystem-distilled/walter-white.jpg">
 
-Constraint:
+In this example, we want the user walter to constraint in such a way, that the set of orders he is allowed to edit will reduce futher. Currently he can see (and edit) all orders that are placed by customers in the Northeast area.
+
+
+Now we want that, although he can see all of those orders, editing is only possible for a subset of those. In this case, he should be allowed to edit only orders that created by himself.
+
+`Constraint`
 {% highlight json %}
 {
   "accessGroup": "Northeast",
@@ -237,17 +267,19 @@ Constraint:
 }
 {% endhighlight %}
 
-In the groovy script, certain variables get injected. One of those is <code>userSession</code> which allows getting information about the current user. In this case we need the login string to compare it to the currents entites createdBy attribute.
+In the groovy script, certain variables get injected. One of those is <code>userSession</code> which allows getting information about the current user. In this case we need the login name to compare it to the currents entites createdBy attribute.
 
 ### 3. "walter" can only create non-invoice based orders for new customers
 
+
+<img style="float:left; width: 250px; padding: 10px;" src="{{site.url}}/images/cuba-security-subsystem-distilled/saul-and-walter.jpg">
+
 The next example is a little bit more complex. As the company is not willing to trust walter in the same way it trusts other employees, it is required to to treat him in a special way. In this case, the following constraint should be applied:
+
 
 When walter creates an order with a customer that has the customer type "NEW", it should be only allowed to create this order with particular payment types. New Customers are not allowed to place an order that will be payed via invoice.
 
-Here is the corresponding constraint:
-
-Constraint:
+`Constraint`
 {% highlight json %}
 {
   "accessGroup": "Northeast",
@@ -258,7 +290,7 @@ Constraint:
 }
 {% endhighlight %}
 
-Groovy Script:
+`Groovy Script`
 {% highlight groovy %}
 com.haulmont.cuba.core.global.PersistenceHelper.checkLoaded(__originalEntity__, 'paymentMethod')
 com.haulmont.cuba.core.global.PersistenceHelper.checkLoaded(__originalEntity__.customer, 'type')
@@ -280,6 +312,8 @@ else {
 To make this work, the view of the order in the order editor has to match with the things that are used in the groovy script (e.g. <code>{E}.customer.type</code>). Here we see, that there is an implicit correlation between the editor screen definition and the constraint through the need for a particular view. This is somewhat problematic. Because of this, we need to program a little bit more defensive and check in our script.
 
 To check that the attributes are actually in the view (through <code>PersistenceHelper.checkLoaded</code>) on the entity it is required to use the magic variable <code>__originalEntity__</code> that gets passed into the script via <code>SecurityConstraintExtensionImpl</code>.
+
+<div class="information" style="color:black;">This is actually an <a href="https://github.com/mariodavid/cuba-example-security-constraints/blob/master/modules/core/src/com/company/cesc/core/SecurityConstraintExtensionImpl.groovy">extension</a> in the sample project because CUBA is not capable of doing that at the moment. Using PersistenceHelper with `{E}` simply does not work (see the link for more information in the comments).</div>
 
 We will check that the attributes are loaded via the view in order to not produce false positive results in the script. <code>PersistenceHelper.checkLoaded</code> will throw an exception if the attribute is not loaded, therefore the script will evaluate to false.
 
@@ -316,7 +350,13 @@ In order to achieve this requirement, we need to do a little bit of glue code in
 
 Lets have a look at the <code>deliverOrder</code> method. It will use the [Security platform interface](https://doc.cuba-platform.com/manual-6.4/security.html), that allows certain requests against the security subsystem of CUBA in a programmatic fashion.
 
-In this case we use the the variant to check if an entity has a particular permission on a custom constraint code. There are other options like checking for screen permissions etc. On [github](https://github.com/cuba-platform/cuba/blob/master/modules/global/src/com/haulmont/cuba/core/global/Security.java) you'll find the full fletched interface of it, but for this case, we will use the custom constraint code like this:
+This solution uses a specific feature of the Constraints. You can define a custom code for a constraint that you will check in the code and define in the access group constraints at runtime.
+
+
+<img style="float: left; margin-left:-280px; margin-top:-450px;" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel-7.jpg">
+
+
+In this case we use the the variant to check if an entity has a particular permission on a custom constraint code. On [github](https://github.com/cuba-platform/cuba/blob/master/modules/global/src/com/haulmont/cuba/core/global/Security.java) you'll find the full fletched interface of it, but for this case, we will use the custom constraint code like this:
 
 {% highlight groovy %}
 
@@ -342,9 +382,12 @@ class OrderEdit extends AbstractEditor<Order> {
 }
 {% endhighlight %}
 
+
+<img style="float: right; margin-right:-280px" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel-6.jpg">
+
 After that little bit of clue code, we need to define the actual constraint like before. But this time, we will pick the check type "Custom". This option is relevant for constraint operations that are not directly related to the CRUD operations. In this case we will call it "deliverOrder".
 
-Constraint:
+`Constraint`
 {% highlight json %}
 {
   "accessGroup": "Company",
@@ -356,7 +399,7 @@ Constraint:
 }
 {% endhighlight %}
 
-Groovy Script:
+`Groovy Script`
 {% highlight groovy %}
 if ({E}.lineItems.size() > 0) {
     return true
@@ -366,20 +409,25 @@ else {
 }
 {% endhighlight %}
 
-The groovy script itself just checks if there are line items in place. In this case it will the operation is allowed. One could argue that this requirement is probably somewhat unrelated and probably this is true, but as this example should just show the dfferent techniques that can be used it doesn't really matter for now.
+The groovy script itself just checks if there are line items in place. In this case it will the operation is allowed.
+
+One could argue that this requirement is probably somewhat unrelated and probably this is true, but as this example should just show the dfferent techniques that can be used it doesn't really matter for now.
 
 ### 6. All users can only "send invoice" (via a button in the order browser), if the orders payment method is "invoice" and the orderState is "payed"
 
-This last example is fairly similar to the one above. We need to create a little bit of code in our application to make this work. In this case we will go another route in the implementation. The screen definition basically creates button in the buttons panel that uses the sendInvoiceAction of the table.
+This last example is fairly similar to the one above. Like before we need to create a little bit of code in our application to make this work. In this case we will go another route in the implementation. The screen definition basically creates button in the buttons panel that uses the `sendInvoiceAction` of the table.
 
 {% highlight xml %}
 <button id="sendInvoiceBtn"
         action="ordersTable.sendInvoiceAction"/>
 {% endhighlight %}
 
-In the controller, i created a SendInvoiceAction class that gets added to the orders table. SendInvoiceAction is a subclass of  ItemTrackingAction, which enables the feature of setting constraint code. The ItemTrackingAction will check the security constraint and enable / disable the action (and with the the button) accordingly.
+In the controller, i created a `SendInvoiceAction` class that gets added to the orders table. It is a subclass of  `ItemTrackingAction`, which enables the feature of setting constraint code. The ItemTrackingAction will check the security constraint and enable / disable the action (and with the the button) accordingly.
 
 In the class definition of the SendInvoiceAction i set the constraint code and soem other stuff like icon and caption.
+
+<img style="float: left; margin-left:-280px" src="{{site.url}}/images/cuba-security-subsystem-distilled/nebel-8.jpg">
+
 
 {% highlight groovy %}
 
@@ -413,4 +461,22 @@ class OrderBrowse extends AbstractLookup {
 }
 {% endhighlight %}
 
+
+
 The <code>actionPerform</code> method is the actual handler of the action. It will delegate the business logic to the InvoiceService.
+
+
+### Summary
+
+CUBA offers the possibility to do most of the security constraits at runtime or at least with part runtime / part coding. This is a higly powerful feature that is actually not very prominent in the docs and described use cases.
+
+The main benefits for this are, that first most of the logic sit in one place. Then you are able to change these settings on a per user / per installation basis, but even if you don't use that kind of flexibility, you as the developer can decide to structure your implementation in this way to get some of the benefits like seperation of concerns etc.
+
+However there are some drawbacks that we should be aware of. It is harder to unit-test compared to the Validator approach (not impossible, but harder). Theoretically it is also possible to change this settings even if you as the developer don't want that to happen. There are ways around that, but they are more fragile then burning this into the source code.
+
+With this we were able to solve the requirements regarding additional security constraints on the CuBa Security Inc. I hope i could give another tool into your toolbox for implementing security in your CUBA app.
+
+
+<figure class="center">
+	<img src="{{site.url}}/images/cuba-security-subsystem-distilled/meetings-2.jpg" width="300">
+</figure>
