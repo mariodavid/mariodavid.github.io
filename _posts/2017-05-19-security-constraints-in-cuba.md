@@ -2,7 +2,7 @@
 layout: post-dark
 title: Security constraints in CUBA
 description: "In this blog post, we will discover the insights of CUBA's Security subsystem and how different business security requirements can be achieved."
-modified: 2017-04-15
+modified: 2017-05-19
 tags: [cuba, security]
 image:
   feature: cuba-security-subsystem-distilled/feature-2.jpg
@@ -465,6 +465,8 @@ class OrderBrowse extends AbstractLookup {
 
 The <code>actionPerform</code> method is the actual handler of the action. It will delegate the business logic to the InvoiceService.
 
+
+<div class="information" style="color:black;">When you look at the solution for some of the problems, you may get the impressions that these features could be better supported by the famework. This is my impression as well. I talked to the CUBA team (e.g. <a href="https://www.cuba-platform.com/support/topic/declarativeaction-does-not-use-constraintoperationtype-attributes-and-constraintcode">here</a>) in order to smooth the edges for using these security constraints feature in the feature. So in the next releases of CUBA it should be even a little bit better to work with all of this.</div>
 
 ### Summary
 
