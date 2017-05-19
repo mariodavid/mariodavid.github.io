@@ -138,13 +138,13 @@ As described earlier here are some examples that we can go through and try to im
 
 The first requirement deals with the fact that orders can be updated only when the order is not already in status "closed".
 
-I will show the solution as the two parts `Constraint` and `Groovy script` that have to be created in the corresponding access group. After that I will describe the solution and potential problems.
+I will show the solution as the two parts <code>Constraint</code> and <code>Groovy script</code> that have to be created in the corresponding access group. After that I will describe the solution and potential problems.
 
 For this requirement there are three possible solutions:
 
 #### 1.1. Solution: simple constraint check
 
-`Constraint`
+<code>Constraint</code>
 {% highlight json %}
 {
   "entityName": "cesc$Order",
@@ -154,7 +154,7 @@ For this requirement there are three possible solutions:
 }
 {% endhighlight %}
 
-`order-browse.xml`
+<code>order-browse.xml</code>
 {% highlight xml %}
   <action id="edit" constraintOperationType="update"/>
 {% endhighlight %}
@@ -194,7 +194,7 @@ public class OrderEntityListener implements BeforeInsertEntityListener<Order>, B
 }
 {% endhighlight %}
 
-`Constraint`
+<code>Constraint</code>
 {% highlight json %}
 {
   "entityName": "cesc$Order",
@@ -213,7 +213,7 @@ Here, we switched the check to the closed boolean flag. There the above problem 
 #### 1.3. Solution: reloading the entity through dataManager
 In this solution we will reload the entity from database, to get the current persistent entity. Then we will compare the persistent entity in order to solve the above mentioned problem.
 
-`Constraint`
+<code>Constraint</code>
 {% highlight json %}
 {
   "entityName": "cesc$Order",
@@ -224,7 +224,7 @@ In this solution we will reload the entity from database, to get the current per
 {% endhighlight %}
 
 
-`Groovy Script`
+<code>Groovy Script</code>
 {% highlight groovy %}
 def dataManager = com.haulmont.cuba.core.global.AppBeans.get(com.haulmont.cuba.core.global.DataManager)
 def currentPersistedEntity = dataManager.reload({E},"_local")
@@ -256,7 +256,7 @@ In this example, we want the user walter to constraint in such a way, that the s
 
 Now we want that, although he can see all of those orders, editing is only possible for a subset of those. In this case, he should be be allowed to edit only thd orders created by himself.
 
-`Constraint`
+<code>Constraint</code>
 {% highlight json %}
 {
   "accessGroup": "Northeast",
@@ -279,7 +279,7 @@ The next example is a little bit more complex. As the company is not willing to 
 
 When walter creates an order with a customer that has the customer type "NEW", it should be only allowed to create this order with particular payment types. New Customers are not allowed to place an order that will be payed via invoice.
 
-`Constraint`
+<code>Constraint</code>
 {% highlight json %}
 {
   "accessGroup": "Northeast",
@@ -290,7 +290,7 @@ When walter creates an order with a customer that has the customer type "NEW", i
 }
 {% endhighlight %}
 
-`Groovy Script`
+<code>Groovy Script</code>
 {% highlight groovy %}
 com.haulmont.cuba.core.global.PersistenceHelper.checkLoaded(__originalEntity__, 'paymentMethod')
 com.haulmont.cuba.core.global.PersistenceHelper.checkLoaded(__originalEntity__.customer, 'type')
@@ -313,7 +313,7 @@ To make this work, the view of the order in the order editor has to match with t
 
 To check that the attributes are actually in the view (through <code>PersistenceHelper.checkLoaded</code>) of the entity, it is required to use the magic variable <code>__originalEntity__</code> that gets passed into the script via <code>SecurityConstraintExtensionImpl</code>.
 
-<div class="information" style="color:black;">This is actually an <a href="https://github.com/mariodavid/cuba-example-security-constraints/blob/master/modules/core/src/com/company/cesc/core/SecurityConstraintExtensionImpl.groovy">extension</a> in the sample project because CUBA is not capable of doing that at the moment. Using PersistenceHelper with `{E}` simply does not work (see the link for more information in the comments).</div>
+<div class="information" style="color:black;">This is actually an <a href="https://github.com/mariodavid/cuba-example-security-constraints/blob/master/modules/core/src/com/company/cesc/core/SecurityConstraintExtensionImpl.groovy">extension</a> in the sample project because CUBA is not capable of doing that at the moment. Using PersistenceHelper with <code>{E}</code> simply does not work (see the link for more information in the comments).</div>
 
 We will check that the attributes are loaded via the view in order to not produce false positive results in the script. <code>PersistenceHelper.checkLoaded</code> will throw an exception if the attribute is not loaded, therefore the script will evaluate to false.
 
@@ -387,7 +387,7 @@ class OrderEdit extends AbstractEditor<Order> {
 
 After that little bit of glue code, we need to define the actual constraint like before. But this time, we will pick the check type "Custom". This option is relevant for constraint operations that are not directly related to the CRUD operations. In this case we will call it "deliverOrder".
 
-`Constraint`
+<code>Constraint</code>
 {% highlight json %}
 {
   "accessGroup": "Company",
@@ -399,7 +399,7 @@ After that little bit of glue code, we need to define the actual constraint like
 }
 {% endhighlight %}
 
-`Groovy Script`
+<code>Groovy Script</code>
 {% highlight groovy %}
 if ({E}.lineItems.size() > 0) {
     return true
@@ -415,14 +415,14 @@ One could argue that this requirement is probably somewhat unrelated and probabl
 
 ### 6. All users can only "send invoice" (via a button in the order browser), if the orders payment method is "invoice" and the orderState is "payed"
 
-This last example is fairly similar to the one above. Like before we need to create a little bit of code in our application to make this work. In this case we will go another route in the implementation. The screen definition basically creates button in the buttons panel that uses the `sendInvoiceAction` of the table.
+This last example is fairly similar to the one above. Like before we need to create a little bit of code in our application to make this work. In this case we will go another route in the implementation. The screen definition basically creates button in the buttons panel that uses the <code>sendInvoiceAction</code> of the table.
 
 {% highlight xml %}
 <button id="sendInvoiceBtn"
         action="ordersTable.sendInvoiceAction"/>
 {% endhighlight %}
 
-In the controller, I created a `SendInvoiceAction` class that gets added to the orders table. It is a subclass of `ItemTrackingAction`, which enables the feature of setting constraint code. The ItemTrackingAction will check the security constraint and enable / disable the action (and with the the button) accordingly.
+In the controller, I created a <code>SendInvoiceAction</code> class that gets added to the orders table. It is a subclass of <code>ItemTrackingAction</code>, which enables the feature of setting constraint code. The ItemTrackingAction will check the security constraint and enable / disable the action (and with the the button) accordingly.
 
 In the class definition of the SendInvoiceAction I set the constraint code and some other stuff like icon and caption.
 
