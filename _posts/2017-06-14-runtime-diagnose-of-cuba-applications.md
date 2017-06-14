@@ -2,7 +2,7 @@
 layout: post
 title: Runtime diagnose of CUBA applications
 description: ""
-modified: 2017-06-05
+modified: 2017-06-14
 tags: [cuba, debugging, runtime, diagnose]
 image:
   feature: runtime-diagnose-of-cuba-applications/feature.png
