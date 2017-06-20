@@ -52,9 +52,9 @@ You sit in a restaurant and are so hungry you could literally eat a horse. After
 
 After the waiter asks you if you want to have something to drink and a starter (which you gladly accept), you finally decide that you will take the pasta first and if you are still hungry you are going to order another piece of pasta and the fish you have seen in the first page of the menu.
 
-The waiter brings the drink, five minutes later the starter and another ten minutes later the pasta. You know that you are going to be hungry afterwards with this, so you add another pasta and the fish. Additionally you order two sandwiches (although you only really like the bread, not so much the content) and for dessert you'll take the ice cream with chocolate, raspberry and vanilla. You know that you will only eat the raspberry one, but as it could not be ordered on its own, that's the way it is.
+The waiter brings the drink, five minutes later the starter and another ten minutes later the pasta. You know that you are going to be hungry afterwards with this, so you add another pasta and the fish. Additionally you order two sandwiches (although you only really like the bread, not so much the topping) and for dessert you'll take the ice cream with chocolate, raspberry and vanilla. You know that you will only eat the raspberry one, but as it could not be ordered on its own, that's the way it is.
 
-The waiter takes a couple of additional round trips to bring you all this stuff. You eat a bit of everything, but it turns out your eyes were bigger than your belly. So you see not eaten food all over the place. You had eaten so much, you aren't really able to move, when the waiter brings you the bill. This is when you realize that letting the belly decide what to order is not the best idea.
+The waiter takes a couple of additional round trips to bring you all this stuff. You eat a bit of everything, but it turns out your eyes were bigger than your belly. So you see not eaten food all over the place. You had eaten so much, you aren't really able to move, when the waiter brings you the bill. This is when you realize that letting the belly decide what to order is not the best idea. Additionally the waiter has already burning feed.
 
 
 ### arrange your meal on your own - *eager fetching*
@@ -64,11 +64,11 @@ Now imagine the following other situation. Setting is the same, but you are at h
 In this scenario, although you are very hungry, you decide to only take pasta and leave the fish because you know it is going to be fast to prepare. On your way out of the supermarket you'll grab a piece of raspberry ice cream. This means you have to drive faster so that it wouldn't melt, but you feel bad anyway, so that's not a big of a deal.
 After you are ready eating, you are full up as well. Not so much you can't move anymore but its enough for now.
 
-This was a fairly long story, but it pretty much sums up the situations when it comes to the question when what data will be loaded of your entities.
+This was a fairly long story, but it pretty much sums up the situations when it comes to the question when what data will be loaded of your entities. Both options have their own strength, it is up to you, to decide which one is more accurate in which situation.
 
 ## N+1 query problem
 
-The N+1 query problem occurs when using lazy loading without activly thinking about it. To illustrate that, let's have a look at a snippet of Grails code. This does not mean that in Grails everything is lazy loaded (its actually up to you to decide). In Grails your database requests will return instances of the Entity, with all attributes of the table loaded with it. It basically makes a "SELECT * FROM Pet". When you want to traverse a relationship between entities you do that afterwards. Here's an example:
+The N+1 query problem oftentimes occurs when using lazy loading all over the place without actively thinking about it. To illustrate that, let's have a look at a snippet of Grails code. This does not mean that in Grails everything is lazy loaded (its actually up to you to decide). In Grails your database requests will return instances of the Entity, with all attributes of the table loaded with it. It basically makes a "SELECT * FROM Pet". When you want to traverse a relationship between entities you do that afterwards. Here's an example:
 
 {% highlight groovy %}
 function getPetOwnerNamesForPets(String nameOfPet) {
@@ -84,16 +84,83 @@ function getPetOwnerNamesForPets(String nameOfPet) {
 }
 {% endhighlight %}
 
-It is a single line of code that will do the traversal here: <code>it.owner.name</code>. Owner is the relationship that has not been loaded in the first request (<code>Pet.findAll</code>). So for each call of this line, GORM will something like "SELECT * FROM Person WHERE id='...'". This is called *lazy loading*.
+It is a single line of code that will do the traversal here: <code>it.owner.name</code>. Owner is the relationship that has not been loaded in the first request (<code>Pet.findAll</code>). So for each call of this line, GORM will something like "SELECT * FROM Person WHERE id='...'". This is called *lazy loading*. When you count the SQL queries you will end up at N (the person for each invocation of <code>it.owner</code>) + 1 (for the initial <code>Pet.findAll</code>). If you traverse your entity graph further, you will most likely pushing your database to the edge of what is possible.
 
 As a application developer you probably don't really notice this, because you might think that you will only traverse the object graph.
 
+This implicity with a single line of code hitting the database really hard is what makes lazy loading somewhat dangerous.
 
-CUBA instead has the notion of "views". Views are basically a definition of what attributes have to be fetched and will be loaded in the entity instances. This would be a "SELECT name FROM Pet".
+## Eliminating N+1 queries through CUBA views
 
-The real difference comes into play when it comes to relations between entities.
+In CUBA the N+1 query problem most likely never occurs, because the framework decided to not implicitly do lazy loading. Instead CUBA has the notion of "views". Views are basically a definition of what attributes have to be fetched and will be loaded in the entity instances. This would be something like: <code>SELECT pet.name, person.name FROM Pet pet JOIN Person person ON pet.owner == person.id</code>
 
-## Only pay for what you really need
+A view on the one hand represents the column that gets fetched from the own table (Pet) (instead of everything via *), on the other hand represents the columns that have to be loaded via a JOIN.
+
+You can think of a CUBA view as a [SQL view](https://www.w3schools.com/sql/sql_view.asp) for the OR-Mapper since it acts pretty much in the same way.
+
+In CUBA you cannot make a SQL call through the [DataManager](https://doc.cuba-platform.com/manual-6.5/dataManager.html) without using a view. Let's look at the example from the docs for this:
+
+{% highlight java %}
+@Inject
+private DataManager dataManager;
+
+private Book loadBookById(UUID bookId) {
+    LoadContext<Book> loadContext = LoadContext.create(Book.class)
+            .setId(bookId).setView("book.edit");
+    return dataManager.load(loadContext);
+}
+{% endhighlight %}
+
+In this case we want to load a book via its id. The method <code>setView("book.edit")</code> in the Load context creation defines what view to use when fetching the database. In case you don't define the view, the data manager will use one of the two standard views that exists for every entity: the <code>_local</code> view. Local means that every attribute that is not a reference to another table will be loaded, nothing else.
+
+## Solving the IllegalStateException with views
+
+To get back to our example from above with the knowledge about views, let's take a look how to resolve the issue.
+
+The error message <code>IllegalStateException: Cannot get unfetched attribute [] from detached object</code> just means, that there is an attribute that you want to display which is not part of the view that you are using for this entity. This is true, because when we look at the [browse screen](https://github.com/mariodavid/rtcab-cuba-example-views/blob/1-unfetched-attribute-in-table/modules/web/src/com/rtcab/cev/web/customer/customer-browse.xml#L11) i used the <code>_local</code> view:
+
+{% highlight xml %}
+<dsContext>
+    <groupDatasource id="customersDs"
+                     class="com.rtcab.cev.entity.Customer"
+                     view="_local">
+        <query>
+            <![CDATA[select e from cev$Customer e]]>
+        </query>
+    </groupDatasource>
+</dsContext>
+{% endhighlight %}
+
+
+To get rid of the error message, the first thing we need to do is to include our customer type into our view. Since we cannot change the <code>_local</code> view, we can create our own. You can either do it via studio like this (right click on the entity > create view):
+
+<figure class="center">
+	<a href="{{ site.url }}/images/views-the-uncharted-mystery/view-definition-in-studio.png"><img src="{{ site.url }}/images/views-the-uncharted-mystery/view-definition-in-studio.png" alt=""></a>
+	<figcaption><a href="{{ site.url }}/images/views-the-uncharted-mystery/view-definition-in-studio.png" title="Cannot get unfetched attribute error in the CUBA UI">Cannot get unfetched attribute error in the CUBA UI</a></figcaption>
+</figure>
+
+or directly in the [views.xml](https://github.com/mariodavid/rtcab-cuba-example-views/blob/2-using-view-to-display-referenced-data/modules/global/src/com/rtcab/cev/views.xml#L5) of the application:
+
+{% highlight xml %}
+<view class="com.rtcab.cev.entity.Customer"
+      extends="_local"
+      name="customer-view">
+    <property name="type"
+              view="_minimal"/>
+</view>
+{% endhighlight %}
+
+After that, you can change the view reference in the [browse screen](https://github.com/mariodavid/rtcab-cuba-example-views/blob/2-using-view-to-display-referenced-data/modules/web/src/com/rtcab/cev/web/customer/customer-browse.xml#L11) like this:
+
+{% highlight xml %}
+<groupDatasource id="customersDs"
+   class="com.rtcab.cev.entity.Customer"
+   view="customer-view">
+    <query>
+        <![CDATA[select e from cev$Customer e]]>
+    </query>
+</groupDatasource>
+{% endhighlight %}
 
 
 ## The _minimal views and the instance name
