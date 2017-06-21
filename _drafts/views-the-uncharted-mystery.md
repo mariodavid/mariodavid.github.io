@@ -117,7 +117,7 @@ In this case we want to load a book via its id. The method <code>setView("book.e
 
 To get back to our example from above with the knowledge about views, let's take a look how to resolve the issue.
 
-The error message <code>IllegalStateException: Cannot get unfetched attribute [] from detached object</code> just means, that there is an attribute that you want to display which is not part of the view that you are using for this entity. This is true, because when we look at the [browse screen](https://github.com/mariodavid/rtcab-cuba-example-views/blob/1-unfetched-attribute-in-table/modules/web/src/com/rtcab/cev/web/customer/customer-browse.xml#L11) i used the <code>_local</code> view:
+The error message <code>IllegalStateException: Cannot get unfetched attribute [] from detached object</code> just means, that there is an attribute that you want to display which is not part of the view that you are using for this entity. When we look at the [browse screen](https://github.com/mariodavid/rtcab-cuba-example-views/blob/1-unfetched-attribute-in-table/modules/web/src/com/rtcab/cev/web/customer/customer-browse.xml#L11) i used the <code>_local</code> view - which is exactly the problem:
 
 {% highlight xml %}
 <dsContext>
@@ -162,8 +162,50 @@ After that, you can change the view reference in the [browse screen](https://git
 </groupDatasource>
 {% endhighlight %}
 
+This resolved the issue and referenced data is loaded in the browse screen as well.
 
 ## The _minimal views and the instance name
 
+The next thing that is relevant when talking about views is the <code>_minimal</code> view. For the local view there is a straight forward definition: all attributes of an entity that are direct attributes of the table.
 
-## create multiple views for different purposes
+For the minimal view it is not so obvious, but actually straight forward as well.
+
+In CUBA there is a term called "instance name". The instance name is pretty much the same as the [toString](https://stackoverflow.com/questions/3615721/how-to-use-the-tostring-method-in-java) method in a plain old Java program. It is the representation of an entity on the UI and for referencing it. The instance name is defined through the usage of the [NamePattern Annotation](https://github.com/cuba-platform/cuba/blob/d77b25a67dbd2e25fbaebdda0157beef6f091c70/modules/global/src/com/haulmont/chile/core/annotations/NamePattern.java).
+
+It is used like this: <code>@NamePattern("%s (%s)|name,code")</code>. This will lead to two distinct things:
+
+### The instance name defines the UI representation
+
+First and foremost it will determine what things in which order will be displayed if the entity is referenced by another entity (e.g. the CustomerType by the Customer) and displayed on the UI.
+
+In this case, the Customer Type should be represented as the name of the CustomerType instance followed by the code in brackets. If no instance name is shown it will display the entity class name as well as the ID, which is mostly not what anyone wants to look at in the UI. See the before / after image for an example:
+
+<figure class="center">
+	<a href="{{ site.url }}/images/views-the-uncharted-mystery/reference-without-defining-instance-name.png"><img src="{{ site.url }}/images/views-the-uncharted-mystery/reference-without-defining-instance-name.png" alt=""></a>
+	<figcaption><a href="{{ site.url }}/images/views-the-uncharted-mystery/reference-without-defining-instance-name.png" title="Reference without defining an instance name">Reference without defining an instance name</a></figcaption>
+</figure>
+
+
+<figure class="center">
+	<a href="{{ site.url }}/images/views-the-uncharted-mystery/reference-with-defining-instance-name.png"><img src="{{ site.url }}/images/views-the-uncharted-mystery/reference-with-defining-instance-name.png" alt=""></a>
+	<figcaption><a href="{{ site.url }}/images/views-the-uncharted-mystery/reference-with-defining-instance-name.png" title="Reference with defining an instance name">Reference with defining an instance name</a></figcaption>
+</figure>
+
+### The instance name define the attributes of the minimal view
+
+The second thing that gets defined through the Annotation is that every attribute that is mentioned after the Pipe in the annotation value *is* the minimal view. This seems somewhat obvious because somehow the data has to be displayed in the UI and therefore has to be loaded through the database. But at least for me, i oftentimes don't really thing about that fact.
+
+Another thing that is very important is, that the "minimal" view, compared to "local", can contain references to other entities. In the example from above i defined the instance name of the Customer entity by using one local attribute of the Customer (name) and one attribute that is a reference (type): <code>@NamePattern("%s - %s|name,type")</code>
+<figure class="center">
+	<img style="width: 400px;" src="{{ site.url }}/images/views-the-uncharted-mystery/recursive-usage-of-minimal-view.png" alt="">
+	<figcaption>The minimal view can be used recursively (Customer [Instance Name] --> CustomerType [Instance Name])</figcaption>
+</figure>
+
+
+## Summary
+
+To summarize this topic, let's recap what is important. What get's loaded from the database is very explicit in CUBA. It uses view that define what gets loaded in an eager fashion compared to lazy loading what a lot of other frameworks do.
+
+Views are a little bit cumbersome, but they mostly turn out well in the long run.
+
+I hope, i could clarify your thoughts on what views actually are. There are are some advances usages as well as gotchas and pitfalls with views in general and the minimal view in particular, that i will shift to the next blog post.
