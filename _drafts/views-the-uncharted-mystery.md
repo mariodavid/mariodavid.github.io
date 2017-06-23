@@ -49,19 +49,18 @@ Lazy loading and eager fetching are two strategies to retrieve the desired data 
 
 
 
-<div class="hobbit-scene">Do you remember the scene from the book "The Hobbit" where the expedition group of the dwarves together with Gandalf and Bilbo tries to get a bed in Beorns house for a couple of days? Gandalf told the dwarves to only come one at a time after he already talked to Beorn slovely to not make Beorn freak out about the fact that he has to take care of 15 guests.
+<div class="hobbit-scene">Do you remember the scene from the book "The Hobbit" where the expedition group of the dwarves together with Gandalf and Bilbo tries to get a bed in Beorns house for a couple of days? Gandalf told the dwarves to only come one at a time after he already talked to Beorn carefully and introduced them one by one, to not make Beorn freak out about the fact that he has to take care of 15 guests.
 <br /><br />
 <figure class="center">
 	<img src="{{ site.url }}/images/views-the-uncharted-mystery/feature2.jpg" alt="">
 	<figcaption>Gandalf with the dwarves at Beorns house...</figcaption>
 </figure>
 
-This is another way to think about the N+1 queries. Gandalf was very wise in doing so, because he knew the constraints. He basically actively decided to do <i>lazy loading</i> because he new that loading all the data from the database would be too heavy for the database. After the 8th dwarf he switched to <i>eager fetching</i> to get the last four dwares in the room, because he noticed that querying the database too often will not lead to the goal either.
+This is not the most obvious way to think about the <i>lazy loading</i> and <i>eager fetching</i>, but it certainly has the same characteristics. Gandalf was very wise in doing so, because he knew the constraints. He basically actively decided to do <i>lazy loading</i> because he new that loading all the data from the database would be too heavy for the database. After the 8th dwarf he switched to <i>eager fetching</i> to get the last four dwares in the room, because he noticed that querying the database too often will not lead to the goal either.
 </div>
 
 
-
-This was a fairly long story, but it pretty much sums up the situations when it comes to the question when what data will be loaded of your entities. Both options have their own strength, it is up to you, to decide which one is more accurate in which situation.
+The takeaway of this is, that both options have their own strengths and weaknesses. It is up to you, to decide which one is more accurate in which situation.
 
 ## N+1 query problem
 
@@ -212,11 +211,11 @@ I hope, i could clarify your thoughts on what views actually are. There are are 
 
 <style type="text/css">
 article.hentry {
-  background-color:#c0e7de;
+  background-color:#314016;
 }
 
 div.hobbit-scene {
-  background-color:#c0e7de;
+  background-color:#314016;
   border: 0px;
   margin-left: -100px;
   margin-right: -100px;
