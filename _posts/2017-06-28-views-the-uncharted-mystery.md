@@ -85,16 +85,17 @@ As a application developer you probably don't really notice this, because you mi
 This implicity with a single line of code hitting the database really hard is what makes lazy loading somewhat dangerous.
 
 <div class="hobbit-scene">
-To strach the hobbit analogy a little further, the N+1 query probmem would manifest itself by the following extension of the example:
+To strach the hobbit analogy a little further, the N+1 query problem would manifest itself by the following extension of the example:
 
-Imagine Gandalf is not capable of meorizing the names of the dwarves. So when introducing the dwarves one by one, he has to go back to the group and ask the corresponding dwarf about his name. With this information he would go back to beorn to introduce Thorin. The same thing goes on for Bifur, Bofur, Fili, Kili, Dori, Nori, Ori, Oin, Glóin, Balin, Dwalin and Bombur.
+Imagine Gandalf is not capable of memorizing the names of the dwarves. So when introducing the dwarves one by one, he has to go back to the group and ask the corresponding dwarf about his name. With this information he would go back to Beorn to introduce Thorin. The same thing goes on for Bifur, Bofur, Fili, Kili, Dori, Nori, Ori, Oin, Glóin, Balin, Dwalin and Bombur.
+
 
 <br /><br />
 <figure class="center">
 	<img src="{{ site.url }}/images/views-the-uncharted-mystery/gandalf-beorn-2.jpg" alt="">
 </figure>
 
-As you can imagine, Beorn would probably don't like this behavior either, because it would take way too long to get the actual information to the receiver. This is why you have to think carefully when you use what approach and not rely on the defaults of your persistence mapper framework.
+As you can imagine, Beorn would probably not like this behavior either, because it would take way too long to get the actual information to the receiver. This is why you have to think carefully when you use that approach and not rely on the defaults of your persistence mapper framework.
 
 </div>
 
