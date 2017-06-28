@@ -1,9 +1,9 @@
 ---
 layout: post
 title: Views - the uncharted mystery
-description: "The views approach is "
-modified: 2017-04-15
-tags: [cuba, business applications]
+description: "View are the mechanism to avioid N+1 queries. In this blog post we will go into detail about how views work and why there are required in CUBA."
+modified: 2017-06-28
+tags: [cuba, views, N+1 Query problem]
 image:
   feature: views-the-uncharted-mystery/feature.jpg
 ---
@@ -45,9 +45,7 @@ Nevertheless, the data has to be fetched from the database somehow and transform
 
 ## Lazy loading vs. eager fetching
 
-Lazy loading and eager fetching are two strategies to retrieve the desired data from the database. They distinguish themselves in the question, *when* the data of referenced tables are loaded. To understand what that means, imagine the following situations:
-
-
+Lazy loading and eager fetching are two strategies to retrieve the desired data from the database. They distinguish themselves in the question, *when* the data of referenced tables are loaded. To understand what that means, here's a little example:
 
 <div class="hobbit-scene">Do you remember the scene from the book "The Hobbit" where the expedition group of the dwarves together with Gandalf and Bilbo tries to get a bed in Beorns house for a couple of days? Gandalf told the dwarves to only come one at a time after he already talked to Beorn carefully and introduced them one by one, to not make Beorn freak out about the fact that he has to take care of 15 guests.
 <br /><br />
@@ -64,7 +62,7 @@ The takeaway of this is, that both options have their own strengths and weakness
 
 ## N+1 query problem
 
-The N+1 query problem oftentimes occurs when using lazy loading all over the place without actively thinking about it. To illustrate that, let's have a look at a snippet of Grails code. This does not mean that in Grails everything is lazy loaded (its actually up to you to decide). In Grails your database requests will return instances of the Entity, with all attributes of the table loaded with it. It basically makes a "SELECT * FROM Pet". When you want to traverse a relationship between entities you do that afterwards. Here's an example:
+The N+1 query problem oftentimes occurs when using lazy loading all over the place without actively thinking about it. To illustrate that, let's have a look at a snippet of Grails code. This does not mean that in Grails everything is lazy loaded (its actually up to you to decide). In Grails, by default your database requests will return instances of the Entity, with all attributes of the table loaded with it. It basically makes a "SELECT * FROM Pet". When you want to traverse a relationship between entities you do that afterwards. Here's an example:
 
 {% highlight groovy %}
 function getPetOwnerNamesForPets(String nameOfPet) {
@@ -85,6 +83,20 @@ It is a single line of code that will do the traversal here: <code>it.owner.name
 As a application developer you probably don't really notice this, because you might think that you will only traverse the object graph.
 
 This implicity with a single line of code hitting the database really hard is what makes lazy loading somewhat dangerous.
+
+<div class="hobbit-scene">
+To strach the hobbit analogy a little further, the N+1 query probmem would manifest itself by the following extension of the example:
+
+Imagine Gandalf is not capable of meorizing the names of the dwarves. So when introducing the dwarves one by one, he has to go back to the group and ask the corresponding dwarf about his name. With this information he would go back to beorn to introduce Thorin. The same thing goes on for Bifur, Bofur, Fili, Kili, Dori, Nori, Ori, Oin, Glóin, Balin, Dwalin and Bombur.
+
+<br /><br />
+<figure class="center">
+	<img src="{{ site.url }}/images/views-the-uncharted-mystery/gandalf-beorn-2.jpg" alt="">
+</figure>
+
+As you can imagine, Beorn would probably don't like this behavior either, because it would take way too long to get the actual information to the receiver. This is why you have to think carefully when you use what approach and not rely on the defaults of your persistence mapper framework.
+
+</div>
 
 ## Eliminating N+1 queries through CUBA views
 
