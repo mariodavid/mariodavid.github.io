@@ -9,19 +9,19 @@ image:
   feature: grails-vs-cuba/feature.png
 ---
 
-Since i started a transition from Grails to CUBA some time ago, i thought it would be a good idea to give you a technical comparison between those two frameworks. In this blog post series i go though different aspects, starting with data access and business logic in this post, to conclude why I finally decided to give CUBA a shot in more and more of my projects.
+Since I started a transition from Grails to CUBA some time ago, I thought it would be a good idea to give you a technical comparison between those two frameworks. In this blog post series I go though different aspects, starting with data access and business logic in this post, to conclude why I finally decided to give CUBA a shot in more and more of my projects.
 
 <!-- more -->
 
 
-If we would have a gartner magic quadrant for web frameworks, technically CUBA and grails would be definitively nearby (i will not tell you in which quadrant though ;)), so it is fairly easy to compare those. Both are meta-frameworks in the JVM world. Since both are full stack frameworks we can go from layer to layer to see the differences and similarities.
+If we would have a gartner magic quadrant for web frameworks, technically CUBA and grails would be definitively nearby (I will not tell you in which quadrant though ;)), so it is fairly easy to compare those. Both are meta-frameworks in the JVM world. Since both are full stack frameworks we can go from layer to layer to see the differences and similarities.
 
 
 
 
 ## Entities and OR Mapping
 
-Lets get started with the mapping between the database and the object model. This is an important part for a lot of backend developers, so i'll go into a little more detail about the approaches both frameworks take.
+Lets get started with the mapping between the database and the object model. This is an important part for a lot of backend developers, so I'll go into a little more detail about the approaches both frameworks take.
 
 
 ### Grails and GORM
@@ -174,7 +174,7 @@ To write and interact with lazy loaded data is so easy, because you just forget 
 
 Although lazy loading is default in Grails, it is not your only choice. You can define eager fetching globally on the entity attribute level or on a case to case basis when you actually trigger the loading.
 
-But for me, since the lazy loading is default and it is so convinient, i often felt myself in the trap of not thinking about it at all and only remember it, when the application acts really slow (which probably tells you more about myself as a programmer instead of grails as a framework ;)).
+But for me, since the lazy loading is default and it is so convinient, I often felt myself in the trap of not thinking about it at all and only remember it, when the application acts really slow (which probably tells you more about myself as a programmer instead of grails as a framework ;)).
 
 #### CUBA views make loading explicit
 
@@ -192,9 +192,9 @@ CUBA instead has the notion of "views". Views are basically a definition of what
 
 In this example we take some direct attributes of the Role (name, type etc.) as well as a 1:N composition (permission).
 
-I found using views is a very explicit way of dealing with the situation. It forces the developer to think about this topic. This can sometimes be cumbersome but it leads to a better place i think compared to make this whole loading story implicit.
+I found using views is a very explicit way of dealing with the situation. It forces the developer to think about this topic. This can sometimes be cumbersome but it leads to a better place I think compared to make this whole loading story implicit.
 
-If you are interested in more detail on this topic, i created an article around CUBA views. You can find it here: [Views - the uncharted mystery](https://www.road-to-cuba-and-beyond.com/views-the-uncharted-mystery/).
+If you are interested in more detail on this topic, I created an article around CUBA views. You can find it here: [Views - the uncharted mystery](https://www.road-to-cuba-and-beyond.com/views-the-uncharted-mystery/).
 
 
 ### Database migrations
