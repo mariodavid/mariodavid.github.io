@@ -14,7 +14,7 @@ Since I started a transition from Grails to CUBA some time ago, I thought it wou
 <!-- more -->
 
 
-If we would have a gartner magic quadrant for web frameworks, technically CUBA and grails would be definitively nearby (I will not tell you in which quadrant though ;)), so it is fairly easy to compare those. Both are meta-frameworks in the JVM world. Since both are full stack frameworks we can go from layer to layer to see the differences and similarities.
+If we would have a gartner magic quadrant for web frameworks, technically CUBA and Grails would be definitively nearby (I will not tell you in which quadrant though ;)), so it is fairly easy to compare them. Both are meta-frameworks in the JVM world. Since both are full stack frameworks we can go from layer to layer to see the differences and similarities.
 
 
 
@@ -32,7 +32,7 @@ Grails has a built in OR-Mapper called [GORM](http://gorm.grails.org/) which has
 
 GORM is a place where a lot of the innovation of the framework happens. The reason is not so much the mapping to relational databases but to non-relational ones like Neo4j or MongoDB. It supports a variety of NoSQL databases to map it to the domain types in a form that makes sense depending on the database you are working with.
 
-Also GORM shifts slightly to non-blocking IO when it comes to the actual access of the database. Turns out to be quite hard for the relational databases, since JDBC is blocking by nature. But NoSQL databases have not the restriction of the JDBC standard and therefore the driver support for asynchronous operations is much better over there (see the [RxGORM docs](http://gorm.grails.org/latest/rx/manual/index.html) for more info).
+Also GORM shifts slightly to non-blocking IO when it comes to the actual access of the database. Turns out to be quite hard for the relational databases, since JDBC is blocking by nature. But NoSQL databases do not have the restriction of the JDBC standard and therefore the driver support for asynchronous operations is much better over there (see the [RxGORM docs](http://gorm.grails.org/latest/rx/manual/index.html) for more info).
 
 Generally you will create a domain type by executing the command line task <code>grails create-domain-class Person</code> or using the IDE to accomplish the same thing. After that you add some properties to the person class. You'll end up with something like this:
 
@@ -53,9 +53,9 @@ class Pet {
 
 <img style="float: left; padding-right: 10px; margin-left:-80px; width:400px" src="{{site.url}}/images/grails-vs-cuba/cuba.jpg">
 
-CUBA took a slightly different route in this regard. CUBA basically does not do much around the topic of the OR-Mapper. It doesn't have an explicit part in the framework that deals with database access. Instead CUBA uses the Java persistence API in order to fulfill its job. Entities are just POJOs with <code>@Entity</code> annotations.
+CUBA took a slightly different route in this regard. CUBA basically does not do much around the topic of the OR-Mapper. It doesn't have an explicit part in the framework that deals with database access. Instead, CUBA uses the Java persistence API in order to fulfill its job. Entities are just POJOs with <code>@Entity</code> annotations.
 
-An equivalent to the above Person example would look like this:
+An equivalent to the Person example above would look like this:
 
 
 {% highlight groovy %}
@@ -96,7 +96,7 @@ Executing queries against the datastore is a little more different.
 
 First of all, they differ in the way the data retrieval gets called. Grails uses a pattern called [Active record](https://www.martinfowler.com/eaaCatalog/activeRecord.html) in order to fetch data from the database. Active record means that the entity class itself is responsible for fetching the data. <code>Person.list()</code> will in this case get all the entities of the Person table.
 
-In JPA there is the <code>EntityManager</code> that has to be used for data retrieval, while the Entity object are more data access objects (DAO) that act more in a passive manner. You can see it more or less as a [repository pattern](https://martinfowler.com/eaaCatalog/repository.html). CUBA additionally has some more options to access data. Normally instead of using the <code>EntityManager</code> CUBA has a thin layer on top of that called <code>DataManager</code>. The DataManager cares about all the stuff that JPA is not really aware of but is part of CUBA like row level security or views (see this [diff](https://doc.cuba-platform.com/manual-6.5/dm_vs_em.html) for details).
+In JPA there is the <code>EntityManager</code> that has to be used for data retrieval, while the Entity objects are more data access objects (DAO) that act more in a passive manner. You can see it more or less as a [repository pattern](https://martinfowler.com/eaaCatalog/repository.html). CUBA additionally has some more options to access data. Normally instead of using the <code>EntityManager</code> CUBA has a thin layer on top of that called <code>DataManager</code>. The DataManager cares about all the stuff that JPA is not really aware of but is part of CUBA like row level security or views (see this [diff](https://doc.cuba-platform.com/manual-6.5/dm_vs_em.html) for details).
 
 
 <img src="{{site.url}}/images/grails-vs-cuba/fight.jpg">
@@ -129,7 +129,7 @@ You use the <code>dataManager</code> and pass it a <code>loadContext</code>. The
 
 When it comes to the UI, CUBA has an additional concept called "datasource" that will do the heavy lifting to get the data in the UI components.
 
-Grails has different options to access data. Let's look at the outstanding ones. As the example we want to fetch all pets that have a certain name. You can use dynamic finders in Grails like this: <code>Pet.findAllByName("Long John")</code>. Pretty easy, right? Actually the method findAllByName is created dynamically and interpreted by the execution engine do create the correct SQL statement. This means that it has never been defined by the application developer. Instead Grails understands all combinations of those method names. <code>Pet.findAllByNameLikeAndFirstnameLikeAndAgeGreaterThan("Long", "John", 21)</code> would also work (but the readability will go down fast for complicated queries).
+Grails has different options to access data. Let's look at the outstanding ones. As the example we want to fetch all pets that have a certain name. You can use dynamic finders in Grails like this: <code>Pet.findAllByName("Long John")</code>. Pretty easy, right? Actually the method findAllByName is created dynamically and interpreted by the execution engine do create the correct SQL statement. This means that it has never been defined by the application developer. Instead, Grails understands all combinations of those method names. <code>Pet.findAllByNameLikeAndFirstnameLikeAndAgeGreaterThan("Long", "John", 21)</code> would also work (but the readability will go down fast for complicated queries).
 
 As these methods are only suitable for simple queries, there is the opportunity to create a so called 'where query' that does the same thing:
 
@@ -167,18 +167,18 @@ It is a single line of code that will do the traversal here: <code>it.owner.name
 
 > Lazy loading is one of GORMs greatest strength and probably one of its greatest weaknesses
 
-To write and interact with lazy loaded data is so easy, because you just forget about it. It is so transparent, because from an app developer point of view it exactly looks like traversing an object graph.
+Writing and interacting with lazy loaded data is so easy, because you just forget about it. It is so transparent, because from an app developer point of view it exactly looks like traversing an object graph.
 
 <img src="{{site.url}}/images/grails-vs-cuba/fight2.jpg">
 
 
-Although lazy loading is default in Grails, it is not your only choice. You can define eager fetching globally on the entity attribute level or on a case to case basis when you actually trigger the loading.
+Although lazy loading is default in Grails, it is not your only choice. You can define eager fetching globally on the entity attribute level or on a case-to-case basis when you actually trigger the loading.
 
-But for me, since the lazy loading is default and it is so convinient, I often felt myself in the trap of not thinking about it at all and only remember it, when the application acts really slow (which probably tells you more about myself as a programmer instead of grails as a framework ;)).
+But for me, since the lazy loading is default and it is so convinient, I often felt myself in the trap of not thinking about it at all and only remember it, when the application acts really slow (which probably tells you more about myself as a programmer instead of Grails as a framework ;)).
 
 #### CUBA views make loading explicit
 
-CUBA instead has the notion of "views". Views are basically a definition of what attributes have to be fetched and will be loaded in the entity instances. Views are defined in the corresponding views.xml file where you give a view a name and define what attributes will be loaded with this view. Here's an example of a CUBA view for the Role entity:
+CUBA instead has the notion of "views". Views are basically a definition of what attributes have to be fetched and will be loaded in the entity instances. Views are defined in the corresponding views.xml file where you give the view a name and define what attributes will be loaded with this view. Here's an example of a CUBA view for the Role entity:
 
 {% highlight xml %}
 <view class="com.haulmont.cuba.security.entity.Role" name="role.copy">
@@ -192,29 +192,29 @@ CUBA instead has the notion of "views". Views are basically a definition of what
 
 In this example we take some direct attributes of the Role (name, type etc.) as well as a 1:N composition (permission).
 
-I found using views is a very explicit way of dealing with the situation. It forces the developer to think about this topic. This can sometimes be cumbersome but it leads to a better place I think compared to make this whole loading story implicit.
+I found using views a very explicit way of dealing with the situation. It forces the developer to think about this topic. This can sometimes be cumbersome but it leads to a better place I think compared to making this whole loading story implicit.
 
 If you are interested in more detail on this topic, I created an article around CUBA views. You can find it here: [Views - the uncharted mystery](https://www.road-to-cuba-and-beyond.com/views-the-uncharted-mystery/).
 
 
 ### Database migrations
 
-Database migrations are oftentimes part of modern full stack frameworks. Ruby on Rails pionered with this idea so automatically generate deltas between two database schema versions.
+Database migrations are oftentimes part of modern full stack frameworks. Ruby on Rails pionered with this idea to automatically generate deltas between two database schema versions.
 
-Grails and CUBA both have features in place that make that happen as well. For Grails there is a commonly used plugin called [Grails database migration](https://github.com/grails-plugins/grails-database-migration) which uses a java library called [Liquibase](http://www.liquibase.org/) under the covers. CUBA instead comes out of the box with SQL scripts that gets generated via their RAP tool CUBA studio. Both approaches recognies changes in the entities and try to do their best in order to generate a SQL schema delta (like <code>ALTER TABLE...</code>) to reflect the changes in the entity model.
+Grails and CUBA both have features in place that make that happen as well. For Grails there is a commonly used plugin called [Grails database migration](https://github.com/grails-plugins/grails-database-migration) which uses a Java library called [Liquibase](http://www.liquibase.org/) under the covers. CUBA instead comes out of the box with SQL scripts that get generated via their RAP tool CUBA Studio. Both approaches recognize changes in the entities and try to do their best in order to generate an SQL schema delta (like <code>ALTER TABLE...</code>) to reflect the changes in the entity model.
 
 
 <img style="float: right; padding-left: 10px; margin-right:-80px; width:400px" src="{{site.url}}/images/grails-vs-cuba/fans.jpg">
 
-Besides this build in approaches, both frameworks can use any of the mature java libraries for db migrations like [Flyway](https://flywaydb.org/) or the above mentioned [Liquibase](http://www.liquibase.org/).
+Besides this built-in approaches, both frameworks can use any of the mature Java libraries for DB migrations like [Flyway](https://flywaydb.org/) or the above mentioned [Liquibase](http://www.liquibase.org/).
 
 With this we've basically covered all stuff related to data access. Next, we will look at the next layer which is where and how to put the business logic.
 
 ## business logic & constraints
 
-When it comes to business logic, both frameworks are actually pretty close to each other. This has mainly to do with the fact, that Grails as well as CUBA use the [Spring framework](https://projects.spring.io/spring-framework/) under the covers. This means that in both frameworks make fairly heavy use of the [dependency injection pattern](https://martinfowler.com/articles/injection.html).
+When it comes to business logic, both frameworks are actually pretty close to each other. This has mainly to do with the fact, that Grails as well as CUBA use the [Spring framework](https://projects.spring.io/spring-framework/) under the covers. This means that both frameworks make fairly heavy use of the [dependency injection pattern](https://martinfowler.com/articles/injection.html).
 
-In Grails you usually create [services](https://docs.grails.org/latest/guide/services.html) via the command line. These classes are spring beans that repesent some kind of business logic and have certain characteristics. Normally the UI layer either directly interacts with the entity instances to talk to the database (in easier cases), or use services to execute some kind of business logic, that itself might call the database.
+In Grails you usually create [services](https://docs.grails.org/latest/guide/services.html) via the command line. These classes are spring beans that represent some kind of business logic and have certain characteristics. Normally the UI layer either interacts directly with the entity instances to talk to the database (in easier cases), or uses services to execute some kind of business logic, that itself might call the database.
 
 In CUBA there is as well the notion of [services](https://doc.cuba-platform.com/manual-6.5/services.html) (in the same sense). You most likely create a service via CUBA studio, which will generate a Service interface as well as a Class that implements this interface and is annotated with the Spring <code>@Component</code> annotation.
 
@@ -224,7 +224,7 @@ In both frameworks you can additionally create any kind of spring bean and use i
 
 ### Defining constraints on entities
 
-The last part in this blog post is about validation. Normally every application has some kind of validation logic (mostly on entities), that have to be fulfiled in order to e.g. save them in the database. This is why both frameworks have solutions for the problem built-in.
+The last part in this blog post is about validation. Normally every application has some kind of validation logic (mostly on entities), that have to be fulfilled in order to e.g. save them in the database. This is why both frameworks have solutions for the problem built-in.
 
 Let's look at an example for what a validation in this context means. Taking the Person - Pet example from above, let's say that the name of the person has to be there in order to create a person instance. Another one would be that at least every Person has to have one Pet.
 
