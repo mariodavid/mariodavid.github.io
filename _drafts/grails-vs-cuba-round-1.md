@@ -13,13 +13,11 @@ Since i started a transition from Grails to CUBA some time ago, i thought it wou
 
 <!-- more -->
 
+
 If we would have a gartner magic quadrant for web frameworks, technically CUBA and grails would be definitively nearby (i will not tell you in which quadrant though ;)), so it is fairly easy to compare those. Both are meta-frameworks in the JVM world. Since both are full stack frameworks we can go from layer to layer to see the differences and similarities.
 
 
 
-<!--
-<img style="margin-left:-80px; width:1200px" src="{{site.url}}/images/grails-vs-cuba/example.png">
--->
 
 ## Entities and OR Mapping
 
@@ -29,6 +27,8 @@ Lets get started with the mapping between the database and the object model. Thi
 ### Grails and GORM
 
 Grails has a built in OR-Mapper called [GORM](http://gorm.grails.org/) which has been extracted from the core in recent versions. When we look at SQL based databases, GORM uses Hibernate under the covers, which is a very powerful OR-Mapper. It basically adds a lot of syntactic sugar on top of it.
+
+<img style="float: right; padding-left: 10px; margin-right:-80px; width:400px" src="{{site.url}}/images/grails-vs-cuba/grails.jpg">
 
 GORM is a place where a lot of the innovation of the framework happens. The reason is not so much the mapping to relational databases but to non-relational ones like Neo4j or MongoDB. It supports a variety of NoSQL databases to map it to the domain types in a form that makes sense depending on the database you are working with.
 
@@ -50,7 +50,13 @@ class Pet {
 
 ### CUBA loves JPA
 
-CUBA took a slightly different route in this regard. CUBA basically does not do much around the topic of the OR-Mapper. It doesn't have an explicit part in the framework that deals with database access. Instead CUBA uses the Java persistence API in order to fulfill its job. Entities are just POJOs with <code>@Entity</code> annotations. An equivalent to the above Person example would look like this:
+
+<img style="float: left; padding-right: 10px; margin-left:-80px; width:400px" src="{{site.url}}/images/grails-vs-cuba/cuba.jpg">
+
+CUBA took a slightly different route in this regard. CUBA basically does not do much around the topic of the OR-Mapper. It doesn't have an explicit part in the framework that deals with database access. Instead CUBA uses the Java persistence API in order to fulfill its job. Entities are just POJOs with <code>@Entity</code> annotations.
+
+An equivalent to the above Person example would look like this:
+
 
 {% highlight groovy %}
 @Table(name = "PERSONPET_PERSON")
@@ -91,6 +97,9 @@ Executing queries against the datastore is a little more different.
 First of all, they differ in the way the data retrieval gets called. Grails uses a pattern called [Active record](https://www.martinfowler.com/eaaCatalog/activeRecord.html) in order to fetch data from the database. Active record means that the entity class itself is responsible for fetching the data. <code>Person.list()</code> will in this case get all the entities of the Person table.
 
 In JPA there is the <code>EntityManager</code> that has to be used for data retrieval, while the Entity object are more data access objects (DAO) that act more in a passive manner. You can see it more or less as a [repository pattern](https://martinfowler.com/eaaCatalog/repository.html). CUBA additionally has some more options to access data. Normally instead of using the <code>EntityManager</code> CUBA has a thin layer on top of that called <code>DataManager</code>. The DataManager cares about all the stuff that JPA is not really aware of but is part of CUBA like row level security or views (see this [diff](https://doc.cuba-platform.com/manual-6.5/dm_vs_em.html) for details).
+
+
+<img src="{{site.url}}/images/grails-vs-cuba/fight.jpg">
 
 Both patterns have some advantages and disadvantages. Active model sometimes leads to a slightly messier code when you have a big application because the entities have more responsibilities, but in smaller applications it is easier to read.
 
@@ -160,9 +169,12 @@ It is a single line of code that will do the traversal here: <code>it.owner.name
 
 To write and interact with lazy loaded data is so easy, because you just forget about it. It is so transparent, because from an app developer point of view it exactly looks like traversing an object graph.
 
+<img src="{{site.url}}/images/grails-vs-cuba/fight2.jpg">
+
+
 Although lazy loading is default in Grails, it is not your only choice. You can define eager fetching globally on the entity attribute level or on a case to case basis when you actually trigger the loading.
 
-But for me, since the lazy loading is default and it is so convinient, i often felt myself in the trap of not thinking about it at all and only remeber it, when the application acts really slow (which probably tells you more about myself as a programmer instead of grails as a framework ;)).
+But for me, since the lazy loading is default and it is so convinient, i often felt myself in the trap of not thinking about it at all and only remember it, when the application acts really slow (which probably tells you more about myself as a programmer instead of grails as a framework ;)).
 
 #### CUBA views make loading explicit
 
@@ -182,16 +194,19 @@ In this example we take some direct attributes of the Role (name, type etc.) as 
 
 I found using views is a very explicit way of dealing with the situation. It forces the developer to think about this topic. This can sometimes be cumbersome but it leads to a better place i think compared to make this whole loading story implicit.
 
-If you are interested in more detail on this topic, i created an article around CUBA views. You can find it here: <a style="color:red; font-size:20px;" href="https://www.road-to-cuba-and-beyond.com/views-the-uncharted-mystery/">Views: the uncharted mystery - TODO: link korrigieren</a>
+If you are interested in more detail on this topic, i created an article around CUBA views. You can find it here: [Views - the uncharted mystery](https://www.road-to-cuba-and-beyond.com/views-the-uncharted-mystery/).
 
 
 ### Database migrations
 
 Database migrations are oftentimes part of modern full stack frameworks. Ruby on Rails pionered with this idea so automatically generate deltas between two database schema versions.
 
-Grails and CUBA both have features in place that make that happen. For Grails there is a commonly used plugin called [Grails database migration](https://github.com/grails-plugins/grails-database-migration) which uses a java library called [Liquibase](http://www.liquibase.org/) under the covers. CUBA instead comes out of the box with SQL scripts that gets generated via their RAP tool CUBA studio. Both approaches recognies changes in the entities and try to do their best in order to generate a SQL schema delta (like <code>ALTER TABLE...</code>) to reflect the changes in the entity model.
+Grails and CUBA both have features in place that make that happen as well. For Grails there is a commonly used plugin called [Grails database migration](https://github.com/grails-plugins/grails-database-migration) which uses a java library called [Liquibase](http://www.liquibase.org/) under the covers. CUBA instead comes out of the box with SQL scripts that gets generated via their RAP tool CUBA studio. Both approaches recognies changes in the entities and try to do their best in order to generate a SQL schema delta (like <code>ALTER TABLE...</code>) to reflect the changes in the entity model.
 
-Besides this build in approaches, both frameworks can use any major java library for db migrations like [Flyway](https://flywaydb.org/) or the above mentioned [Liquibase](http://www.liquibase.org/).
+
+<img style="float: right; padding-left: 10px; margin-right:-80px; width:400px" src="{{site.url}}/images/grails-vs-cuba/fans.jpg">
+
+Besides this build in approaches, both frameworks can use any of the mature java libraries for db migrations like [Flyway](https://flywaydb.org/) or the above mentioned [Liquibase](http://www.liquibase.org/).
 
 With this we've basically covered all stuff related to data access. Next, we will look at the next layer which is where and how to put the business logic.
 
@@ -203,13 +218,13 @@ In Grails you usually create [services](https://docs.grails.org/latest/guide/ser
 
 In CUBA there is as well the notion of [services](https://doc.cuba-platform.com/manual-6.5/services.html) (in the same sense). You most likely create a service via CUBA studio, which will generate a Service interface as well as a Class that implements this interface and is annotated with the Spring <code>@Component</code> annotation.
 
-One thing to notice is that in CUBA, since it uses an 4-tier application architecture, there is an optional separation between the client tier (the web server) and the middle tier (the backend application server) (see the [docs on app-tiers](https://doc.cuba-platform.com/manual-6.5/app_tiers.html) for more information). This means that you as a developer have to think a little bit more where to put your spring beans, because this has implications where you can call them.
+One thing to notice is that in CUBA, since it uses an four-tier application architecture, there is an optional separation between the client tier (the web server) and the middle tier (the backend application server) (see the [docs on app-tiers](https://doc.cuba-platform.com/manual-6.5/app_tiers.html) for more information). This means that you as a developer have to think a little bit more where to put your spring beans, because this has implications where you can call them.
 
 In both frameworks you can additionally create any kind of spring bean and use it throughout the application.
 
 ### Defining constraints on entities
 
-The last part in this blog post is about validation. Normally every application has some kind of validation logic (mostly on entities), that have to be fulfiled in order to e.g. save them in the database. This is why both frameworks have solutions for the problem.
+The last part in this blog post is about validation. Normally every application has some kind of validation logic (mostly on entities), that have to be fulfiled in order to e.g. save them in the database. This is why both frameworks have solutions for the problem built-in.
 
 Let's look at an example for what a validation in this context means. Taking the Person - Pet example from above, let's say that the name of the person has to be there in order to create a person instance. Another one would be that at least every Person has to have one Pet.
 
