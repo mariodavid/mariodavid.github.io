@@ -3,8 +3,8 @@ layout: post
 title: Grails vs CUBA
 subtitle: Round 1 - Data access and business logic
 description: "In this blog post series we'll compare the two JVM based web frameworks: Grails and CUBA. This time, starting with data access"
-modified: 2017-04-15
-tags: [cuba, business applications]
+modified: 2017-07-07
+tags: [cuba, grails]
 image:
   feature: grails-vs-cuba/feature.png
 ---
@@ -201,7 +201,7 @@ If you are interested in more detail on this topic, I created an article around 
 
 Database migrations are oftentimes part of modern full stack frameworks. Ruby on Rails pionered with this idea to automatically generate deltas between two database schema versions.
 
-Grails and CUBA both have features in place that make that happen as well. For Grails there is a commonly used plugin called [Grails database migration](https://github.com/grails-plugins/grails-database-migration) which uses a Java library called [Liquibase](http://www.liquibase.org/) under the covers. CUBA instead comes out of the box with SQL scripts that get generated via their RAP tool CUBA Studio. Both approaches recognize changes in the entities and try to do their best in order to generate an SQL schema delta (like <code>ALTER TABLE...</code>) to reflect the changes in the entity model.
+Grails and CUBA both have features in place that make that happen as well. For Grails there is a commonly used plugin called [Grails database migration](https://github.com/grails-plugins/grails-database-migration) which uses a Java library called [Liquibase](http://www.liquibase.org/) under the covers. CUBA instead comes out of the box with SQL scripts that get generated via their RAD tool CUBA Studio. Both approaches recognize changes in the entities and try to do their best in order to generate an SQL schema delta (like <code>ALTER TABLE...</code>) to reflect the changes in the entity model.
 
 
 <img style="float: right; padding-left: 10px; margin-right:-80px; width:400px" src="{{site.url}}/images/grails-vs-cuba/fans.jpg">
