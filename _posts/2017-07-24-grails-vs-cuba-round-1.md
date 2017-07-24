@@ -9,7 +9,7 @@ image:
   feature: grails-vs-cuba/feature.png
 ---
 
-Since I started a transition from Grails to CUBA some time ago, I thought it would be a good idea to give you a technical comparison between those two frameworks. In this blog post series I go though different aspects, starting with data access and business logic in this post, to conclude why I finally decided to give CUBA a shot in more and more of my projects.
+Since I started a transition from [Grails](https://grails.org/) to [CUBA](https://www.cuba-platform.com/) some time ago, I thought it would be a good idea to give you a technical comparison between those two frameworks. In this blog post series I go though different aspects, starting with data access and business logic in this post, to conclude why I finally decided to give CUBA a shot in more and more of my projects.
 
 <!-- more -->
 
