@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Continous delivery for with Gitlab and Rancher
+title: Continous delivery with Gitlab and Rancher
 subtitle: Part 1 - Overview and installing Gitlab
 description: ""
 modified: 2017-07-07
