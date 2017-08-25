@@ -9,18 +9,15 @@ image:
   feature: cd-environment-with-gitlab-and-rancher/feature.png
 ---
 
-In this blog post i would like to show how to create a self-hosted continuous delivery pipeline for CUBA applications.
+In this blog post series I would like to show how to create a self-hosted continuous delivery pipeline with Gitlab and Rancher. We'll take an example application and create a complete CD pipeline to cover the workflow from idea to production.
+
 <!-- more -->
 
-When developing applications in a more or less professional setting, it requires
-to have something like a continuous integration / continuous delivery pipeline in place.
+When developing applications in a more or less professional setting, it requires to have something like a continuous integration / continuous delivery pipeline in place.
 
-The reason for that is, that these pipelines generally lead to a degree of automation of your workflow as well as an
-increase in speed and quality of the different processes.
+The reason for that is, that these pipelines generally lead to a degree of automation of your workflow as well as an increase in speed and quality of the different processes.
 
-When you look around at how to solve these problems, you'll quickly find online services
-that do the job very very well. Take a look at [Github](https://github.com/) as a source code repository or [Travis CI](https://travis-ci.org/) as a CI tool. These are all really good options, if you are either having the luxury working
-on open source software or you are willing to pay for these SaaS tools (which you probably really should thinking about).
+When you look around at how to solve these problems, you'll quickly find online services that do the job very very well. Take a look at [Github](https://github.com/) as a source code repository or [Travis CI](https://travis-ci.org/) as a CI tool. These are all really good options, if you are either having the luxury working on open source software or you are willing to pay for these SaaS tools (which you probably really should thinking about).
 
 Nevertheless, in other scenarios where for whatever reason you want to self-host some of these tools, there are options as well. In this blog post series I will do exactly that.
 
@@ -32,7 +29,7 @@ Let's start with one of the first and probably most important tools for a profes
 
 A repository where your application source code is crucial and it is a must have for almost 30 years in the software industry. One example of a VCS (version control system) is [Git](https://git-scm.com/) and since it has become so dominant in the last years, we will focus on that.
 
-As i already said, a lot of online hosted git respository options are available. However, we will take a look at an open source, self-hosted version of it called: [Gitlab](https://www.gitlab.com/). Although Gitlab offers online hosting, it is  possible (and common) to self-host the software - and this is what we will do.
+As I already said, a lot of online hosted git respository options are available. However, we will take a look at an open source, self-hosted version of it called: [Gitlab](https://www.gitlab.com/). Although Gitlab offers online hosting, it is  possible (and common) to self-host the software - and this is what we will do.
 
 Gitlab consists of different parts: a web application, the actual storage of the source code, a relational database for the web application etc.
 
@@ -75,7 +72,7 @@ To start a VM (or Droplet in the Digitalocean terms) we use the following bash c
 docker-machine create --driver digitalocean --digitalocean-access-token $DOTOKEN --digitalocean-image ubuntu-16-04-x64 --digitalocean-size 4gb --digitalocean-tags gitlab-rancher-example gitlab-host
 {% endhighlight %}
 
-In order to run Gitlab smoothly a 4GB droplet is necessary. Additionally i created a tag called After this is done, we want our <code>docker</code> binary to connect to this newly created VM in order to start Containers etc. This can be done via:
+In order to run Gitlab smoothly a 4GB droplet is necessary. Additionally I created a tag called After this is done, we want our <code>docker</code> binary to connect to this newly created VM in order to start Containers etc. This can be done via:
 
 {% highlight bash %}
 eval $(docker-machine env gitlab-host)
