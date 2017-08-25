@@ -1,19 +1,19 @@
 ---
 layout: post
-title: Continous delivery with Gitlab and Rancher
+title: Continuous delivery with Gitlab and Rancher
 subtitle: Part 1 - Overview and installing Gitlab
 description: ""
 modified: 2017-07-07
-tags: [cuba, gitlab]
+tags: [cuba, gitlab, rancher, CD]
 image:
-  feature: grails-vs-cuba/feature.png
+  feature: cd-environment-with-gitlab-and-rancher/feature.png
 ---
 
-In this blog post i would like to show how to create a self-hosted continous delivery pipeline for CUBA applications.
+In this blog post i would like to show how to create a self-hosted continuous delivery pipeline for CUBA applications.
 <!-- more -->
 
 When developing applications in a more or less professional setting, it requires
-to have something like a continous integration / continous delivery pipeline in place.
+to have something like a continuous integration / continuous delivery pipeline in place.
 
 The reason for that is, that these pipelines generally lead to a degree of automation of your workflow as well as an
 increase in speed and quality of the different processes.
@@ -109,13 +109,18 @@ After this is done, the container can be started with
 docker-compose up -d
 {% endhighlight %}
 
-This will trigger the download of the container on the VM and starts it accordingly. When the process is finished, you can open the Gitlab UI in the browser and define a root password.
-
 
 <figure class="center">
 	<a href="{{ site.url }}/images/cd-environment-with-gitlab-and-rancher/step-1-gitlab-browser.png"><img src="{{ site.url }}/images/cd-environment-with-gitlab-and-rancher/step-1-gitlab-browser.png" alt=""></a>
 	<figcaption><a href="{{ site.url }}/images/cd-environment-with-gitlab-and-rancher/step-1-gitlab-browser.png" title="Gitlab running on the docker-machine VM in a container">Gitlab running on the docker-machine VM in a container</a></figcaption>
 </figure>
+
+This will trigger the download of the container on the VM and starts it accordingly. When the process is finished, you can open the Gitlab UI in the browser and define a root password.
+
+
+<img src="{{ site.url }}/images/cd-environment-with-gitlab-and-rancher/bender-applause.gif" style="float:right; margin:10px; width: 150px; border:2px solid black;"/>
+
+
 
 ### Setting up Gitlab CI runner
 
@@ -139,7 +144,7 @@ web:
 Starting the Gitlab runner just like above:
 {% highlight bash %}
 docker-compose up -d
-{% endhighlight %}.
+{% endhighlight %}
 
 After the command is executed and the container is online, we need to connect the runner with the UI. To do this, we need
 to execute <code>gitlab-runner register</code> in the container. To do this, we can use the <code>exec</code> command from Docker like this:
@@ -215,7 +220,21 @@ Clicking on "Commit changes" will save the file in the repo and start the first 
 
 The <code>.gitlab-ci.yml</code> file definition is declarative based approach to configure the UI steps. There is a very bold reference from Gitlab which I will point you to [here](https://docs.gitlab.com/ce/ci/yaml/README.html). But mainly it consists of so called "jobs" and "stages". A stage is one step in the pipeline, while there might be multiple jobs per stage that are executed in parallel. The job contains one or more scripts that should get executed (in this case <code>./gradlew check</code> e.g.).
 
+<img src="{{ site.url }}/images/cd-environment-with-gitlab-and-rancher/fry.png" style="width:80px; float:left; margin:10px;"/>
+
 One additional thing you might noticed in the yaml file is the first line <code>image: java:8</code>. This line describes the Docker image that should be used to execute this pipeline in general (or a particular job). The Gitlab runner will start a Container for every build in order to fully isolate the different biulds from each other.
 
 
-With this we are ready with the first part of the CD pipeline. In the next part we will enhance the CD pipeline to build a docker container from the application and push it to Dockerhub. In the third part we will use this image in order to deploy this docker container into production with Rancher.
+With this we are ready with the first automated part of the CD pipeline. In the next part we will enhance the CD pipeline to build a docker container from the application and push it to Dockerhub. In the third part we will use this image in order to deploy this docker container into production with Rancher.
+
+
+<div class="center" style="text-align:center">
+<img src="{{ site.url }}/images/cd-environment-with-gitlab-and-rancher/running-robot.gif" style="border: 2px solid black;"/>
+</div>
+
+
+<style type="text/css">
+div.entry-content, div.read-more, section#disqus_thread  {
+  background-color:#f4b87c !important;
+}
+</style>
