@@ -60,7 +60,7 @@ Since the Gitlab Container itself will eat up quite a lot memory and this will n
 
 In this example I will use Digitalocean for this purpose, but you can easily choose a different cloud provider or host it on your own servers due to the fact that I will use a Abstraction of the IaaS provider from the Docker ecosystem called "Docker Machine".
 
-Docker machine can start virtual servers on a variaty of cloud providers as well as selft hosted servers.
+Docker machine can start virtual servers on a variety of cloud providers as well as self hosted servers.
 
 ### start a VM for Gitlab with docker-machine
 
@@ -74,7 +74,7 @@ To start a VM (or Droplet in the Digitalocean terms) we use the following bash c
 docker-machine create --driver digitalocean --digitalocean-access-token $DOTOKEN --digitalocean-image ubuntu-16-04-x64 --digitalocean-size 4gb --digitalocean-tags gitlab-rancher-example gitlab-host
 {% endhighlight %}
 
-In order to run Gitlab smoothly a 4GB droplet is necessary. Additionally I created a tag called After this is done, we want our <code>docker</code> binary to connect to this newly created VM in order to start Containers etc. This can be done via:
+In order to run Gitlab smoothly, a 4GB droplet is necessary. Additionally I created a tag called After this is done, we want our <code>docker</code> binary to connect to this newly created VM in order to start Containers etc. This can be done via:
 
 {% highlight bash %}
 eval $(docker-machine env gitlab-host)
@@ -83,6 +83,7 @@ eval $(docker-machine env gitlab-host)
 To verify that we use the correct docker machine, we can check the output of <code>docker-machine ls</code>.
 
 Once this is done, we can start the Gitlab container. Compared to the docker command from above, we will use docker-compose so that we can define the configuartion of the container in a file more accurately. In the repo you'll find the following [docker-compose.yml](https://github.com/mariodavid/gitlab-rancher-example/blob/master/gitlab-ui/docker-compose.yml) file for the gitlab-ui container:
+
 {% highlight yaml %}
 web:
   image: 'gitlab/gitlab-ce:latest'
@@ -101,7 +102,7 @@ web:
     - '/srv/gitlab/data:/var/opt/gitlab'
 {% endhighlight %}
 
-Before starting the container, we need to adjust the IP address (<code>8.8.8.8</code>) in the settings so that Gitlab knows on which public IP it is operating. To get the public IP of the digitalocean droplet, you can either go to the web UI of digitalocen, or use the equivalent doker-machine command <code>docker-machine ip gitlab-host</code>.
+Before starting the container, we need to adjust the IP address (<code>8.8.8.8</code>) in the settings so that Gitlab knows on which public IP it is operating. To get the public IP of the digitalocean droplet, you can either go to the web UI of digitalocean, or use the equivalent doker-machine command <code>docker-machine ip gitlab-host</code>.
 
 After this is done, the container can be started with
 {% highlight bash %}
@@ -186,7 +187,7 @@ After both parts of Gitlab are configured correctly, we can go on and create our
 
 #### CI configuration through .gitlab-ci.yml
 
-On the upper right of the repository browser, there is a button called "Set up CI" which will enable us to define our steps in the CI build. Basically this will create a <code>.gitlab-ci.yml</code> file in the repository which will control the CI runner. To keep the CI definition within the repository is very valuabe and has become the main way of doing it throughout the CI tool landscape.
+On the upper right of the repository browser, there is a button called "Set up CI" which will enable us to define our steps in the CI build. Basically this will create a <code>.gitlab-ci.yml</code> file in the repository which will control the CI runner. To keep the CI definition within the repository is very valuable and has become the main way of doing it throughout the CI tool landscape.
 
 The example project is a normal CUBA platform application. As CUBA uses gradle as the build system, we can just choose Gradle from the template list of Gitlab CI configurations. The template provided by Gitlab looks like this:
 
