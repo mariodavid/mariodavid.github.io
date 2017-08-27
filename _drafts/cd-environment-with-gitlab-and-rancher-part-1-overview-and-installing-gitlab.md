@@ -21,7 +21,9 @@ When you look around at how to solve these problems, you'll quickly find online 
 
 Nevertheless, in other scenarios where for whatever reason you want to self-host some of these tools, there are options as well. In this blog post series I will do exactly that.
 
-You can find the complete sources of the example on github: [mariodavid/gitlab-rancher-example](https://github.com/mariodavid/gitlab-rancher-example)
+You can find the complete sources of the example on github: [mariodavid/gitlab-rancher-example](https://github.com/mariodavid/gitlab-rancher-example).
+
+Additionally, you can find a five part video series on youtube that shows this guide as a running example: [CI/CD with Gitlab and Rancher](https://www.youtube.com/playlist?list=PLJ0nYE0NtQxaoo-KJ5ciDn2AbOGHlH3OI). You'll also find the different steps as embedded videos in these blog posts.
 
 Let's start with one of the first and probably most important tools for a professional CI / CD pipeline: The source code repository.
 
@@ -80,7 +82,7 @@ eval $(docker-machine env gitlab-host)
 
 To verify that we use the correct docker machine, we can check the output of <code>docker-machine ls</code>.
 
-Once this is done, we can start the Gitlab Container. Compared to the docker command from above, we will use docker-compose so that we can define the configuartion of the container in a file more accurately. In the repo you'll find the following [docker-compose.yml](https://github.com/mariodavid/gitlab-rancher-example/blob/master/gitlab-ui/docker-compose.yml) file for the gitlab-ui container:
+Once this is done, we can start the Gitlab container. Compared to the docker command from above, we will use docker-compose so that we can define the configuartion of the container in a file more accurately. In the repo you'll find the following [docker-compose.yml](https://github.com/mariodavid/gitlab-rancher-example/blob/master/gitlab-ui/docker-compose.yml) file for the gitlab-ui container:
 {% highlight yaml %}
 web:
   image: 'gitlab/gitlab-ce:latest'
@@ -117,7 +119,7 @@ This will trigger the download of the container on the VM and starts it accordin
 
 <img src="{{ site.url }}/images/cd-environment-with-gitlab-and-rancher/bender-applause.gif" style="float:right; margin:10px; width: 150px; border:2px solid black;"/>
 
-
+<iframe width="560" height="315" src="https://www.youtube.com/embed/sHjnpWuJhwA?list=PLJ0nYE0NtQxaoo-KJ5ciDn2AbOGHlH3OI" frameborder="0" allowfullscreen></iframe>
 
 ### Setting up Gitlab CI runner
 
@@ -167,6 +169,8 @@ After the wizard is finished, you can see the active runners in the same page of
 	<a href="{{ site.url }}/images/cd-environment-with-gitlab-and-rancher/step-1-gitlab-browser.png"><img src="{{ site.url }}/images/cd-environment-with-gitlab-and-rancher/step-2-gitlab-active-runners.png" alt=""></a>
 	<figcaption><a href="{{ site.url }}/images/cd-environment-with-gitlab-and-rancher/step-2-gitlab-active-runners.png" title="Gitlab shows the active runners in the UI">Gitlab shows the active runners in the UI</a></figcaption>
 </figure>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/eLizK6qYZ0U?list=PLJ0nYE0NtQxaoo-KJ5ciDn2AbOGHlH3OI" frameborder="0" allowfullscreen></iframe>
 
 
 ### Creating a project and configuring CI
@@ -222,7 +226,7 @@ The <code>.gitlab-ci.yml</code> file definition is declarative based approach to
 One additional thing you might noticed in the yaml file is the first line <code>image: java:8</code>. This line describes the Docker image that should be used to execute this pipeline in general (or a particular job). The Gitlab runner will start a Container for every build in order to fully isolate the different biulds from each other.
 
 
-With this we are ready with the first automated part of the CD pipeline. In the next part we will enhance the CD pipeline to build a docker container from the application and push it to Dockerhub. In the third part we will use this image in order to deploy this docker container into production with Rancher.
+With this we are ready with the first automated part of the CI pipeline. In the next part we will enhance the CI pipeline to build a docker container from the application and push it to Dockerhub. In the third part we will use this image in order to deploy this docker container into production with Rancher.
 
 
 <div class="center" style="text-align:center">
