@@ -181,7 +181,47 @@ rancher:
     - '8080:8080'
 {% endhighlight %}
 
-<code>docker-compose up -d</code> will start the container.
+<code>docker-compose up -d</code> will start the container. After the container is started you can enable access control (I show it in the video).
+
+
+
+## Start a rancher-host for the containers (like Gitlab runner)
+
+The next and last step for this blog post is to create a Rancher host, that will run the container for us. This can be done via the command line through rancher cli or through docker-machine manually. But in this case we will use the Rancher UI for it. Rancher has integrations to a lot of IaaS providers like AWS, Azure or Digitalocean. We will stick with Digitalocean in this case.
+
+To create a Rancher host you have to go to the UI like this:
+Rancher UI > Default environment > Hosts > Add Host > Digitalocean. Add the Access token of Digitalocean ($DOTOKEN) and create a machine.
+
+After a couple of minutes you'll see in the UI that the host has been started and the required infrastructure containers like the Rancher agent have been started.
+
+
+
+
+<figure class="center">
+	<a href="{{ site.url }}/images/cd-environment-with-gitlab-and-rancher/step-6-running-rancher-host.png"><img src="{{ site.url }}/images/cd-environment-with-gitlab-and-rancher/step-6-running-rancher-host.png" alt=""></a>
+	<figcaption><a href="{{ site.url }}/images/cd-environment-with-gitlab-and-rancher/step-6-running-rancher-host.png" title="Running Rancher host dashboard">Running Rancher host dashboard</a></figcaption>
+</figure>
+
+
+
+### Connecting to Rancher through the CLI
+
+
+
+
+In order to deploy to rancher, we need to get an API key for Rancher and configure our shell environment accordinly. This can be done via the UI: API > Keys. After creating a key, you have to add the following information into your shell (e.g. .bashrc):
+{% highlight bash %}
+export RANCHER_URL=http://<<RANCHER_IP>>:8080
+export RANCHER_ACCESS_KEY=<accessKey_of_account_api_key>
+export RANCHER_SECRET_KEY=<secretKey_of_account_api_key>
+{% endhighlight %}
+
+
+With this you can use the rancher cli and execute something like <code>rancher hosts</code>.
+
+In the next blog post we will use all of this configuration and installation to combine our Rancher instance together with our Gitlab installation so that our CD pipeline will automatically deploy every change in the code to our staging and or production system.
+
+
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/cC3ch1tg-Xs?list=PLJ0nYE0NtQxaoo-KJ5ciDn2AbOGHlH3OI" frameborder="0" allowfullscreen></iframe>
 
