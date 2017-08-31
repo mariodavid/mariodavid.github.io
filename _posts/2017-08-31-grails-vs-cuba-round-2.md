@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Grails vs CUBA
-subtitle: Round 2 - Security, UI and the ecosystem
+subtitle: Round 2 - Security and UI approaches
 description: "In this blog post series we'll compare the two JVM based web frameworks: Grails and CUBA. This time it is all about security and UI approaches"
 modified: 2017-04-15
 tags: [cuba, business applications]
@@ -9,7 +9,7 @@ image:
   feature: grails-vs-cuba/feature.png
 ---
 
-After comparing Grails and CUBA mostly from a persistence and business logic perspective in the first blog post, this time I'll take a look at the frontend as well as at cross cutting concerns like security, testing, platform features and the ecosystem.
+After comparing Grails and CUBA mostly from a persistence and business logic perspective in the first blog post, this time I'll take a look at the frontend as well as at cross cutting concerns like security.
 
 <!-- more -->
 
