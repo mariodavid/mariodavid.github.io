@@ -9,7 +9,7 @@ image:
   feature: cd-environment-with-gitlab-and-rancher/feature.png
 ---
 
-The second part of this series is about setting up a CI pipeline from build to Docker image as well as installing Rancher.
+The second part of this series is about setting up a CI pipeline from build to Docker image of the application as well as installing and cofiguring Rancher on Digitalocean through docker-machine.
 
 <!-- more -->
 
