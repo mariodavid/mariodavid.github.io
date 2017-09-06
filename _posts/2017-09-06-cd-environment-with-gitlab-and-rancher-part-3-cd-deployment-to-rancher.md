@@ -13,6 +13,22 @@ The third and last part of this series will combine all the already configured p
 
 <!-- more -->
 
+<div class="information">
+
+This blog post series is splitted into three blog posts:
+<br />
+<ol>
+<li><a href="https://www.road-to-cuba-and-beyond.com/cd-environment-with-gitlab-and-rancher-part-1-overview-and-installing-gitlab/">Part 1 - Overview and installing Gitlab</a>
+</li>
+<li><a href="https://www.road-to-cuba-and-beyond.com/cd-environment-with-gitlab-and-rancher-part-2-ci-pipeline-and-rancher/">Part 2 - CI Pipeline and installing Rancher</a>
+</li>
+<li>
+<a href="https://www.road-to-cuba-and-beyond.com/cd-environment-with-gitlab-and-rancher-part-3-cd-deployment-to-rancher/">Part 3 - CD deployment from Gitlab to Rancher</a>
+</li>
+</ol>
+
+</div>
+
 After we insatlled and configured Rancher in the last part of the second blog post, lets use this installation to deploy our application to rancher.
 
 ### Deploy to racher manually

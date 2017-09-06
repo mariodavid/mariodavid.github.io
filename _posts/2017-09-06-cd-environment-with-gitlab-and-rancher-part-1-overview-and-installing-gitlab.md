@@ -13,6 +13,22 @@ In this blog post series I would like to show how to create a self-hosted contin
 
 <!-- more -->
 
+<div class="information">
+
+This blog post series is splitted into three blog posts:
+<br />
+<ol>
+<li><a href="https://www.road-to-cuba-and-beyond.com/cd-environment-with-gitlab-and-rancher-part-1-overview-and-installing-gitlab/">Part 1 - Overview and installing Gitlab</a>
+</li>
+<li><a href="https://www.road-to-cuba-and-beyond.com/cd-environment-with-gitlab-and-rancher-part-2-ci-pipeline-and-rancher/">Part 2 - CI Pipeline and installing Rancher</a>
+</li>
+<li>
+<a href="https://www.road-to-cuba-and-beyond.com/cd-environment-with-gitlab-and-rancher-part-3-cd-deployment-to-rancher/">Part 3 - CD deployment from Gitlab to Rancher</a>
+</li>
+</ol>
+
+</div>
+
 When developing applications in a more or less professional setting, it requires to have something like a continuous integration / continuous delivery pipeline in place.
 
 The reason for that is, that these pipelines generally lead to a degree of automation of your workflow as well as an increase in speed and quality of the different processes.
@@ -227,7 +243,7 @@ The <code>.gitlab-ci.yml</code> file definition is declarative based approach to
 One additional thing you might noticed in the yaml file is the first line <code>image: java:8</code>. This line describes the Docker image that should be used to execute this pipeline in general (or a particular job). The Gitlab runner will start a Container for every build in order to fully isolate the different biulds from each other.
 
 
-With this we are ready with the first automated part of the CI pipeline. In the next part we will enhance the CI pipeline to build a docker container from the application and push it to Dockerhub. In the third part we will use this image in order to deploy this docker container into production with Rancher.
+With this we are ready with the first automated part of the CI pipeline. In the [next part](https://www.road-to-cuba-and-beyond.com/cd-environment-with-gitlab-and-rancher-part-2-ci-pipeline-and-rancher/) we will enhance the CI pipeline to build a docker container from the application and push it to Dockerhub. In the [third part](https://www.road-to-cuba-and-beyond.com/cd-environment-with-gitlab-and-rancher-part-3-cd-deployment-to-rancher/) we will use this image in order to deploy this docker container into production with Rancher.
 
 
 <div class="center" style="text-align:center">

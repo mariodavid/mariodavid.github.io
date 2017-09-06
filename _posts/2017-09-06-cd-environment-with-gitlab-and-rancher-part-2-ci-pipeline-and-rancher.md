@@ -13,6 +13,22 @@ The second part of this series is about setting up a CI pipeline from build to D
 
 <!-- more -->
 
+<div class="information">
+
+This blog post series is splitted into three blog posts:
+<br />
+<ol>
+<li><a href="https://www.road-to-cuba-and-beyond.com/cd-environment-with-gitlab-and-rancher-part-1-overview-and-installing-gitlab/">Part 1 - Overview and installing Gitlab</a>
+</li>
+<li><a href="https://www.road-to-cuba-and-beyond.com/cd-environment-with-gitlab-and-rancher-part-2-ci-pipeline-and-rancher/">Part 2 - CI Pipeline and installing Rancher</a>
+</li>
+<li>
+<a href="https://www.road-to-cuba-and-beyond.com/cd-environment-with-gitlab-and-rancher-part-3-cd-deployment-to-rancher/">Part 3 - CD deployment from Gitlab to Rancher</a>
+</li>
+</ol>
+
+</div>
+
 Last time we stoped at the successful invocation of the CI pipeline with the compile and test stage. In order to push the applicatication to production environment there are a few steps necessary. The first step towards this goal is to create Docker image out of the software that we want to deploy.
 
 ### Create a docker image in the CI pipeline
