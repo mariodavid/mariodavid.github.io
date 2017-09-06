@@ -3,7 +3,7 @@ layout: post
 title: Continuous delivery with Gitlab and Rancher
 subtitle: Part 3 - CD deployment from Gitlab to Rancher
 description: ""
-modified: 2017-09-01
+modified: 2017-09-05
 tags: [cuba, gitlab, rancher, CD]
 image:
   feature: cd-environment-with-gitlab-and-rancher/feature.png

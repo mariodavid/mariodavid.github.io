@@ -3,7 +3,7 @@ layout: post
 title: Grails vs CUBA
 subtitle: Round 3 - Testing, plugin architecture and ecosystem
 description: "In this blog post series we'll compare the two JVM based web frameworks: Grails and CUBA. This time will cover the missing bits like testing, the plugin architecture and the ecosystem"
-modified: 2017-04-15
+modified: 2017-09-05
 tags: [cuba, business applications]
 image:
   feature: grails-vs-cuba/feature.png

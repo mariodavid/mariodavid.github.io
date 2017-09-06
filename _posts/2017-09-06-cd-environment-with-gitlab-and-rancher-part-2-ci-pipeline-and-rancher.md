@@ -3,7 +3,7 @@ layout: post
 title: Continuous delivery with Gitlab and Rancher
 subtitle: Part 2 - CI Pipeline and installing Rancher
 description: ""
-modified: 2017-09-01
+modified: 2017-09-06
 tags: [cuba, gitlab, rancher, CD]
 image:
   feature: cd-environment-with-gitlab-and-rancher/feature.png
