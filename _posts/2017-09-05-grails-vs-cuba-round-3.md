@@ -9,7 +9,7 @@ image:
   feature: grails-vs-cuba/feature.png
 ---
 
-In the last part of the Grails vs. CUBA series, it is all about the remaing parts like Testing as well as the ecosystem. After covering the last parts of the comparison there will be a summary.
+In the last part of the Grails vs. CUBA series, it is all about the remaining parts like Testing as well as the ecosystem. After covering the last parts of the comparison there will be a summary.
 
 <!-- more -->
 
