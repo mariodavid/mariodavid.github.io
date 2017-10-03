@@ -14,6 +14,23 @@ Since I started a transition from [Grails](https://grails.org/) to [CUBA](https:
 <!-- more -->
 
 
+<div class="information">
+
+This blog post series is splitted into three blog posts:
+<br />
+<ol>
+<li><a href="https://www.road-to-cuba-and-beyond.com/grails-vs-cuba-round-1/">Round 1 - Data access and business logic</a>
+</li>
+<li><a href="https://www.road-to-cuba-and-beyond.com/grails-vs-cuba-round-2/">Round 2 - Security and UI approaches</a>
+</li>
+<li>
+<a href="https://www.road-to-cuba-and-beyond.com/grails-vs-cuba-round-3/">Round 3 - Testing, plugin architecture and ecosystem</a>
+</li>
+</ol>
+
+</div>
+
+
 If we would have a gartner magic quadrant for web frameworks, technically CUBA and Grails would be definitively nearby (I will not tell you in which quadrant though ;)), so it is fairly easy to compare them. Both are meta-frameworks in the JVM world. Since both are full stack frameworks we can go from layer to layer to see the differences and similarities.
 
 

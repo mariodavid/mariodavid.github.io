@@ -13,6 +13,23 @@ In the last part of the Grails vs. CUBA series, it is all about the remaining pa
 
 <!-- more -->
 
+<div class="information">
+
+This blog post series is splitted into three blog posts:
+<br />
+<ol>
+<li><a href="https://www.road-to-cuba-and-beyond.com/grails-vs-cuba-round-1/">Round 1 - Data access and business logic</a>
+</li>
+<li><a href="https://www.road-to-cuba-and-beyond.com/grails-vs-cuba-round-2/">Round 2 - Security and UI approaches</a>
+</li>
+<li>
+<a href="https://www.road-to-cuba-and-beyond.com/grails-vs-cuba-round-3/">Round 3 - Testing, plugin architecture and ecosystem</a>
+</li>
+</ol>
+
+</div>
+
+
 ## Testing
 
 The testing support for both framework is a topic, where again the approaches differ fairly heavy.
