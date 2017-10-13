@@ -5,12 +5,16 @@ description: "In the first week of October of 2017, I had the chance to particip
 modified: 2017-04-15
 tags: [cuba, java, java-one]
 image:
-  feature: cuba-security-subsystem-distilled/feature-2.jpg
+  feature: javaone-2017-recap/feature.jpg
 ---
 
 In the first week of October of 2017, I had the chance to participate in the JavaOne conference in San Francisco. In this blog post I'll make a little recap of what I learned during these days.
 
 <!-- more -->
+
+## Talks all over the place
+
+This was definitivly the conference where most parallel talks were taking place. Oftentimes there was the possibility to switch between 20 concurrent talks. Not easy to choose from. I attended to a lot of them, but here are my write-up of the most memorable ones.
 
 #### Java Keynote: All about openness
 
@@ -44,65 +48,57 @@ Interstingly they said that they decided to not go the event sourcing route, but
 
 The last quite interesting thing in a MS architecture is the question on how the UI integration works. There are different approaches to this. REWE decided to create a thing, they called "UI-gateway", which aggegates  the UI (HTML+CSS+JavaScript) from Microservices and pushes them to the web client. This means that the microservices have to agree on a particular UI technology (and a version of it too) like React v.15.0. That has some obvious drawbacks, but it was interesting to see that that took that as a trade-off.
 
-The slides for this interesting talk can be found at Speakerdeck: https://speakerdeck.com/abrauner/javaone-2017-a-competitive-food-retail-architecture-with-microservices.
+The slides for this interesting talk can be found at [Speakerdeck](https://speakerdeck.com/abrauner/javaone-2017-a-competitive-food-retail-architecture-with-microservices).
+
+#### You Deserve Great Tools: Commit-to-Production Automation at LinkedIn
+
+Another interesting talk was from the the creator of the widely used Mockito library. He talked about how they applied "continous delivery" in the development of the open source library. They automated everything so that every pull request creates a release. This enforces the developers that every pull request has to contain everything:
+
+- code
+- tests
+- documentation
+
+After that, we made the switch and talked about the continous-delivery process, they approached at LinkedIn.
+Mainly they used a so-called 3x3 approach: 3 releases per day & max 3 hours to release.
+
+Before that, they were doing 1x release per month. Switching to 3x3 removes the "feature-rush" problem. A feature rush is usually the situation that a few days before the release the amount of commits go up drastically, to get it into the release.
+
+Besides the often heard problems and solutions to CD, a very neat thing that resonated with me is their approch to flaky tests:
+
+In order to identify flaky tests, LinkedIn runs their functional test-suite 1000x at night. Then they count the flaky ones. In the morning, they remove the flaky ones from the suite and fix them before putting them back in.
 
 
-### Ten Simple Rules for Writing Great Test cases
+#### Developer Keynote - Promises and DevOps
 
-- two presenters: 20+ years of experience in testing
+The next day, there was another keynote where besides the obvious Oracle cheremony it included a talk from  Patick Debois, the person who coined the term DevOps.
 
-- don't think: "Devs create unit tests, QA creates system tests" but:
-  - QA: long running & complex domain knowledge tests
-  - Dev: fast running & easy to understand
+His talk was dealing with the fact that a lot of companies use services whereever they can. He called it "ServiceFull". Besides the obvious benefits of such an approach, like concentrating on the core business, lower costs etc. there are some heavy drawbacks on this approach as well.
 
-- test code shoud be considered just like production code
-- test one thing
+To explain this fact, he went into [Promise theory](http://a.co/imya0c4) in order to discusss the idea of a promise, which stands as a fundamental building block. You shoud only create promises for your service only on what you can control.
 
+Spinning back to the ServiceFull idea, he said that one should try to eliminate single point of failures even when using services (using OpenFaaS instead of Lambda). It's all about the choice, in order to keep your promise.
 
-### You Deserve Great Tools: Commit-to-Production Automation at LinkedIn
+Taking DevOps into the picture, he said that the problem with use of services is that, the idea of DevOps does not holds when using external services very much. This is because in DevOps it is all about getting the different people back together on a single table to communicate across boundaries. But this doesn't really work when outsourcing everything to services. Actually, then there are even bigger boundaries. But this is exactly what DevOps tries to prevent.
 
-- CD applied to Open-Source library: Mockito
-  - experience from Mockito CD approach: every pull request creates a release
-  - code, tests & documentation has to be there, because of automatic release
+He pointed out some solutions in these ServiceFull spaces:
 
-- LinkedIn CD:
-  - 3x3: 3 releases per day & max 3 hours to release
-- before: 1x release / month
-  - removes "feature-rush" (a few days before the release --> #commits go up, to get it in)
-- no pre-release manual verification, per-featuer verification
-- if something is hard: do it more often
-- resolve flaky tests: running test-suite 1000x at night, count the flaky ones & remove the flaky ones & fix them
-- master branch always green in big teams
+External services need to try to open their boundaries so that you can hold your promise. It is about how do they communicate with problems etc. Some possible options to opening up are:
+
+- post mordems
+- changelog
+- open sourcing
+- direct access to engineers
+
+He closes with the idea that using DevOps in the ServiceFull space means DevOps across service / company boundaries.
 
 
-### Developer Keynote
+#### How Languages Influence Each Other: Reflections on 14 Years of Apache Groovy
 
-- Oracle Cloud product annoucement
+Guillaume Laforge [@glaforge](https://twitter.com/glaforge), one of the core maintainers gave an interesting talk about groovy. It was mainly going through the different syntatical features of the languages and talk about what other languages influenced groovy or what other languages were influenced by groovy.
 
-- Patick Debois - DevOps founder:
-  - "ServiceFull" - overuser of services (Github, Google calender, Circle CI...)
-  - Promise theory (http://a.co/imya0c4) - take a promise as a fundamental building block which should be the standard idea
-  - create promises for your service only on what you can control
-  - eliminate single point of failures even when using services (using OpenFaaS instead of Lambda) - it's
-  about the choice, in order to keep your promise
-  - problem with services: the idea of DevOps does not holds when using external services very much
-  - external services: how do they communicate with problems etc. which allows you to fulfil your promises a little better
-    - post mordems
-    - changelog
-    - open sourcing
-    - direct access to engineers
-    - ...
-  - DevOps: not only within the company, but in ServiceFull space: communicate between companies / services
+Besides that there were some little tricks I wasn't really aware of, so I'll just mention them here:
 
-
-## Wendsday
-
-
-### How Languages Influence Each Other: Reflections on 14 Years of Apache Groovy
-
-- Groove lives in the C-Family of programming languages
-- strong collelation between ruby, groovy and swift
-- named parameters also work for regular methods:
+- named parameters can not only be used for constructors, but for regular method calls as well:
 
 {% highlight groovy %}
 
@@ -110,48 +106,60 @@ def rectangle(Map m, Color r) {
   println "$m.width:$m.height $r"
 }
 
-
 rectangle red, width: 100, height: 200
 
 {% endhighlight %}
 
-- @Immutable Annotation to create an immutable class
-- Type aliases through import ...ClassName as CN
-- Null-Safe operator was invented by groovy
+- <code>@Immutable</code> Annotation to create immutable classes
+- type aliases through naming imports: <code>import com.company.project.ClassName as CN</code>
 
 
+#### Testing Containers with TestContainers: There and Back Again
 
-### Testing Containers with TestContainers: There and Back Again
+Another very interesting talk was about how to use Docker for integration testing.
+There is a library called [TestContainers](https://www.testcontainers.org/) which allows the user to create Docker containers in their JUnit based integration tests.
 
-- JUnit testing extension in order to run dependencies in Containers
-- solves the problem of starting databases in integrations tests e.g.
-- removes the burden of handling with ports and docker env variables
-- testcontainers.org
-- create specific classes extending GenericContainer, like HazelcastContainer
-- docker network support in unit tests
-- support for spock
-- alternative to arquillian cube
+This is normally useful, if you can dependencies of your application, that are otherwise hard to create. An example of this would be a Kafka message broker. Your application uses Kafka for async communication and in your test you want to check, if your system successfully creates messages if a customer is created e.g.
 
+Normally because starting and stopping a Kafka cluster is pretty hard, there will be something like a single shared resource that is use throughout the test-suite. But this has some limitations. What about testing failure scenarios of the messaging system? What about concurrent running tests?
+
+Testcontainers solves this problem with the help of Docker. It acts as a JUnit Rule, that creates some containers through a nice DSL.
 
 
-### Docker Tips and Tricks for Java Developers
+## Chatting with the vendors
 
-- Dockerfiles:
-  - "apt-get install wget --no-install-recommends" will only install the really necessary packages
-  - every RUN cmd will create a layer: combine RUN cmds
-  - always use tags in "FROM image"
-  - RUN will get executed every time. "apt-get install openjdk-8-jdk" will not guarantee the same version --> specify the versions even in apt-get
-  - always use explicit user in Dockerfile
-  - "RUN chown +x ..." creates another layer with the executable version of the file / directory
-  - using official images or your own with proper tipps (the from above)
-  - https://stacksmith.bitnami.com
-  - every "docker run" will create another layer of this "contnainer". So 100x "docker run" will add 100x layers
-  - docker run --> docker kill && docker rm || docker run -it --rm debian
-  - be careful with logs into the filesystem of the container, because of the above
-  - docker system prune
-  - for java apps: the heap size is normally not defined by docker memory constains: -m
-  - newer versions of java can "-XX:+UseCGroupsMemoryLimitForHeap" in order to use the values from -m
-  - https://hub.docker.com/r/fabric8/fabric8-java/ <-- good java image
-  - multi stage builds: 1st container --> container with mvn e.g.; 2nd container builds from first container
-  --> therefore
-  - docker run excepts STD_IN & STD_OUT for pipeing etc.
+Besides the talks that were quite informative, I had the chance to have a deep chat with some of the software vendors that had their booths in this pretty big exhibition. Most of the time I spend with the [CUBA Platform](https://www.cuba-platform.com/) developers (for obvious reasons). We talked about different things regarding the framework.
+
+The first notable thing was the whole messaging infrastructure they will provide in CUBA 6.7. It's about backend messages as well as UI events, which allow greater flexibility and looser coupling between the moving parts of the application.
+
+Next they talked about plans to change the way UI controllers are supposed to work. Currently it is required to extend some base class (like <code>AbstractEditor</code>). Then there are certain lifecycle hook methods that can be overridden to put custom logic in place.
+
+It is inspired by the [Vaadin folks](https://vaadin.com/), who had some booth at JavaOne as well. They showed some early preview of the upcoming [Vaadin 10](https://vaadin.com/blog/vaadin-flow-the-next-piece-of-vaadin-10-is-now-in-developer-preview) and their way on how to glue together your controller logic with the actual UI like this:
+
+
+{% highlight java %}
+
+@Tag("my-label") // declare which HTML element to use, here a custom element <my-label>
+public class Label extends Component {
+
+ public void setText(String text) {
+   getElement().setText(text);
+ }
+ public String getText() {
+   return getElement().getText();
+ }
+}
+
+{% endhighlight %}
+
+CUBA thinks on switching from the base class approach to a more annotation driven approach where the developer just creates POJOs and the annotation will create the binding so some XML e.g.
+
+It was kind of interesting to see how these frameworks influence each other and how they cherry-pick ideas in order to fulfil their customer needs best.
+
+
+Another interesting vendor was [Datadog](https://www.datadoghq.com/). It was all about monitoring and analytics of running application. It was pretty impressive how easy it is to setup a monitoring system and what insides can be fetched form a running system.
+
+Besides the raw data, it is only useful if the data can be consumed in a way that makes it easy to get some business value out. Seems, that Datadog is doing a pretty good job on it.
+
+
+There were a lot of other interesting talks and vendors that I did not take the time to participate in. However, this was my little impression of JavaOne 2017. It was a very subjective description, nevertheless I hope you enjoyed the recap.
