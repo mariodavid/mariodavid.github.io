@@ -46,7 +46,7 @@ They used Apache Kafka for message based communication. Additionally, the receiv
 
 Interestingly they said that they decided to not go the event sourcing route, but instead hold the latest state in the messages.
 
-The last quite interesting thing in the MS architecture is the question on how the UI integration works. There are different approaches to this. REWE decided to create a thing, they called "UI-gateway", which aggregates the UI (HTML+CSS+JavaScript) from Microservices and pushes them to the web client. This means that the microservices have to agree on a particular UI technology (and a version of it too) like React v.15.0. That has some obvious drawbacks, but it was interesting to see that as a trade-off.
+The last quite interesting thing in the microservices architecture is the question on how the UI integration works. There are different approaches to this. REWE decided to create a thing, they called "UI-gateway", which aggregates the UI (HTML+CSS+JavaScript) from Microservices and pushes them to the web client. This means that the microservices have to agree on a particular UI technology (and a version of it too) like React v.15.0. That has some obvious drawbacks, but it was interesting to see that sometimes as an architectural trade-off a decision like this is being made.
 
 The slides for this interesting talk can be found at [Speakerdeck](https://speakerdeck.com/abrauner/javaone-2017-a-competitive-food-retail-architecture-with-microservices).
 
@@ -119,7 +119,7 @@ rectangle red, width: 100, height: 200
 Another very interesting talk was about how to use Docker for integration testing.
 There is a library called [TestContainers](https://www.testcontainers.org/) which allows the user to create Docker containers in their JUnit based integration tests.
 
-This is normally useful if you can mock dependencies of your application, that are otherwise hard to create. An example of this would be a Kafka message broker. Your application uses Kafka for async communication, and in your test you want to check if your system successfully creates messages if a customer is created e.g.
+This is super useful, if you have other services as dependencies of your application. Those are normally hard to create manually, but through Docker it becomes a breeze. An example of this would be a Kafka message broker. Your application uses Kafka for async communication, and in your test you want to check if your system successfully creates messages if a customer is created e.g.
 
 Normally because starting and stopping a Kafka cluster is pretty hard, there will be something like a single shared resource that is used throughout the test-suite. But this has some limitations. What about testing failure scenarios of the messaging system? What about concurrent running tests?
 
