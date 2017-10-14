@@ -14,21 +14,21 @@ In the first week of October of 2017, I had the chance to participate in the Jav
 
 ## Talks all over the place
 
-This was definitivly the conference where most parallel talks were taking place. Oftentimes there was the possibility to switch between 20 concurrent talks. Not easy to choose from. I attended to a lot of them, but here are my write-up of the most memorable ones.
+This was definitely the conference where most parallel talks were taking place. Oftentimes there was the possibility to switch between 20 concurrent talks. Not easy to choose between. I attended a lot of them, but here are my write-ups of the most memorable ones.
 
 #### Java Keynote: All about openness
 
-Starting with the first day, there was the [Java Keynote](https://www.oracle.com/javaone/on-demand.html?bcid=5596229112001) from Mark Cavage ([@mcavage](https://twitter.com/mcavage)) and Mark Reinhold ([@mreinhold](https://twitter.com/mreinhold)).
+Starting with the first day, there was [Java Keynote](https://www.oracle.com/javaone/on-demand.html?bcid=5596229112001) from Mark Cavage ([@mcavage](https://twitter.com/mcavage)) and Mark Reinhold ([@mreinhold](https://twitter.com/mreinhold)).
 
-The Keynote was all about openness of the java platform. They talked about their recent annoucement of moving JavaEE to the Eclipse foundation and what that means in terms of openness. Then they annouced that they want to change their release cycles dramatically from feature-based releases with timeframes of 3-4 years to times based releases every 6 month.
+The Keynote was all about openness of the Java platform. They talked about their recent annoucement of moving JavaEE to the Eclipse foundation and what that means in terms of openness. Then they annouced that they wanted to change their release cycles dramatically from feature-based releases with timeframes of 3-4 years to times-based releases every 6 months.
 
-Next they talked about the jigsaw project as part of the JDK9. Since this the major feature of Java 9, there has been written a lot before about it. Being able to define modules In Java seems to be reasonable approach and is also the missing piece that other languages had for ages. Since the major libraries also need to support the java 9 module system, time will tell how this works out.
+Next they talked about the Jigsaw project as a part of JDK9. Since this is the major feature of Java 9, there has been written a lot before about it. Being able to define modules In Java seems to be a reasonable approach and is also the missing piece that other languages have had for ages. Since the major libraries also need to support the Java 9 module system, time will tell how this works out.
 
-The last notable thing is called project amber. This is an effort that has been around for quite some time. It deals with increasing the features of the Java language itself in order to make it a little better step by step.
+The last notable thing is called Project Amber. This is an effort that has been around for quite some time. It deals with increasing the features of the Java language itself in order to make it a little better step by step.
 
-Within project amber there are subproject that will deal with certain parts. One is to introduce pattern matching into Java, which is very cool. Next thing is automatic type inference within a function. This would allow to use the keyword <code>var</code> instead of defining the type. Not to confuse with dynamic typing. It is just, that the java compiler will infer the type of the variable from the right side of the assignment.
+Within Project Amber there are subprojects that deal with certain parts. One is to introduce pattern matching into Java, which is very cool. Next thing is the automatic type inference within a function. This would allow to use the keyword <code>var</code> instead of defining the type. Not to confuse with dynamic typing. It is just that the Java compiler will infer the type of the variable from the right side of the assignment.
 
-So great feature enhancements. But they are not part of Java 9. Instead they will be part of ext releases of the jdk. However, combined with the new release schedule, it should out to users much faster. The <code>var</code> thing e.g. will be part of the next (18.03) release in march of 2018.
+So, these are the great feature enhancements. But they are not part of Java 9. Instead, they will be part of ext releases of the JDK. However, combined with the new release schedule, it should out to users much faster. The <code>var</code> thing e.g. will be part of the next (18.03) release in March 2018.
 
 
 #### A Competitive Food Retail Architecture with Microservices - REWE
@@ -37,28 +37,28 @@ Next up was an interesting and practical talk from two german software developer
 
 It was a monolith to microservices story as it has been told a few times, but with a practical showcase it is always interesting.
 
-One of the main things was "Asnychronous > Synchronous". So whereever it may possible, async communication should be preferred, because it will highly decouple the elements in the architecture.
+One of the main things was "Asnychronous > Synchronous". So wherever it may be possible, async communication should be preferred, because it will highly decouple the elements in the architecture.
 
-With this there comes the second notable takeaway: "Having data is much better than fetching data"
-This basically means, that it is totally ok to duplicate data in a MS based architecture. It is not perfect either, but doing distributed sychronous network calls is even worse.
+With this there comes the second notable takeaway: "Having data is much better than fetching data".
+This basically means that it is totally ok to duplicate data in the MS based architecture. It is not perfect either, but making distributed sychronous network calls is even worse.
 
-They used Apache Kafka for message based communication. Additionally, the receivers of the message only take the data of the message it requires. This is somewhat related to the idea of a bounded context in domain-driven-design.
+They used Apache Kafka for message based communication. Additionally, the receivers of the message only take the data of the message it requires. This is somewhat related to the idea of bounded context in the domain-driven design.
 
-Interstingly they said that they decided to not go the event sourcing route, but instead hold the latest state in the messages.
+Interestingly they said that they decided to not go the event sourcing route, but instead hold the latest state in the messages.
 
-The last quite interesting thing in a MS architecture is the question on how the UI integration works. There are different approaches to this. REWE decided to create a thing, they called "UI-gateway", which aggegates  the UI (HTML+CSS+JavaScript) from Microservices and pushes them to the web client. This means that the microservices have to agree on a particular UI technology (and a version of it too) like React v.15.0. That has some obvious drawbacks, but it was interesting to see that that took that as a trade-off.
+The last quite interesting thing in the MS architecture is the question on how the UI integration works. There are different approaches to this. REWE decided to create a thing, they called "UI-gateway", which aggregates the UI (HTML+CSS+JavaScript) from Microservices and pushes them to the web client. This means that the microservices have to agree on a particular UI technology (and a version of it too) like React v.15.0. That has some obvious drawbacks, but it was interesting to see that as a trade-off.
 
 The slides for this interesting talk can be found at [Speakerdeck](https://speakerdeck.com/abrauner/javaone-2017-a-competitive-food-retail-architecture-with-microservices).
 
 #### You Deserve Great Tools: Commit-to-Production Automation at LinkedIn
 
-Another interesting talk was from the the creator of the widely used Mockito library. He talked about how they applied "continous delivery" in the development of the open source library. They automated everything so that every pull request creates a release. This enforces the developers that every pull request has to contain everything:
+Another interesting talk was from the the creator of the widely used Mockito library. He talked about how they applied "continuous delivery" in the development of the open source library. They automated everything so that every pull request creates a release. This enforces the developers that every pull request has to contain everything:
 
 - code
 - tests
 - documentation
 
-After that, we made the switch and talked about the continous-delivery process, they approached at LinkedIn.
+After that, we made the switch and talked about the continuous-delivery process they approached at LinkedIn.
 Mainly they used a so-called 3x3 approach: 3 releases per day & max 3 hours to release.
 
 Before that, they were doing 1x release per month. Switching to 3x3 removes the "feature-rush" problem. A feature rush is usually the situation that a few days before the release the amount of commits go up drastically, to get it into the release.
@@ -70,21 +70,21 @@ In order to identify flaky tests, LinkedIn runs their functional test-suite 1000
 
 #### Developer Keynote - Promises and DevOps
 
-The next day, there was another keynote where besides the obvious Oracle cheremony it included a talk from  Patick Debois, the person who coined the term DevOps.
+The next day, there was another keynote where besides the obvious Oracle ceremony it included a talk from  Patick Debois, the person who coined the term DevOps.
 
-His talk was dealing with the fact that a lot of companies use services whereever they can. He called it "ServiceFull". Besides the obvious benefits of such an approach, like concentrating on the core business, lower costs etc. there are some heavy drawbacks on this approach as well.
+His talk was dealing with the fact that a lot of companies use services wherever they can. He called it "ServiceFull". Besides the obvious benefits of such approach, like concentrating on the core business, lower costs etc., there are some heavy drawbacks on this approach as well.
 
 To explain this fact, he went into [Promise theory](http://a.co/imya0c4) in order to discusss the idea of a promise, which stands as a fundamental building block. You shoud only create promises for your service only on what you can control.
 
-Spinning back to the ServiceFull idea, he said that one should try to eliminate single point of failures even when using services (using OpenFaaS instead of Lambda). It's all about the choice, in order to keep your promise.
+Spinning back to the ServiceFull idea, he said that one should try to eliminate a single point of failures even when using services (using OpenFaaS instead of Lambda). It's all about the choice, in order to keep your promise.
 
-Taking DevOps into the picture, he said that the problem with use of services is that, the idea of DevOps does not holds when using external services very much. This is because in DevOps it is all about getting the different people back together on a single table to communicate across boundaries. But this doesn't really work when outsourcing everything to services. Actually, then there are even bigger boundaries. But this is exactly what DevOps tries to prevent.
+Taking DevOps into the picture, he said that the problem with use of services is that the idea of DevOps does not hold when using external services very much. This is because in DevOps it is all about getting the different people back together at a single table to communicate across boundaries. But this doesn't really work when outsourcing everything to services. Actually, then there are even bigger boundaries. But this is exactly what DevOps tries to prevent.
 
 He pointed out some solutions in these ServiceFull spaces:
 
 External services need to try to open their boundaries so that you can hold your promise. It is about how do they communicate with problems etc. Some possible options to opening up are:
 
-- post mordems
+- post-mortems
 - changelog
 - open sourcing
 - direct access to engineers
@@ -94,11 +94,11 @@ He closes with the idea that using DevOps in the ServiceFull space means DevOps 
 
 #### How Languages Influence Each Other: Reflections on 14 Years of Apache Groovy
 
-Guillaume Laforge [@glaforge](https://twitter.com/glaforge), one of the core maintainers gave an interesting talk about groovy. It was mainly going through the different syntatical features of the languages and talk about what other languages influenced groovy or what other languages were influenced by groovy.
+Guillaume Laforge [@glaforge](https://twitter.com/glaforge), one of the core maintainers, gave an interesting talk about Groovy. It was mainly going through the different syntactical features of the languages and talk about what other languages influenced Groovy or what other languages were influenced by Groovy.
 
-Besides that there were some little tricks I wasn't really aware of, so I'll just mention them here:
+Besides that, there were some little tricks I wasn't really aware of, so I'll just mention them here:
 
-- named parameters can not only be used for constructors, but for regular method calls as well:
+- named parameters can be used not only for constructors but for regular method calls as well:
 
 {% highlight groovy %}
 
@@ -119,22 +119,22 @@ rectangle red, width: 100, height: 200
 Another very interesting talk was about how to use Docker for integration testing.
 There is a library called [TestContainers](https://www.testcontainers.org/) which allows the user to create Docker containers in their JUnit based integration tests.
 
-This is normally useful, if you can dependencies of your application, that are otherwise hard to create. An example of this would be a Kafka message broker. Your application uses Kafka for async communication and in your test you want to check, if your system successfully creates messages if a customer is created e.g.
+This is normally useful if you can mock dependencies of your application, that are otherwise hard to create. An example of this would be a Kafka message broker. Your application uses Kafka for async communication, and in your test you want to check if your system successfully creates messages if a customer is created e.g.
 
-Normally because starting and stopping a Kafka cluster is pretty hard, there will be something like a single shared resource that is use throughout the test-suite. But this has some limitations. What about testing failure scenarios of the messaging system? What about concurrent running tests?
+Normally because starting and stopping a Kafka cluster is pretty hard, there will be something like a single shared resource that is used throughout the test-suite. But this has some limitations. What about testing failure scenarios of the messaging system? What about concurrent running tests?
 
-Testcontainers solves this problem with the help of Docker. It acts as a JUnit Rule, that creates some containers through a nice DSL.
+Testcontainers solves this problem with the help of Docker. It acts as a JUnit Rule that creates some containers through a nice DSL.
 
 
 ## Chatting with the vendors
 
-Besides the talks that were quite informative, I had the chance to have a deep chat with some of the software vendors that had their booths in this pretty big exhibition. Most of the time I spend with the [CUBA Platform](https://www.cuba-platform.com/) developers (for obvious reasons). We talked about different things regarding the framework.
+Besides the talks that were quite informative, I had the chance to have a deep chat with some of the software vendors that had their booths in this pretty big exhibition. Most of the time I spend with [CUBA Platform](https://www.cuba-platform.com/) developers (for obvious reasons). We talked about different things regarding the framework.
 
-The first notable thing was the whole messaging infrastructure they will provide in CUBA 6.7. It's about backend messages as well as UI events, which allow greater flexibility and looser coupling between the moving parts of the application.
+The first notable thing was the whole messaging infrastructure they will provide in CUBA 6.7. It's about backend messages, as well as UI events, which allow greater flexibility and looser coupling between the moving parts of the application.
 
 Next they talked about plans to change the way UI controllers are supposed to work. Currently it is required to extend some base class (like <code>AbstractEditor</code>). Then there are certain lifecycle hook methods that can be overridden to put custom logic in place.
 
-It is inspired by the [Vaadin folks](https://vaadin.com/), who had some booth at JavaOne as well. They showed some early preview of the upcoming [Vaadin 10](https://vaadin.com/blog/vaadin-flow-the-next-piece-of-vaadin-10-is-now-in-developer-preview) and their way on how to glue together your controller logic with the actual UI like this:
+It is inspired by [Vaadin folks](https://vaadin.com/) who had a booth at JavaOne as well. They showed some early preview of the upcoming [Vaadin 10](https://vaadin.com/blog/vaadin-flow-the-next-piece-of-vaadin-10-is-now-in-developer-preview) and their way on how to glue together your controller logic with the actual UI like this:
 
 
 {% highlight java %}
@@ -152,14 +152,14 @@ public class Label extends Component {
 
 {% endhighlight %}
 
-CUBA thinks on switching from the base class approach to a more annotation driven approach where the developer just creates POJOs and the annotation will create the binding so some XML e.g.
+CUBA thinks on switching from the base class approach to a more annotation driven approach where the developer just creates POJOs, and the annotation will create the binding to some XML e.g.
 
-It was kind of interesting to see how these frameworks influence each other and how they cherry-pick ideas in order to fulfil their customer needs best.
+It was kind of interesting to see how these frameworks influence on each other and how they cherry-pick ideas in order to fulfil their customer needs best.
 
 
 Another interesting vendor was [Datadog](https://www.datadoghq.com/). It was all about monitoring and analytics of running application. It was pretty impressive how easy it is to setup a monitoring system and what insides can be fetched form a running system.
 
-Besides the raw data, it is only useful if the data can be consumed in a way that makes it easy to get some business value out. Seems, that Datadog is doing a pretty good job on it.
+Besides the raw data, it is only useful if the data can be consumed in a way that makes it easy to get some business value out. Seems that Datadog is doing a pretty good job on it.
 
 
 There were a lot of other interesting talks and vendors that I did not take the time to participate in. However, this was my little impression of JavaOne 2017. It was a very subjective description, nevertheless I hope you enjoyed the recap.
