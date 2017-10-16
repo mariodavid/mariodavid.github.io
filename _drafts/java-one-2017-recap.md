@@ -1,28 +1,28 @@
 ---
 layout: post
 title: JavaOne 2017 Recap
-description: "In the first week of October of 2017, I had the chance to participate in the JavaOne conference in San Francisco. In this blog post I'll make a little recap of what I learned during these days."
-modified: 2017-04-15
-tags: [cuba, java, java-one]
+description: "In the first week of October 2017 I got a chance to join the CUBA Platform team and participate in the JavaOne conference, taking place in San Francisco. In this blog post I'll make a little recap of what I have learned during these days."
+modified: 2017-04-16
+tags: [cuba platform, java, java-one]
 image:
   feature: javaone-2017-recap/feature.jpg
 ---
 
-In the first week of October of 2017, I had the chance to participate in the JavaOne conference in San Francisco. In this blog post I'll make a little recap of what I learned during these days.
+In the first week of October 2017 I got a chance to join the CUBA Platform team and participate in the JavaOne conference, taking place in San Francisco. In this blog post I'll make a little recap of what I have learned during these days.
 
 <!-- more -->
 
-## Talks all over the place
+## Talks All Over the Place
 
-This was definitely the conference where most parallel talks were taking place. Oftentimes there was the possibility to switch between 20 concurrent talks. Not easy to choose between. I attended a lot of them, but here are my write-ups of the most memorable ones.
+First of all I would like to note that is was impossible to attend even one-third of the talks, as they were split by over than 10 parallel tracks. Choosing between the sessions also wasn't an easy task, as it's not easy to choose between useful and interesting. However, I managed to attend quite a lot of them. Must say that sometimes (not often, but still...) my expectations from the talks I attended were overestimated, so I will not mention them in this article, keeping space only for the best ones.
 
 #### Java Keynote: All about openness
 
-Starting with the first day, there was [Java Keynote](https://www.oracle.com/javaone/on-demand.html?bcid=5596229112001) from Mark Cavage ([@mcavage](https://twitter.com/mcavage)) and Mark Reinhold ([@mreinhold](https://twitter.com/mreinhold)).
+Starting with the first day, there was [Java Keynote](https://www.oracle.com/javaone/on-demand.html?bcid=5596229112001), led by Mark Cavage ([@mcavage](https://twitter.com/mcavage)) and Mark Reinhold ([@mreinhold](https://twitter.com/mreinhold)).
 
-The Keynote was all about openness of the Java platform. They talked about their recent annoucement of moving JavaEE to the Eclipse foundation and what that means in terms of openness. Then they annouced that they wanted to change their release cycles dramatically from feature-based releases with timeframes of 3-4 years to times-based releases every 6 months.
+The Keynote was all about the openness of the Java platform. They talked about their recent announcement of moving JavaEE to the Eclipse foundation and what it means in terms of openness. Then they announced that they wanted to change their release cycles dramatically from feature-based releases with timeframes of 3-4 years to times-based releases every 6 months.
 
-Next they talked about the Jigsaw project as a part of JDK9. Since this is the major feature of Java 9, there has been written a lot before about it. Being able to define modules In Java seems to be a reasonable approach and is also the missing piece that other languages have had for ages. Since the major libraries also need to support the Java 9 module system, time will tell how this works out.
+Next they talked about the Jigsaw project as a part of JDK9. Since this is the major feature of Java 9, there has been written a lot before about it. Being able to define modules in Java seems to be a reasonable approach and is also the missing piece that other languages have had for ages. Since the major libraries also need to support the Java 9 module system, time will tell how this works out.
 
 The last notable thing is called Project Amber. This is an effort that has been around for quite some time. It deals with increasing the features of the Java language itself in order to make it a little better step by step.
 
@@ -35,14 +35,14 @@ So, these are the great feature enhancements. But they are not part of Java 9. I
 
 Next up was an interesting and practical talk from two german software developers working for a major retail company called REWE: Sebastian Gauder ([@rattakresch](https://twitter.com/rattakresch)) and Ansgar Brauner ([@a_brauner](https://twitter.com/a_brauner)).
 
-It was a monolith to microservices story as it has been told a few times, but with a practical showcase it is always interesting.
+It was a "monolith to microservices" story as it has been told a few times, but accompanied with a practical showcase it is always interesting.
 
 One of the main things was "Asnychronous > Synchronous". So wherever it may be possible, async communication should be preferred, because it will highly decouple the elements in the architecture.
 
 With this there comes the second notable takeaway: "Having data is much better than fetching data".
 This basically means that it is totally ok to duplicate data in the MS based architecture. It is not perfect either, but making distributed sychronous network calls is even worse.
 
-They used Apache Kafka for message based communication. Additionally, the receivers of the message only take the data of the message it requires. This is somewhat related to the idea of bounded context in the domain-driven design.
+They use Apache Kafka for message based communication. Additionally, the receivers of the message only take data of the message it requires. This is somewhat related to the idea of bounded context in the domain-driven design.
 
 Interestingly they said that they decided to not go the event sourcing route, but instead hold the latest state in the messages.
 
@@ -52,7 +52,7 @@ The slides for this interesting talk can be found at [Speakerdeck](https://speak
 
 #### You Deserve Great Tools: Commit-to-Production Automation at LinkedIn
 
-Another interesting talk was from the the creator of the widely used Mockito library. He talked about how they applied "continuous delivery" in the development of the open source library. They automated everything so that every pull request creates a release. This enforces the developers that every pull request has to contain everything:
+Another interesting talk was from the the creator of the widely used Mockito library. He talked about how they applied "continuous delivery" in the development of the open source library. They automated everything so that every pull request creates a release. This enforces developers that every pull request has to contain everything:
 
 - code
 - tests
@@ -154,8 +154,7 @@ public class Label extends Component {
 
 CUBA thinks on switching from the base class approach to a more annotation driven approach where the developer just creates POJOs, and the annotation will create the binding to some XML e.g.
 
-It was kind of interesting to see how these frameworks influence on each other and how they cherry-pick ideas in order to fulfil their customer needs best.
-
+It was kind of interesting to see how these frameworks influence on each other and how they cherry-pick ideas in order to fulfill their customer needs best.
 
 Another interesting vendor was [Datadog](https://www.datadoghq.com/). It was all about monitoring and analytics of running application. It was pretty impressive how easy it is to setup a monitoring system and what insides can be fetched form a running system.
 
