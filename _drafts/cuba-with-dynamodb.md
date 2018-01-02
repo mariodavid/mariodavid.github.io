@@ -152,3 +152,31 @@ With this the configuration of wiring those two technologies togeter should be d
 
 There are several injection points where we could branch our code to interact with the dynamo db database instead of the standard relational database. We could call the API from the UI directly, or using a Service that will be used in a custom datasource of CUBA. In this case, I decided to take the lowest CUBA injection point available: A custom datastore.
 
+
+#### A non-persitent entity for customer
+First thing is, that we need to create a entity for our data that we want to store. In this case, we will use the good old Customer entity. In studio, when creating a entity, it will ask you about the entity type. In this case, we will select "Not persistent", because we want to configure a custom datastore for it. This is only possible if we chose "Not persistent" - alghough in fact we will persist is, just not in the relational database.
+
+We can configure some attributes of this custmoer, like name, firstName and email and store the entity.
+
+Next thing is, that we define the custom datastore. It is possible to do this in studio, but I thought, it might be a good idea to take a look at the source code files, as this is actually a fairly straight forward way of configuring it directly in code.
+
+First, we go to <code>app.properties</code> and add the following two lines:
+
+{% highlight properties %}
+cuba.additionalStores = dynamodb
+cuba.storeImpl_dynamodb = cedda_dynamodbDataStore
+{% endhighlight %}
+
+The first line registeres a new custom store, which is called "dynamodb". Next, we point the store implementation of "dynamodb" to a specific Spring bean: "cedda_dynamodbDataStore", which we will create in just a bit.
+
+This makes the CUBA core application aware of the datastore.
+
+Additionally, we need to tell the frontend of CUBA about it as well - in <code>web-app.properties</code>:
+
+{% highlight properties %}
+cuba.additionalStores = dynamodb
+{% endhighlight %}
+
+As the frontend does not need to know about the implementation, we will just tell it, that there is an additional store that can be referenced.
+
+
