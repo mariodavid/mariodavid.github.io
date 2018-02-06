@@ -6,6 +6,7 @@ modified: 2017-04-15
 tags: [cuba, business applications]
 image:
   feature: cuba-security-subsystem-distilled/feature-2.jpg
+  feature_source: https://pixabay.com/de/mann-gesch%C3%A4ft-cartoon-kaufmann-1351317/
 ---
 
 In a lot of cases, a relational SQL based database will not fit the needs of the data access use-case.
