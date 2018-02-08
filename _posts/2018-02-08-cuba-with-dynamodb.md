@@ -9,7 +9,7 @@ image:
   feature_source: https://pixabay.com/de/mann-gesch%C3%A4ft-cartoon-kaufmann-1351317/
 ---
 
-In a lot of cases, a relational SQL based database will not fit the needs of the data access use-case.
+In a lot of cases, a relational SQL based database will not fit the needs of the data access use-case. So let's look at some alternatives like Amazon DynamoDB and how to combine it with your CUBA app.
 
 <!-- more -->
 
