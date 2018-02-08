@@ -5,7 +5,7 @@ description: "In this blog post, we will discover the insights of CUBA's Securit
 modified: 2017-04-15
 tags: [cuba, business applications]
 image:
-  feature: cuba-security-subsystem-distilled/feature-2.jpg
+  feature: cuba-with-dynamodb/feature.png
   feature_source: https://pixabay.com/de/mann-gesch%C3%A4ft-cartoon-kaufmann-1351317/
 ---
 
