@@ -1,7 +1,7 @@
 ---
 layout: post
 title: CUBA with DynamoDB
-description: "In this blog post, we will discover the insights of CUBA's Security subsystem and how different business security requirements can be achieved."
+description: "In a lot of cases, a relational SQL based database will not fit the needs of the data access use-case. So let's look at some alternatives like Amazon DynamoDB and how to combine it with your CUBA app."
 modified: 2017-04-15
 tags: [cuba, business applications]
 image:
