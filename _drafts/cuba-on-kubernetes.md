@@ -45,6 +45,56 @@ Instead you have a certain lock-in into an open source tool (kubernetes), which 
 This means that the choice of GKE as the provider for the Kubernetes cluster is more or less irrelevant compared to picking ECS, because you can pretty much lift & shift your kubernetes workloads from one cloud provider to another.
 
 
-### Step 1: setting up a kubernetes cluster on GKE
+### Step 1: setting up a Kubernetes cluster on GKE
 
 However, we will use GKE in this blog post. This means, that you have to prepare certain stuff for using it. In the [quick-start guide](https://cloud.google.com/kubernetes-engine/docs/quickstart) you will find all relevant information on how to create an account, create a project, install the command line tools.
+
+What is also relevant for this blog post is the installation of [Terraform](https://www.terraform.io/). Terraform is a tool which allow to declarativly describe infrastructure in a infrastructure as code style. This allows us instead of creating the cluster through the Google cloud API / CLI / UI, describe the cluster through Terraform. The tool will then go ahead and do the heavy lifting of the interaction with the cloud provider.
+
+Using Terraform has the same advantages regarding reducing the vendor lock-in. Although it does not hide away the feature of a concrete cloud provider (as Kubernetes somewhat does), it still homogenizes the sytax of managing infrastructure resources. Compared to programmatic tools like Chef or puppet, Terraform takes a declarative approach in order to describe the destination state of the infrastructure.
+
+In order to let Terraform interact with the Google Kubernetes API, we need to allow this in the [Google cloud console](https://console.developers.google.com/apis/api/container.googleapis.com/overview). After the Kubernetes API is activated for this project, the only thing left before starting off with Terraform is to create a JSON based Token for Terraform to authenticate.
+In the “Credentials” section of the console, choose “Create Credentials” and then “Service account key”. In the selection for "Service account" you can choose "Compute Engine service account". Use Key Type "JSON". This will give you a JSON file, which contains all necessary information to connect to GKE via Terraform.
+
+#### Creating a GKE cluster through Terraform
+
+Once everything is setup, let's create the kubernetes cluster.
+
+As an example for doing that, I created a repository which contains the infrastructure code for this blog post: [cuba-on-kubernetes-infrastructure](https://github.com/mariodavid/cuba-on-kubernetes-infrastructure).
+
+Is uses an existing Terraform module called [kubernetes-engine](https://registry.terraform.io/modules/google-terraform-modules/kubernetes-engine/google/1.15.0), which will create a Kubernetes cluster for GKE on our behalf. It more or less will take away another set of heavy lifting operations from us.
+
+Terraform modules are a way to encapsulate certain infrastructure resource definitions through a abstraction mechanism with its own API. It allows you to define modules for reoccuring patterns of infrastructure that should be used. The [Terraform module registy](https://registry.terraform.io/) then is an easy way to share common terraform modules just like the Docker registry for container images.
+
+
+{% highlight terraform %}
+module "cuba_on_kubernetes_cluster" {
+  source = "google-terraform-modules/kubernetes-engine/google"
+  version = "1.15.0"
+
+  general = {
+    name = "cuba-on-kube"
+    env  = "prod"
+    zone = "europe-west1-b"
+  }
+
+  master = {
+    username = "admin"
+    password = "${random_string.password.result}"
+  }
+
+  default_node_pool = {
+    node_count = 3
+    remove     = false
+  }
+
+}
+{% endhighlight %}
+
+When we look at this usage of the module, we find certain parameters that we can pass into the module. In the <code>general</code> section, you can define the name of the cluster, the environment and the zone the cluster should be located in.
+
+Then there are certain other options which can be configured, but I will not go through right now. This can be looked up in the documentation of this [module](https://registry.terraform.io/modules/google-terraform-modules/kubernetes-engine/google/1.15.0).
+
+
+<div class="well">
+Note: In order to have a production ready Kubernetes cluster, you should be aware how your cluster is configured. Altough the Terraform module is an API abstraction, at the end of the day it is key to understand the infrastructure and the possible noobs you are running in a production environment.</div>
