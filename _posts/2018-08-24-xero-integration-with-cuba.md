@@ -2,10 +2,10 @@
 layout: post
 title: API integration in CUBA with Xero
 description: "In this blog post, we will discover how to integrate with a SaaS software solution like Xero."
-modified: 2018-08-03
+modified: 2018-08-24
 tags: [cuba, API, integration, xero, REST, OAuth2]
 image:
-  feature: cuba-security-subsystem-distilled/feature-2.jpg
+  feature: api-integration-in-cuba-with-xero/feature.png
 ---
 
 In this blog post we will discover how to integrate with a SaaS software solution like Xero. For those kinds of integrations, there are two main ways to achieve it - API and SDK based. We will compare both approaches and take a look at the concrete integration steps to take.
@@ -19,7 +19,7 @@ Xero is an online accounting solution. It also offers certain features around ba
 ## Integration options
 Nowadays almost all SaaS products have an Abstract programming interface (API) in order to communicate with them through your own applications automatically. Oftentimes those solutions have an API as well as an SDK which is wrapping and making the API nicely accessible to the developers in their programming language of choice.
 
-So an Integration-API is oftentimes a protocol-based communication mechanism like HTTP. There you have certain endpoints that you can use in order to achieve your automation purposes. 
+So an Integration-API is oftentimes a protocol-based communication mechanism like HTTP. There you have certain endpoints that you can use in order to achieve your automation purposes.
 
 Since the term API is so overloaded, it is also sometimes meant to be an abstraction within a programming language / operating process and so on. For this blog post, we will use the term "API" as a protocol (HTTP) based integration mechanism, while the term "SDK" means a non-protocol based integration mechanism like a set of classes/functions that can be used within a programming language to interact with.
 
@@ -36,7 +36,7 @@ Data can be fetched and or changed & stored via sending HTTP messages to those e
 
 As a prerequisite, it is required to authenticate against the API. This is a little bit different from API to API. Sometimes a username & password combination is sufficient, sometimes a token-based approach has to be used.
 
-In the case of Xero, they differentiate between different applications that you want to create. A Xero application is, in this case, a representation of your application on the Xero service itself, that you register on their site for every integration application that you want to build. They have classified those applications into "private", "public" and "partner". You can read more about that concept in their docs around [API application types](https://developer.xero.com/documentation/getting-started/api-application-types). 
+In the case of Xero, they differentiate between different applications that you want to create. A Xero application is, in this case, a representation of your application on the Xero service itself, that you register on their site for every integration application that you want to build. They have classified those applications into "private", "public" and "partner". You can read more about that concept in their docs around [API application types](https://developer.xero.com/documentation/getting-started/api-application-types).
 
 When you want to have a private app connecting to Xero, an OAuth2-based authentication with a public/private key combination is required to interact with the SaaS. In this blog post we will use a private app, so the corresponding authentication workflow will be used.
 
@@ -64,7 +64,7 @@ In this case, you might want to control what data you want to log, which form an
 
 Since in the SDK case all of the network calls are hidden away from you as a developer, you have fewer options to change the way the interaction works.
 
-This has to be kept in mind when using an SDK-based integration approach. 
+This has to be kept in mind when using an SDK-based integration approach.
 
 For this blog, post we will stick to the SDK-based integration and live with the fact that we do not have the full control over the protocol interaction that occurs during the integration. Furthermore, we leverage this fact and have an easier integration due to it.
 
@@ -73,12 +73,12 @@ For this blog, post we will stick to the SDK-based integration and live with the
 
 Now that we have talked about the general approach on how to integrate with a SaaS provider like Xero, let's dig into the details of how to implement the actual integration.
 
-<div class="well">In case you only want to get the code of the integration with Xero: I've made that integration an application component for CUBA, so that you do not have to copy & paste all the source code. 
+<div class="well">In case you only want to get the code of the integration with Xero: I've made that integration an application component for CUBA, so that you do not have to copy & paste all the source code.
 <br /><br />
-You can find it on github: <a href="https://github.com/mariodavid/cuba-component-xero">mariodavid/cuba-component-xero</a>. 
-<br /><br />
-There is also an example application which uses the application component:
-<a href="https://github.com/mariodavid/cuba-example-using-xero">cuba-example-using-xero</a>.</div>
+<a href="https://github.com/mariodavid/cuba-component-xero" class="github-link">mariodavid/cuba-component-xero</a>
+<br />
+<a href="https://github.com/mariodavid/cuba-example-using-xero" class="github-link">mariodavid/cuba-example-using-xero</a>
+</div>
 
 ### Adding the Xero SDK dependency
 
@@ -239,7 +239,7 @@ With that everything is in place to successfully connect to the Xero API. The la
 
 ## Using the xero application component
 
-In the example application [cuba-example-using-xero](https://github.com/mariodavid/cuba-example-using-xero) we can find a usage of the <code>XeroClient</code> in the [XeroInvoiceService](https://github.com/mariodavid/cuba-example-using-xero/blob/master/modules/core/src/de/diedavids/cuba/ceux/service/XeroInvoiceServiceBean.java) to retrieve some invoices from the API and store it in the CUBA application. 
+In the example application [cuba-example-using-xero](https://github.com/mariodavid/cuba-example-using-xero) we can find a usage of the <code>XeroClient</code> in the [XeroInvoiceService](https://github.com/mariodavid/cuba-example-using-xero/blob/master/modules/core/src/de/diedavids/cuba/ceux/service/XeroInvoiceServiceBean.java) to retrieve some invoices from the API and store it in the CUBA application.
 
 {%highlight java%}
 
@@ -307,3 +307,57 @@ As you see, with the SDK in place, the interaction for the application developer
 Although there are downsides in using an SDK, it is oftentimes the most straightforward way of doing an integration.
 
 Luckily with open protocols like HTTP, OAuth and so on using an SDK is just a convenient way of doing it. If this approach is not suitable in a particular case, you always can go one layer below and use the protocols directly.
+
+
+<style>
+
+article.hentry {
+  background-color: #1fa8c9;
+
+}
+article h3 {
+    color: #1fa8c9;
+}
+
+div.github {
+
+      background-color: white;
+    padding: 5px;
+
+}
+
+
+a.github-link {
+  display: block;
+    font-family: monospace;
+    background-color: white;
+    padding: 10px;
+    padding-left: 50px;
+    background-image: url(https://cdn1.iconfinder.com/data/icons/logotypes/32/github-32.png);
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: 10px;
+    font-size: 1.5em;
+    padding-left: 70px;
+    box-shadow:0 0 0 0, 0 6px 12px rgba(0,0,0,0.1);
+}
+
+article h2 {
+      color: white;
+    background-color: #1fa8c9;
+    padding-left: 70px;
+    margin-left: -90px;
+    margin-right: -20px;
+}
+
+div.well {
+  background-color: #1fa8c9;
+color: white;
+border: none;
+border-radius: 0px;
+margin-left: -120px;
+padding-left: 80px;
+margin-right: -120px;
+padding-right: 80px;
+}
+</style>
