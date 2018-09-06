@@ -8,7 +8,7 @@ image:
   feature: cuba-security-subsystem-distilled/feature-2.jpg
 ---
 
-Kubernetes has become the de-facto standard when it comes to doing container scheduling & orchestration. Since it is not omnipresent these days, let's have a look on how to deploy a CUBA application into a Kubernetes cluster. This first part deals with creating the Kubernetes cluster infrastructure through Terraform.
+Kubernetes has become the de-facto standard when it comes to doing container scheduling & orchestration. Since it is so omnipresent these days, let's have a look on how to deploy a CUBA application into a Kubernetes cluster. This first part deals with creating the Kubernetes cluster infrastructure through Terraform.
 
 <!-- more -->
 
