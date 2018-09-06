@@ -1,14 +1,14 @@
 ---
 layout: post
 title: CUBA on Kubernetes - Part 2
-description: "In this blog post, we will discover the insights of CUBA's Security subsystem and how different business security requirements can be achieved."
+description: "In this blog post, we will deploy CUBA on Kubernetes. This second part deals with the actual deployment via Kubernetes after the infrastructure has been created in part one."
 modified: 2018-08-03
 tags: [cuba, kubernetes, deployment]
 image:
   feature: cuba-security-subsystem-distilled/feature-2.jpg
 ---
 
-Kubernetes has become the de-facto standard when it comes to doing container scheduling. Since it is not omnipresent these days, let's have a look on how to deploy a CUBA application into a Kubernetes cluster. In the second part, we will continue with deploying the application to the existing Kubernetes infrastructure.
+Kubernetes has become the de-facto standard when it comes to doing container scheduling. Since it is so omnipresent these days, let's have a look on how to deploy a CUBA application into a Kubernetes cluster. In the second part, we will continue with deploying the application to the existing Kubernetes infrastructure.
 
 <!-- more -->
 
