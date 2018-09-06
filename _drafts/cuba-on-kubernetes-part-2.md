@@ -8,7 +8,7 @@ image:
   feature: cuba-security-subsystem-distilled/feature-2.jpg
 ---
 
-Kubernetes has become the de-facto standard when it comes to doing container scheduling. Since it is no omnipresent these days, let's have a look on how to deploy a CUBA application into a Kubernetes cluster. In the second part we will continue with deploying the application to the existing Kubernetes infrastructure.
+Kubernetes has become the de-facto standard when it comes to doing container scheduling. Since it is not omnipresent these days, let's have a look on how to deploy a CUBA application into a Kubernetes cluster. In the second part, we will continue with deploying the application to the existing Kubernetes infrastructure.
 
 <!-- more -->
 
@@ -90,7 +90,7 @@ With that in place, to create a docker image locally, use:
 $ ./gradlew buildImage
 {% endhighlight %}
 
-to create the image. You can verify that it succeded and created one image with two different tags via:
+to create the image. You can verify that it succeeded and created one image with two different tags via:
 
 {%highlight bash%}
 $ docker images | grep cubarnetes
@@ -98,13 +98,13 @@ cubarnetes                                                            latest    
 gcr.io/cuba-on-kubernetes/cubarnetes                                  latest              3ba5a7da458f        2 days ago          179MB
 {% endhighlight %}
 
-In order to push a docker image to Google cloud, we have to authenticate the docker command against the GCR repository. Destails can be found in the [docs](https://cloud.google.com/container-registry/docs/pushing-and-pulling), but the main point is to use another <code>gcloud</code> command to do it:
+In order to push a docker image to Google cloud, we have to authenticate the docker command against the GCR repository. Details can be found in the [docs](https://cloud.google.com/container-registry/docs/pushing-and-pulling), but the main point is to use another <code>gcloud</code> command to do it:
 
 {%highlight bash%}
 $ gcloud auth configure-docker
 {% endhighlight %}
 
-Since we tagged the docker image as <code>gcr.io/cuba-on-kubernetes/cubarnetes</code> the US based registry will be used (see docs for other locations). To push the image up to the registry use the corresponding docker command:
+Since we tagged the docker image as <code>gcr.io/cuba-on-kubernetes/cubarnetes</code> the US-based registry will be used (see docs for other locations). To push the image up to the registry use the corresponding docker command:
 
 {%highlight bash%}
 $ docker push gcr.io/cuba-on-kubernetes/cubarnetes
@@ -226,9 +226,9 @@ A ConfigMap is used to put configuration options of the deployment to a dedicate
 
 The next thing defines the main part of the deployment (kind: "Deployment").
 
-In this section the pods (and therefore the containers) are described. The container reference a Docker image (e.g. <code>gcr.io/cuba-on-kubernetes/cubarnetes:latest</code>) which will be used. So this is the connection between the desription of a software deployment and the application binary that should be deployed. With the reference to the google container registry (<code>grc.io</code>) the information where to get the binary is also figured out. GKE works natively with GCR, so there is no explicit need to configure authentication against the registry.
+In this section the pods (and therefore the containers) are described. The container reference a Docker image (e.g. <code>gcr.io/cuba-on-kubernetes/cubarnetes:latest</code>) which will be used. So this is the connection between the description of a software deployment and the application binary that should be deployed. With the reference to the google container registry (<code>grc.io</code>) the information where to get the binary is also figured out. GKE works natively with GCR, so there is no explicit need to configure authentication against the registry.
 
-Furthermore the environment variables of the container are defined. Above I said that I externalized the three parameters <code>DB_URL</code>, <code>DB_USER</code> and <code>DB_PASS</code> from the container image. This is the point where the vaules are injected into the containers.
+Furthermore the environment variables of the container are defined. Above I said that I externalized the three parameters <code>DB_URL</code>, <code>DB_USER</code> and <code>DB_PASS</code> from the container image. This is the point where the values are injected into the containers.
 
 As we do not want to hard-code the credentials in our deployment.yml file, the file references the secrets mechanism from Kubernetes where we inserted our secrets in the first part.
 
@@ -236,9 +236,9 @@ As we do not want to hard-code the credentials in our deployment.yml file, the f
 
 One thing to mention is the fact, that there is not only one container defined (the CUBA application) within the pod, but actually two. The second container with the name <code>cloudsql-proxy</code> is a side-car container, which acts as a proxy for the DB connection. 
 
-Instead of letting the CUBA application directly talk to to DB, it will use the side-car container to actually connect to it. This approach is pretty common, as it allows to seperate different concerns. On the one hand, the application can assume it can always connect to the DB by "localhost:5432". The indirection of the side-car will forward the requests & takes care of finding the correct cloud SQL db. Also it is an easy point for logging and so on. 
+Instead of letting the CUBA application directly talk to DB, it will use the side-car container to actually connect to it. This approach is pretty common, as it allows to separate different concerns. On the one hand, the application can assume it can always connect to the DB by "localhost:5432". The indirection of the side-car will forward the requests & takes care of finding the correct cloud SQL DB. Also, it is an easy point for logging and so on. 
 
-From a security point of view it is also an improvement. Because if you imaginge your web application container is compromised due to an attack through the exposed HTTP API / UI, the attacker is not able to get access to the credentials that are used for DB access, because they are not stored in the container at all.
+From a security point of view, it is also an improvement. Because if you imagine your web application container is compromised due to an attack through the exposed HTTP API / UI, the attacker is not able to get access to the credentials that are used for DB access, because they are not stored in the container at all.
 
 
 #### Autoscaling through HorizontalPodAutoscaler
@@ -247,12 +247,12 @@ The next section creates a "HorizontalPodAutoscaler" in order to automatically s
 
 #### Exposing the app through a Kubernetes service
 
-The last remaining part is to create a service, which will take care of exposing the application (in particular a defined TCP port) to the outside world. In this case I used the type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) to achieve that the application will actually be accessible to the outside world. A service in itself normally only exposes pods (or replica sets to be more precise) outside of the Kubernetes cluster.
+The last remaining part is to create a service which will take care of exposing the application (in particular a defined TCP port) to the outside world. In this case, I used the type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) to achieve that the application will actually be accessible to the outside world. A service in itself normally only exposes pods (or replica sets to be more precise) outside of the Kubernetes cluster.
 
 But we also want to bridge the gap to the world outside of the network that the GKE cluster lives in within the cloud infrastructure.
-This is where we leave the kubernetes world as this is actually an integration point with the cloud provider, which will then provision a corresponding Load Balancer from their offerings. But still, the API or abstraction to interact with stay in the Kubernetes world, which is pretty neat.
+This is where we leave the kubernetes world as this is actually an integration point with the cloud provider, which will then provision a corresponding Load Balancer from their offerings. But still, the API or abstraction to interact with stays in the Kubernetes world, which is pretty neat.
 
-This is just a very brief overview over the configuration of the Kubernetes deployment. Honestly this is where the Kubernetes magic starts to begin. But for the sake of simplicitly I will leave it at this point with this basic configuration. You can dig much deeper into the configuration options of a Kubernetes deployment as this is out of scope for this article.
+This is just a very brief overview over the configuration of the Kubernetes deployment. Honestly, this is where the Kubernetes magic starts to begin. But for the sake of simplicity I will leave it at this point with this basic configuration. You can dig much deeper into the configuration options of a Kubernetes deployment as this is out of scope for this article.
 
 #### Trigger the deployment with "kubectl"
 
@@ -276,10 +276,10 @@ After a couple of seconds after the deployment was triggered, you can head over 
 
 ## Summary
 
-With this its time to wrap up this series of two blog posts about Kubernetes. The main idea behind Kubernetes is to give developers a common ground to deploy applications to. With the win of the Container wars it became clear that Kubernetes will become a fundamental building block of deploying & running distributed systems. It also is a starting point for a lot of other projects that are building on the sholders of this giant like [Helm](https://helm.sh/) or [Istio](https://istio.io/). With that we will hopefully see the emergence of products that allow to run production grade microservice architectures with little need of infrastructure experts.
+With this its time to wrap up this series of two blog posts about Kubernetes. The main idea behind Kubernetes is to give developers a common ground to deploy applications to. With the win of the Container wars, it became clear that Kubernetes will become a fundamental building block of deploying & running distributed systems. It also is a starting point for a lot of other projects that are building on the sholders of this giant like [Helm](https://helm.sh/) or [Istio](https://istio.io/). With that, we will hopefully see the emergence of products that allow running production grade microservice architectures with little need of infrastructure experts.
 
 With the cloud offerings we have seen (like GKE in this case) this challenge will become even easier. They take on the heavy lifting for a lot of things like Cluster management or managed DB services like we used with Google cloud SQL.
 
 Although the effort to configure those managed services is quite low, we still used Terraform in order to get one of the best practices of the DevOps world in place: "infrastructure as code".
 
-I hope you got a good enough overview on how the interaction will all of those pieces worked. Especially for Kubernetes it can just be seen as a starting point. The ecosystem of Kubernetes is quite huge and I hope I could give you the feeling that it is worth to be investigated further. If you just want to play around a little bit with Kubernetes in general without going through the initial installation phase of the CLI tools and so on, you can also check out the [Kubernetes Courses on Katacoda](https://www.katacoda.com/courses/kubernetes) - a super easy way to learn the technology in the browser.
+I hope you got a good enough overview on how the interaction with all of those pieces worked. Especially for Kubernetes, it can just be seen as a starting point. The ecosystem of Kubernetes is quite huge and I hope I could give you the feeling that it is worth to be investigated further. If you just want to play around a little bit with Kubernetes in general without going through the initial installation phase of the CLI tools and so on, you can also check out the [Kubernetes Courses on Katacoda](https://www.katacoda.com/courses/kubernetes) - a super easy way to learn the technology in the browser.
