@@ -1,7 +1,7 @@
 ---
 layout: post
 title: CUBA on Kubernetes - Part 1
-description: "In this blog post, we will discover the insights of CUBA's Security subsystem and how different business security requirements can be achieved."
+description: "In this blog post, we will deploy CUBA on Kubernetes. This first part deals with the infrastructure deployment (GKE Kubernetes cluster and Google Cloud SQL DB) via Terraform and GKE"
 modified: 2018-08-03
 tags: [cuba, kubernetes, deployment]
 image:
