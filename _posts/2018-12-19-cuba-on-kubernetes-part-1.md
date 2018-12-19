@@ -1,11 +1,11 @@
 ---
-layout: post
+layout: cubarnetes
 title: CUBA on Kubernetes - Part 1
 description: "In this blog post, we will deploy CUBA on Kubernetes. This first part deals with the infrastructure deployment (GKE Kubernetes cluster and Google Cloud SQL DB) via Terraform and GKE"
-modified: 2018-08-03
+modified: 2018-12-19
 tags: [cuba, kubernetes, deployment]
 image:
-  feature: cuba-security-subsystem-distilled/feature-2.jpg
+  feature: cuba-on-kubernetes/feature-1.png
 ---
 
 Kubernetes has become the de-facto standard when it comes to doing container scheduling & orchestration. Since it is so omnipresent these days, let's have a look on how to deploy a CUBA application into a Kubernetes cluster. This first part deals with creating the Kubernetes cluster infrastructure through Terraform.
@@ -17,7 +17,9 @@ Kubernetes has become the de-facto standard when it comes to doing container sch
 
 When it comes to deployment of an application living in a docker container, a lot has changed in the recent year. Back in 2016 when I wrote another container-related blog post series dealing with running CUBA on ECS - the proprietary elastic container service from AWS, the container orchestration wars were at their all-time highs. Back then the main competitors were Docker Swarm & Apache Mesos. But even at that times Kubernetes already stood out for its great and vibrant community.
 
-Fast forward to mid-2018 - Kubernetes has mainly got adopted by all major cloud vendors, which have hosted Kubernetes offerings and took Kubernetes more or less as the basis for their container workloads. Also, the Ecosystem around Kubernetes itself as well as the CNCF in general is very mature and growing like crazy.
+<img src="{{ site.url }}/images/cuba-on-kubernetes/1.png" style="">
+
+Fast forward to end-2018 - Kubernetes has mainly got adopted by all major cloud vendors, which have hosted Kubernetes offerings and took Kubernetes more or less as the basis for their container workloads. Also, the Ecosystem around Kubernetes itself as well as the CNCF in general is very mature and growing like crazy.
 
 But not only that, also previous competitors like Openshift and Rancher (or at least software solving similar problems) switched to Kubernetes as their underpinning. Additionally, a lot of CI/CD tools like Gitlab or GoCD and even [Jenkins](https://jenkins-x.io/) have a tight integration into Kubernetes as their platform for deploying applications through the pipeline.
 
@@ -55,6 +57,8 @@ In the “Credentials” section of the console, choose “Create Credentials”
 Once everything is setup, let's create the Kubernetes cluster. As an example of doing that, I created a repository which contains the infrastructure code for this blog post: [cuba-on-kubernetes-infrastructure](https://github.com/mariodavid/cuba-on-kubernetes-infrastructure).
 
 It uses an existing Terraform module called [kubernetes-engine](https://registry.terraform.io/modules/google-terraform-modules/kubernetes-engine/google/1.15.0) which will create a Kubernetes cluster for GKE on our behalf. It will more or less take away another set of heavy lifting operations from us.
+
+<img src="{{ site.url }}/images/cuba-on-kubernetes/2.png" style="">
 
 Terraform modules are a way to encapsulate certain infrastructure resource definitions through an abstraction mechanism with its own API. It allows you to define modules for reoccurring patterns of infrastructure that should be used. The [Terraform module registry](https://registry.terraform.io/) then is an easy way to share common terraform modules just like the Docker registry for container images.
 
@@ -151,9 +155,13 @@ Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
 
 Note that I removed some of the output from Terraform. Mainly you can look at the different resources that will be created and confirm this by typing in "yes".
 
+
+<img src="{{ site.url }}/images/cuba-on-kubernetes/3.png" style="">
+
+
 #### Look at the created cluster
 
-After the successful creation of the GKE cluster, you can take a look at the Google cloud console UI in order to see your cluster. 
+After the successful creation of the GKE cluster, you can take a look at the Google cloud console UI in order to see your cluster.
 
 <figure class="center">
 	<a href="{{ site.url }}/images/cuba-on-kubernetes/google-cloud-console-gke-clusters.png"><img src="{{ site.url }}/images/cuba-on-kubernetes/google-cloud-console-gke-clusters.png" style=""></a>
@@ -234,7 +242,7 @@ The downloaded private key needs to be stored securely. It is used for later ref
 
 Before that, we also need a user for the SQL database. It can e.g. be created via the <code>gloud</code> command line tool:
 
-{% highlight bash %} 
+{% highlight bash %}
 $ gcloud sql users create proxyuser host --instance=cubarnetes-postgres --password=4d86PPg$P-Cu%8hR                                                  
 WARNING: Positional argument deprecated_host is deprecated. Use --host instead.
 Creating Cloud SQL user...done.                                                                                                                           
@@ -244,7 +252,7 @@ Created user [proxyuser].
 
 For the next steps we need the "connectionName" of the SQL instance, so let's grep this via <code>gloud</code>:
 
-{% highlight bash %} 
+{% highlight bash %}
 $ gcloud sql instances describe cubarnetes-postgres | grep connectionName                                                                            
 connectionName: cuba-on-kubernetes:europe-west1:cubarnetes-postgres
 {% endhighlight %}
@@ -253,7 +261,7 @@ connectionName: cuba-on-kubernetes:europe-west1:cubarnetes-postgres
 
 The above downloaded private key is now used for the next step: to add this information securely to the Kubernetes cluster as a secret (where <code>cuba-on-kubernetes-pk-1c5174bb7e33.json</code> is the name of the downloaded PK file):
 
-{% highlight bash %} 
+{% highlight bash %}
 $ kubectl create secret generic cloudsql-instance-credentials \                                                                                      
     --from-file=credentials.json=cuba-on-kubernetes-pk-1c5174bb7e33.json
 secret/cloudsql-instance-credentials created
@@ -261,14 +269,14 @@ secret/cloudsql-instance-credentials created
 
 Also we store the username and password as a Kubernetes secret:
 
-{% highlight bash %} 
+{% highlight bash %}
 $ kubectl create secret generic cloudsql-db-credentials \
      --from-literal=username=proxyuser --from-literal=password=4d86PPg$P-Cu%8hR
 {% endhighlight %}
 
 Now GKE knows about the secrets for the Google Cloud SQL instance and everything is setup correctly so that we can connect it with the Google Cloud SQL instance. We can verify that the secrets are stored in the Kubernetes cluster via:
 
-{% highlight bash %} 
+{% highlight bash %}
 $ kubectl get secrets                                                                                                                                
 NAME                            TYPE                                  DATA      AGE
 cloudsql-db-credentials         Opaque                                2         7s
@@ -285,3 +293,6 @@ In this first part of the CUBArnetes series, we mainly talked about the infrastr
 Still, there is some work to do because even this infrastructure has to be defined and at least configured at a high level. Terraform does a great job on this angle. With Terraform we describe infrastructure in a declarative way. It will deal with all the necessary API calls to the cloud providers and the module mechanism gives us a PaaS like abstraction for creating infrastructure dependencies.
 
 Now that the infrastructure is ready to be used and all the dependencies are in place, the next part deals with deploying the application onto the running cluster.
+
+
+<img src="{{ site.url }}/images/cuba-on-kubernetes/4.png" style="">

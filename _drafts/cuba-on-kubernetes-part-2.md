@@ -1,11 +1,11 @@
 ---
-layout: post
+layout: cubarnetes
 title: CUBA on Kubernetes - Part 2
 description: "In this blog post, we will deploy CUBA on Kubernetes. This second part deals with the actual deployment via Kubernetes after the infrastructure has been created in part one."
 modified: 2018-08-03
 tags: [cuba, kubernetes, deployment]
 image:
-  feature: cuba-security-subsystem-distilled/feature-2.jpg
+  feature: cuba-on-kubernetes/feature-2.png
 ---
 
 Kubernetes has become the de-facto standard when it comes to doing container scheduling. Since it is so omnipresent these days, let's have a look on how to deploy a CUBA application into a Kubernetes cluster. In the second part, we will continue with deploying the application to the existing Kubernetes infrastructure.
@@ -234,9 +234,9 @@ As we do not want to hard-code the credentials in our deployment.yml file, the f
 
 #### Side car container for connecting to the DB
 
-One thing to mention is the fact, that there is not only one container defined (the CUBA application) within the pod, but actually two. The second container with the name <code>cloudsql-proxy</code> is a side-car container, which acts as a proxy for the DB connection. 
+One thing to mention is the fact, that there is not only one container defined (the CUBA application) within the pod, but actually two. The second container with the name <code>cloudsql-proxy</code> is a side-car container, which acts as a proxy for the DB connection.
 
-Instead of letting the CUBA application directly talk to DB, it will use the side-car container to actually connect to it. This approach is pretty common, as it allows to separate different concerns. On the one hand, the application can assume it can always connect to the DB by "localhost:5432". The indirection of the side-car will forward the requests & takes care of finding the correct cloud SQL DB. Also, it is an easy point for logging and so on. 
+Instead of letting the CUBA application directly talk to DB, it will use the side-car container to actually connect to it. This approach is pretty common, as it allows to separate different concerns. On the one hand, the application can assume it can always connect to the DB by "localhost:5432". The indirection of the side-car will forward the requests & takes care of finding the correct cloud SQL DB. Also, it is an easy point for logging and so on.
 
 From a security point of view, it is also an improvement. Because if you imagine your web application container is compromised due to an attack through the exposed HTTP API / UI, the attacker is not able to get access to the credentials that are used for DB access, because they are not stored in the container at all.
 
@@ -261,7 +261,7 @@ In order to trigger the deployment of our deployment description, we need to cal
 {% highlight bash %} $ kubectl apply -f deployment.yml
 {% endhighlight %}
 
-With that, the Kubernetes API server - a central part of the Kubernetes cluster takes the deployment description. The description will go through a so called "reconciliation-loop". 
+With that, the Kubernetes API server - a central part of the Kubernetes cluster takes the deployment description. The description will go through a so called "reconciliation-loop".
 
 The Kubernetes system verifies the state of the running cluster and pods. It will then map the desired state (described through the deployment descriptor) and identify the delta. It will also take a look throughout the lifecycle of the cluster if the desired state is still in place. If not, e.g. because a worker node failed, a pod was destroyed etc. it will act accordingly to enforce the desired state by starting another pod.
 
