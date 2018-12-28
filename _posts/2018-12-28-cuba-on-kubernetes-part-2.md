@@ -2,7 +2,7 @@
 layout: cubarnetes
 title: CUBA on Kubernetes - Part 2
 description: "In this blog post, we will deploy CUBA on Kubernetes. This second part deals with the actual deployment via Kubernetes after the infrastructure has been created in part one."
-modified: 2018-08-03
+modified: 2018-12-28
 tags: [cuba, kubernetes, deployment]
 image:
   feature: cuba-on-kubernetes/feature-2.png
