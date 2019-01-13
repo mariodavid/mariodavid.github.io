@@ -278,32 +278,106 @@ The whole discussion deals with the questions of what _software architecture_ is
 
 In the concrete this means, that there should be as little dependencies between the parts as possible. Furthermore it means that there should not be arrows from every service / module / class to every other service / module / class in a corresponding dependency diagram.
 
-## An alternative solution to squashing
+## Separate instead of squash
 
-Let's try to organise the class and its dependencies in a way, that keeps the _real_ business logic different from _solution space_ domain logic. When we look at the dependency to the <code>DataManager</code> class, why is it there? It is there, because the <code>VisitPriceCalculator</code> also tries to load the data from a datasource. We can turn that around, because as the name of the class already states: it should calculate the price, not load the data and calculate.
+Let's try to organize the class and its dependencies in a way, that keeps the _real_ business logic different from _solution space_ domain logic. When we look at the dependency to the <code>DataManager</code> class, why is it there? It is there, because the <code>VisitPriceCalculator</code> also tries to load the data from a datasource. We can turn that around, because as the name of the class already states: it should calculate the price, not load the data and calculate.
 
-This is a violation of the single responsibility. So let's get rid of it. Instead we will pass in the data into the method:
+This in fact is a violation of the single responsibility. So let's get rid of it. Instead we will pass in the data into the method:
 
 
 The resulting code looks like this:
 
 {% highlight java %}
-public VisitPrice calculateVisitPrice(PriceUnit priceUnit, PetType petType, LocalDate visitStart, LocalDate visitEnd) {
+package com.rotab.cuba.my_app.real_business_logic;
 
-    VisitDuration visitDuration = calculateDuration(visitStart, visitEnd);
+class VisitPriceCalculator {
+  public VisitPrice calculateVisitPrice(PriceUnit priceUnit, PetType petType, LocalDate visitStart, LocalDate visitEnd) {
 
-    VisitPrice visitPrice;
+      VisitDuration visitDuration = calculateDuration(visitStart, visitEnd);
 
-    if (visitDuration.isOneDay()) {
-        visitPrice = priceUnit * 1 + FIXED_VISIT_PRICE
-    }
-    else if (visitDuration.isLessThenAWeek()) {
-        visitPrice = priceUnit * visitDuration.getDurationDays() + FIXED_VISIT_PRICE / 2
-    }
-    else if (visitDuration.isMoreThenAWeek() {
-        visitPrice = priceUnit * visitDuration.getDurationDays()
-    }
+      VisitPrice visitPrice;
 
-    return visitPrice;
+      if (visitDuration.isOneDay()) {
+          visitPrice = priceUnit * 1 + FIXED_VISIT_PRICE
+      }
+      else if (visitDuration.isLessThenAWeek()) {
+          visitPrice = priceUnit * visitDuration.getDurationDays() + FIXED_VISIT_PRICE / 2
+      }
+      else if (visitDuration.isMoreThenAWeek() {
+          visitPrice = priceUnit * visitDuration.getDurationDays()
+      }
+
+      return visitPrice;
+  }
 }
 {% endhighlight %}
+
+This also requires to have a code snippet that will still interact with the database and load the data. We will extract that method into its own class that is onlys responsibility is to load the data. This class is part of the solution space business logic.
+
+
+{% highlight java %}
+package com.rotab.cuba.my_app.solution_domain_business_logic;
+
+import org.springframework.stereotype.Component;
+import javax.inject.Inject;
+import com.haulmont.cuba.core.global.DataManager;
+
+@Component("myApp_visitPriceUnitFetcher")
+class VisitPriceUnitFetcher {
+
+  @Inject DataManager dataManager
+
+  public PriceUnit determineUnitPrice(PetType petType) {
+    dataManager.load(PriceUnit.class)
+            .query("select e from petclinic$PriceUnit e where e.type.id = :petType")
+            .parameter("petType", petType)
+            .one();
+  }
+}
+{% endhighlight %}
+
+As you see: we now have separated the solution domain business logic from the real business logic. The last step is that we need to have a class that combines the two worlds. This class in fact will need to have one foot in the solution domain, because it needs to interact with the <code>VisitPriceUnitFetcher</code> which is a spring bean and so on. It could look like this:
+
+{% highlight java %}
+package com.rotab.cuba.my_app.integration_of_the_two_worlds;
+
+import org.springframework.stereotype.Component;
+import javax.inject.Inject;
+import com.haulmont.cuba.core.global.DataManager;
+
+@Component("myApp_visitPriceOrchestrator")
+class VisitPriceOrchestrator {
+
+  @Inject VisitPriceUnitFetcher visitPriceUnitFetcher
+
+  public VisitPrice calculateVisitPrice(PetType petType, LocalDate visitStart, LocalDate visitEnd) {
+      PriceUnit priceUnit = visitPriceUnitFetcher.determineUnitPrice(petType);
+      VisitPriceCalculator priceCalculator = new VisitPriceCalculator();
+
+      return priceCalculator.calculateVisitPrice(priceUnit, petType, visitStart, visitEnd);
+  }
+}
+{% endhighlight %}
+
+With this change we have accomplished the following aspects:
+
+* the _real_ business logic is encapsulated from all dependencies to frameworks
+* the _solution space_ business logic is still the doing its thing, but independent of the business rules
+* the *thin* orchestration layer combines the two worlds
+* the _real_ business logic can be tested in isolation without mocking
+* the _real_ business logic can be tested in isolation without integration testing
+* the _solution space_ business logic can still be tested in an integration style
+
+There are also other possibilities to do the orchestration layer or don't even have one at all and instead directly call the real business logic from the solution domain business logic. There is a whole field of ideas around it that have been there for quite some time. One very sophisticated example of it is "Clean architecture" from Uncle bob.
+
+## What about the domain entities?
+
+If you looked carefully over the example, you will notice that there is a dependency between the two worlds, that actually sits in the _solution space_ business logic and is required from the _real_ business logic to do its job. It is the complete entity layer. Why is this the case?
+
+Well, this actually is a hard trade off. Above I said it is mainly about dependency inversion. There should be no dependency from the _real_ business logic to the _solution space_ business logic. If this dependency is there, what is the whole point of not squashing? Because in order to compile the real business logic, it needs the entity layer, which is baked into the _solution space_ business logic.
+
+This is right. In order to drive that out what we would need to do is to try to carve out the entity layer from the _solution space_ business logic. But when you look at CUBA - this is literally impossible. CUBA heavily relies on the entity layer as everything is built on top of it. The DB tables are generated from it, the UI is created based on it and so on.
+
+Even if this is accomplishable - it would remove the whole point of CUBA all together. To be fair, this is also true for a lot of other "Full stack frameworks".
+
+So what alternatives are there?
