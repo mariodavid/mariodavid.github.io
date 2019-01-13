@@ -8,6 +8,23 @@ hr {
     border-bottom: 1px solid #fff;
 }
 
+
+a.github-link {
+  display: block;
+    font-family: monospace;
+    background-color: white;
+    padding: 10px;
+    padding-left: 50px;
+    background-image: url(https://cdn1.iconfinder.com/data/icons/logotypes/32/github-32.png);
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: 10px;
+    font-size: 1.5em;
+    padding-left: 70px;
+    box-shadow:0 0 0 0, 0 6px 12px rgba(0,0,0,0.1);
+}
+
+
 // Figures and images
 // --------------------------------------------------
 figure {
