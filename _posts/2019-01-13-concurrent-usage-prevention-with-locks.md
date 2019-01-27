@@ -1,7 +1,7 @@
 ---
 layout: futurama
 title: Concurrent Usage prevention with Locks
-description: "In this blog post we will go over an example that deals with preventing concurrent usage or particular resources like entities through the differnent CUBA mechanisms of locking."
+description: "In this blog post we will go over an example that deals with preventing concurrent usage or particular resources like entities through the different CUBA mechanisms of locking."
 modified: 2019-01-13
 tags: [cuba, locking]
 image:
@@ -17,7 +17,7 @@ The complete example can be found at Github:
 
 {% include github-example.html repository="cuba-example-concurrent-usage-prevention" %}
 
-Sometimes certain resources of an application like a particular entity or even more general a particular part of the application should only accessed by one particular user at a time in order to prevent the following situation:
+Sometimes certain resources of an application like a particular entity or even more general a particular part of the application should only be accessed by one particular user at a time in order to prevent the following situation:
 
 ## Scenario: Lost update of Customer data for Zapp Brannigan
 
@@ -25,7 +25,7 @@ Sometimes certain resources of an application like a particular entity or even m
 {% include image-center.html image="zapp-love.png" class="futurama-style" width="500px" %}
 
 1. <code class="clock">10:30</code>: Customer <code>Zapp Brannigan</code> sends an email in order to inform about his marriage with <code>Kif Kroker</code>. Therefore he wants to update his last name to <code>Kroker-Brannigan</code>
-2. <code class="clock">10:35</code>: User <code class="leia">leia</code> reads the email and opens the Customer screen from <code>Zapp Brannigan</code>. Directly after that her boss - <code>Jabba the Hutt</code> calls her in for a urgent task. She leaves the customer details screen open.
+2. <code class="clock">10:35</code>: User <code class="leia">leia</code> reads the email and opens the Customer screen from <code>Zapp Brannigan</code>. Directly after that her boss - <code>Jabba the Hutt</code> calls her in for an urgent task. She leaves the customer details screen open.
 3. <code class="clock">10:40</code>: <code>Zapp</code> calls the hotline, because the marriage did not last long and is already gone. But as he found this lovely girl <code>Amy Wong</code> - he now wants to update his name to <code>Wong</code> because they are in love. User <code class="luke">luke</code> accepts the request as he does not know anything about the previous email, opens the Customer screen and changes the name to <code>Zapp Wong</code>.
 4. <code class="clock">10:50</code>: User <code class="leia">leia</code> is back on her desk and wants to finish her task of updating <code>Zapp Brannigan</code> to <code>Bareny Kroker-Brannigan</code>. As she has the customer screen already open, she just changes the name and saves it.
 
@@ -35,7 +35,7 @@ Let's look at the data that has been stored in the system:
 2. <code class="clock">10:40</code> - Customer <code>Zapp Wong</code>
 3. <code class="clock">10:50</code> - Customer <code>Zapp Kroker-Brannigan</code>
 
-As we have seen from the interactions with <code>Zapp</code> what is finally stored in the system is wrong and does not reflect the real world as the final name should be <code>Zapp Wong</code> instead of <code>Zapp Kroker-Brannigan</code>.
+As we have seen from the interactions with <code>Zapp</code>, what is finally stored in the system is wrong and does not reflect the real world as the final name should be <code>Zapp Wong</code> instead of <code>Zapp Kroker-Brannigan</code>.
 
 In order to solve this scenario, there are some established techniques. CUBA offers the following options:
 
@@ -58,7 +58,7 @@ Optimistic locking is enabled by default for all entities in CUBA and is the sta
 
 In this example it is implemented for the entity: <code>Product</code>. <code>Product</code> contains an attribute called <code>version</code> which is a counter. It is incremented each time a particular entity is created / updated.
 
-When a user opens the product details screen in order to update a particular product, the current value of the <code>version</code> attribute is also received in the screen. In case of the above example with the Customer entity an optimistic locking would look like this:
+When a user opens the product details screen in order to update a particular product, the current value of the <code>version</code> attribute is also received in the screen. In case of the above example with the Customer entity, an optimistic locking would look like this:
 
 1. before <code class="clock">10:30</code>: Customer <code>Zapp Brannigan</code> - version <code>1</code>
 2. at <code class="clock">10:35</code>: <code class="leia">leia</code> reads the customer with version <code>1</code>
@@ -83,9 +83,9 @@ that concurrent updates would be possible by the fact that CUBA shows the normal
 
 Only if the second user actually does a concurrent change, the system will prevent this. For the user though, it oftentimes feels like Bender in this gif. 
 
-The problem is that once the system returns this error, the user is not expecting such a behavior and now is in the situation to figure out which person has already did another change without having more detailed information about it.
+The problem is that once the system returns this error, the user is not expecting such behavior and now is in the situation to figure out which person has already done another change without having more detailed information about it.
 
-This is why optimistic locking somestimes can be a undesired behavior.
+This is why optimistic locking sometimes can be an undesired behavior.
 
 More information on optimistic locking can be found here:
 
@@ -100,7 +100,7 @@ Sometimes the optimistic locking approach is not appropriate because the system 
 
 The user is informed upfront that another user is currently doing the wished operation (like changing the customer). This enforces the user to deal with a potential problem upfront.
 
-In the above <code>Zapp Brannigan</code> scenario, <code class="luke">luke</code> would have been informed when opening the Customer editor screen with the information, that <code class="leia">leia</code> is already trying to change the customer and would prevent <code class="luke">luke</code> from changing the customer all together.
+In the above <code>Zapp Brannigan</code> scenario, <code class="luke">luke</code> would have been informed, when opening the Customer editor screen, with the information that <code class="leia">leia</code> is already trying to change the customer, and would prevent <code class="luke">luke</code> from changing the customer all together.
 
 
 This approach is a little more "secure" in the sense that it notifies the user upfront. But also leads to a lot of "false negatives". 
@@ -108,14 +108,14 @@ This approach is a little more "secure" in the sense that it notifies the user u
 
 {% include image-right.html width="200px" image="fry.webp" class="futurama-style" %}
 
-This oftentimes to the situation where you have a lot of frustrated users that actually just wanted to look at the data and then decide if something needs to be changes. But for all cases, the system informs them about the read-only mode. So it is wise to use pessimistic locking where necessary in order to not let your users feel like Fry here.
+This oftentimes leads to the situation where you have a lot of frustrated users that actually just wanted to look at the data and then decide if something needs to be changed. But for all cases, the system informs them about the read-only mode. So it is wise to use pessimistic locking where necessary in order to not let your users feel like Fry here.
 
 
 ### Automatic pessimistic locking for entity editors
 
 CUBA offers automatic pessimistic locking for entity editors. It sets the editor in a read-only mode so that no changes to the entity are possible once one user opened the editor.
 
-In order to activate this behavior a runtime configuration needs to be in place on a per-entity basis. CUBA offers a management UI under <code>Administration > Locks > Setup</code>:
+In order to activate this behavior, a runtime configuration needs to be in place on a per-entity basis. CUBA offers a management UI under <code>Administration > Locks > Setup</code>:
 
 
 {% include hover-image.html image="current-locks.png" description="Current locks" %}
@@ -137,7 +137,7 @@ Normally locks are released once the operation is done. For the automatic pessim
 
 Therefore the lock configuration has to have a timeout configured. After that the system will automatically resolve the locks in order to prevent locking of particular data forever.
 
-CUBA additionally allows the administrator of the system to look at the current locks and also release them manually in case such a scenario occurs. This is useful when the timeout of the lock is not yet over, but the user wants to get access to the data.
+CUBA additionally allows the administrator of the system to look at the current locks and also release them manually in case such scenario occurs. This is useful when the timeout of the lock is not yet over, but the user wants to get access to the data.
 
 {% include hover-image.html image="current-locks.png" description="Currently active locks" %}
 
@@ -149,7 +149,7 @@ It is also possible to use custom pessimistic locks programmatically. This is so
 
 {% include hover-image.html image="current-lock-configurations.png" description="Lock configuration" %}
 
-For programmatically accessing the pessimistic locking functionality of CUBA, there are the two interaction points: <code>LockManagerAPI</code> for the backend as well as <code>LockService</code> for the web layer (e.g. UI controllers). In the <a href="https://github.com/mariodavid/cuba-example-concurrent-usage-prevention/blob/master/modules/web/src/com/rtcab/cecup/web/customer/CustomerSupportTicket.java">CustomerSupportTicket</a> screen, the <code>LockService</code> is used in order to prevent creating support tickets for the same customer. It is done via the custom pessimistic lock with the name <code>customer-support-ticket</code>: <code>lockService.lock(CUSTOMER_SUPPORT_LOCK_NAME, customerId(customer))</code>.
+For programmatically accessing the pessimistic locking functionality of CUBA, there are two interaction points: <code>LockManagerAPI</code> for the backend as well as <code>LockService</code> for the web layer (e.g. UI controllers). In the <a href="https://github.com/mariodavid/cuba-example-concurrent-usage-prevention/blob/master/modules/web/src/com/rtcab/cecup/web/customer/CustomerSupportTicket.java">CustomerSupportTicket</a> screen, the <code>LockService</code> is used in order to prevent creating support tickets for the same customer. It is done via the custom pessimistic lock with the name <code>customer-support-ticket</code>: <code>lockService.lock(CUSTOMER_SUPPORT_LOCK_NAME, customerId(customer))</code>.
 
 {%highlight java%}
 public class CustomerSupportTicket extends AbstractWindow {
@@ -210,23 +210,23 @@ public class CustomerSupportTicket extends AbstractWindow {
 
 
 
-The resulting UI in case of a simultaneous access looks like this:
+The resulting UI in case of simultaneous access looks like this:
 
 {% include hover-image.html image="custom-lock.png" description="Custom lock error message" %}
 
 
 ## Summary
 
-This example should show the different options that are available when it comes to preventing concurrent usage of resources. CUBA supports both optimistic and pessimistic locking.
+This example should show the different options that are available when it comes to preventing the concurrent use of resources. CUBA supports both optimistic and pessimistic locking.
 
-Optimistic locking is the default behavior and will notify the user once an actual attempt to write concurrent changes by multiple users occurs.
+Optimistic locking is the default behavior and will notify the user once an actual attempt to write the concurrent changes by multiple users occurs.
 
-For pessimistic locking, a configuration has to be set. After that the default CUBA editor screen will go into a read-only mode for multiple a particular entity instance in case multiple users are opening the same entity editor concurrently.
+For pessimistic locking, a configuration has to be set. After that the default CUBA editor screen will go into a read-only mode in case multiple users are opening the same entity editor concurrently.
 
-CUBA also offers API to programmatically use pessimistic locking so that is can be used in non-entity scenarios.
+CUBA also offers API to programmatically use pessimistic locking so that it can be used in non-entity scenarios.
 
 
-Which one of both solutions to use highly depends on the use case, how the data is structured, how the UI looks liks etc. With that information you hopefully have enough information about the pros and cons of both approaches.
+Which one of these two solutions to use highly depends on the use case, how the data is structured, how the UI looks like etc. With that article, you hopefully have enough information about the pros and cons of both approaches.
 
 {% include image-center.html width="400px" image="summary.webp" class="futurama-style" %}
 
