@@ -33,7 +33,7 @@ First one is that CUBA studio is now IntelliJ IDEA. Previously there were always
 
 <figure class="center">
 	<a href="{{ site.url }}/images/cuba-7-release-party/studio-idea.png"><img src="{{ site.url }}/images/cuba-7-release-party/studio-idea.png" alt=""></a>
-	<figcaption><a href="{{ site.url }}/images/cuba-7-release-party/studio-idea.png" title="Studio support for Event subscriptions">Studio support for Event subscriptions</a></figcaption>
+	<figcaption><a href="{{ site.url }}/images/cuba-7-release-party/studio-idea.png" title="CUBA Studio based on the IntelliJ IDEA platform">CUBA Studio based on the IntelliJ IDEA platform</a></figcaption>
 </figure>
 
 
@@ -70,15 +70,20 @@ In CUBA 7 this inheritance was mainly exchanged with composition. For notificati
 Where showing a notification on a Screen pre to CUBA 7 looked like this:
 
 {% highlight java %}
-public class CustomerBrowse extends AbstractLookup {
+public class PartyBrowse extends AbstractLookup {
 
-    @Inject
-    protected GroupTable<Customer> customersTable;
+  @Inject
+  protected GroupTable<Party> partiesTable;
 
-    public void greetCustomer() {
-        Customer customerToGreet = customersTable.getSingleSelected();
-        showNotification("Howdy, " + customerToGreet.getInstanceName(), NotificationType.TRAY);
-    }
+  public void startParty() {
+
+    Party partyToStart = partiesTable.getSingleSelected();
+    String themeName = messages.getMessage(partyToStart.getTheme());
+    String startPartyMessage = formatMessage("startPartyMessage", partyToStart.getTitle(),
+        themeName);
+
+    showNotification(startPartyMessage, NotificationType.WARNING);
+  }
 }
 {% endhighlight %}
 
@@ -86,11 +91,11 @@ The shift towards delegation changes the code in the following way:
 
 {% highlight java %}
 
-@UiController("cuba6to7changes_Customer.browse")
-@UiDescriptor("customer-browse.xml")
-@LookupComponent("customersTable")
+@UiController("c7rp_Party.browse")
+@UiDescriptor("party-browse.xml")
+@LookupComponent("partiesTable")
 @LoadDataBeforeShow
-public class CustomerBrowse extends StandardLookup<Customer> {
+public class PartyBrowse extends StandardLookup<Party> {
 
     @Inject
     private Notifications notifications;
@@ -99,15 +104,17 @@ public class CustomerBrowse extends StandardLookup<Customer> {
     private Messages messages;
 
     @Inject
-    protected GroupTable<Customer> customersTable;
+    protected GroupTable<Party> partiesTable;
 
-    ...
 
-    public void greetCustomer() {
-        Customer customerToGreet = customersTable.getSingleSelected();
+    public void startParty() {
+        Party partyToStart = partiesTable.getSingleSelected();
+        String themeName = messages.getMessage(partyToStart.getTheme());
+    
+        String startPartyMessage = messages.formatMessage(this.getClass(), "startPartyMessage", partyToStart.getTitle(),themeName);
 
-        notifications.create(Notifications.NotificationType.TRAY)
-                .withCaption(messages.formatMessage(this.getClass(), "greetMessage", ))
+        notifications.create(Notifications.NotificationType.WARNING)
+                .withCaption(startPartyMessage)
                 .show();
     }
 
@@ -116,27 +123,38 @@ public class CustomerBrowse extends StandardLookup<Customer> {
 
 #### Builders everywhere
 
-Furthermore within those APIs there is a dramatic shift towards the builder pattern. You'll see those all over the place. I personally really like this Fluent API style, because it is easy to read and to compose. It removes the interlectual burden of knowing which parameter index represents which parameter.
+Furthermore within those APIs there is a dramatic shift towards the builder pattern. You'll see those all over the place. I personally really like this Fluent API style, because it is easy to read and to compose. It furthermore removes the interlectual burden of knowing which parameter index represents which parameter.
 
 An example of this new API pattern can be found in the <code>ScreenBuilders</code> API:
 
 
 {% highlight java %}
-SomeCustomerEditor screen = screenBuilders.editor(Customer.class, this)
-    .withScreen(SomeCustomerEditor.class)
-    .withListComponent(customersTable)
-    .editEntity(customersTable.getSingleSelected())
+SomePartyEditor screen = screenBuilders.editor(Party.class, this)
+    .withScreen(SomePartyEditor.class)
+    .withListComponent(partiesTable)
+    .editEntity(partiesTable.getSingleSelected())
     .build();
 {% endhighlight %}
 
 
 #### Event based lifecycle interactions
 
-CUBA 7 switches from programmatically registering event listener classes and screen lifecycle hook methods towards a more event based approach.
+CUBA 7 switches from programmatically registering event listener classes and screen lifecycle hook methods towards a more annotation based approach. Methods can be registered to certain events - and the UI components as well as the screens have a lot of those. The two main Annotations are <code>@Subscribe</code> and <code>@Install</code>
 
-Methods can be registered to certain events - and the UI components as well as the screens have a lot of those.
+One example would be: Instead of having a hook method <code>init(Map<String, Object> params);</code> you register a method via subscribe <code>@Subscribe</code> like this:
 
-Instead of having a hook method <code>init(Map<String, Object> params);</code> all lifecycle interactions are registered with <code>@Subscribe</code>.
+
+{% highlight java %}
+public class PartyEdit extends StandardEditor<Party> {
+
+    @Subscribe
+    protected void onInitEntity(InitEntityEvent<Party> event) {
+        event.getEntity().setTheme(Theme.STAR_WARS);
+    }
+
+}
+{% endhighlight %}
+   
 
 CUBA Studio offeres support in order to create those event subscriptions that are available within a particular screen.
 
@@ -147,18 +165,49 @@ CUBA Studio offeres support in order to create those event subscriptions that ar
 
 #### Controller Mixins
 
+Another very interesting feature is the possibility to use Interfaces as Mixins for controller functionality. With the Release of Java 8 and the Ability for Interfaces to have default method implementations, the way was open to allow the Mixin pattern in the Java world as well. Mixins are a concepts available in multiple languages like Ruby. 
+
+It is basically a mechanism which allows to inject functionality from different places into a class, without having to inherit from another class. Therefore it basically allows the same functionality what multiple inheritance provides but without the downsides.
+
+CUBA 7 adopted this pattern to use it in Controllers. The usage of this mechanism would look like this:
+
+{% highlight java %}
+public class PartyEdit extends StandardEditor<Party> implements Commentable, Attachable {
+
+    @Subscribe
+    protected void onInitEntity(InitEntityEvent<Party> event) {
+        
+        // call your code from Commentable or Attachable Interfaces here
+    }
+
+}
+{% endhighlight %}
+
+<code>Commentable</code> as well as <code>Attachable</code> are both interfaces that provide certain generic logic, which can be used within the Party editor. Also it might be possible, that those interfaces automatically extend the UI screen with certain behavior like having a UI for managing comments to this Party.
+
+Previously it was possible to use the [declarative-controllers](https://github.com/balvi/cuba-component-declarative-controllers) application component for this kind of behavior. There the implementation was done via Annotations, which has certain limitations. With CUBA 7 it is not possible to get a very similar kind of functionality from the Framework directly.
+
+I really like that interface based approach, because it is more type save and adds various compile time checks to the table.
+
 #### API switch towards Java's functional style
 
-
+Even before CUBA 7 APIs alternatives were introduces which more and more go into the style of leveraging Java 8 functional style. There are a lot of usages of the <code>java.util.function</code> package within the CUBA APIs. This seems to be a logical way. CUBA 7 continues this way and deprecates certain alternatives that previously existed. 
 
 
 ### Data containers replace Datasources
 
 ### Catch up with Java
 
-#### Java 8 java.time package
+In general it seems that the CUBA team used the major release in order to catch up with the latest Java changes. For some changes (like the <code>java.time</code> support) I have waited for ages, for others I'm really suprised.
 
 #### Java 11 support
+
+The most important one is that CUBA catches up with new Java releases. This has probably become an additional burden for all Frameworks since the Java release cyclus changed from "up to 10 years" (;)) to a fixed six month period. 
+
+CUBA 7 now supports every Java version up until 11. It will be interesting how they will keep up with the new pace. I hope (and assume) their plan is to also support new Java versions in minor releases, like having Java 12 support in CUBA 7.1. But this obviously heavily depends on how the interlying frameworks / libraries (Gradle, Eclipselink etc.) have support for latest Java versions.
+
+#### Java 8 java.time package
+
 
 
 ## How the app component ecosystem evoloves
