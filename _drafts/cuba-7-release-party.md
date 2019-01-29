@@ -121,7 +121,7 @@ public class PartyBrowse extends StandardLookup<Party> {
 }
 {% endhighlight %}
 
-#### Builders everywhere
+#### Builders Everywhere
 
 Furthermore within those APIs there is a dramatic shift towards the builder pattern. You'll see those all over the place. I personally really like this Fluent API style, because it is easy to read and to compose. It furthermore removes the interlectual burden of knowing which parameter index represents which parameter.
 
@@ -137,7 +137,7 @@ SomePartyEditor screen = screenBuilders.editor(Party.class, this)
 {% endhighlight %}
 
 
-#### Event based lifecycle interactions
+#### Event Based Lifecycle Interactions
 
 CUBA 7 switches from programmatically registering event listener classes and screen lifecycle hook methods towards a more annotation based approach. Methods can be registered to certain events - and the UI components as well as the screens have a lot of those. The two main Annotations are <code>@Subscribe</code> and <code>@Install</code>
 
@@ -189,26 +189,79 @@ Previously it was possible to use the [declarative-controllers](https://github.c
 
 I really like that interface based approach, because it is more type save and adds various compile time checks to the table.
 
-#### API switch towards Java's functional style
+#### API switch Towards Java's Functional Style
 
 Even before CUBA 7 APIs alternatives were introduces which more and more go into the style of leveraging Java 8 functional style. There are a lot of usages of the <code>java.util.function</code> package within the CUBA APIs. This seems to be a logical way. CUBA 7 continues this way and deprecates certain alternatives that previously existed. 
 
 
-### Data containers replace Datasources
+### Data Containers replace Datasources
 
-### Catch up with Java
+Pre CUBA 7 there was this concept of a Datasource, which is a connection layer between the the UI components and the data fetching / storage on the middleware. As from what I have heard is that the implementation had some implications on the borders of what is possible to achieve with datasources. Examples of those limitations were:
+
+* in a two nested composition case it was required to create a datasource definition in XML for the second level in the root element
+* it was not possible to have more then two nested levels of composition
+* it was not possible to filter in nested datasources or use the Filter component
+
+There might be a lot of additional limitations.
+
+CUBA 7 reimplemtend the concept of the datasources and called them Data containers. Fundamentally they solve the same problem, but as what I have seen, just in a better way. The above mentioned example limitations are solved with the new implementation. Actually what previously was all under the umbrella of "datasource" is not split into two concepts: "data containers" and "data loaders".
+
+
+### Catch Up with Java
 
 In general it seems that the CUBA team used the major release in order to catch up with the latest Java changes. For some changes (like the <code>java.time</code> support) I have waited for ages, for others I'm really suprised.
 
-#### Java 11 support
+#### Java 11 Support
 
 The most important one is that CUBA catches up with new Java releases. This has probably become an additional burden for all Frameworks since the Java release cyclus changed from "up to 10 years" (;)) to a fixed six month period. 
 
-CUBA 7 now supports every Java version up until 11. It will be interesting how they will keep up with the new pace. I hope (and assume) their plan is to also support new Java versions in minor releases, like having Java 12 support in CUBA 7.1. But this obviously heavily depends on how the interlying frameworks / libraries (Gradle, Eclipselink etc.) have support for latest Java versions.
+CUBA 7 now supports every Java version up until 11. It will be interesting how they will keep up with the new pace of Java. I hope (and assume) their plan is to also support new Java versions in minor releases, like having Java 12 support in CUBA 7.1. But this obviously heavily depends on how the underlying frameworks / libraries (Gradle, Eclipselink etc.) have support for latest Java versions.
 
-#### Java 8 java.time package
+#### Java 8 java.time Package
 
+One thing I really appreciate in particular is the support for the non-crazy Date types that were introduced in Java 8, which are located in the <code>java.time</code> package. Dealing with dates (and times and timezones) in Java has been a mess for quite some time - for historical reasons. In Java 8 the situation improved dramatically, mainly because they mirrored what turned out to work great in the [Joda time library](https://www.joda.org/joda-time/).
 
+CUBA was pretty late in the game with support for those datatypes. But now with CUBA 7 and the corresponding Studio release, there is now full support for:
 
-## How the app component ecosystem evoloves
+* <code>LocalDate</code>
+* <code>LocalTime</code>
+* <code>LocalDateTime</code>
+* <code>OffsetTime</code>
+* <code>OffsetDateTime</code>
+
+## How the Ecosystem Evoloves
+
 <img src="/images/cuba-7-release-party/star.png" />
+
+With a major version change of a framework there always comes up the question of how fast the version is adopted. CUBA is no difference here. Oftentimes with major version updates heavy changes in the APIs go along with it. 
+
+The reason is that the framework authors with this have the chance of putting everything in that new release conceptually and API wise that has previously been a flaw. Depending on how infrequent those points in time occur for the framework authors, the more likely it is that the changes will be bigger.
+
+### Application Component Adoption
+
+When it comes to adpoting the new version, it furthermore boils down to not only the framework, but the complete ecosystem. In particular this means, the public open source application components have to support the new CUBA version as well. 
+
+This normally means that the practical adoption of new framework versions for applications is dependend on the majority of the ecosystem.
+
+For my existing open source application components, the way I will probably go is, that I will publish versions of those, that will only have a very basic compatability with CUBA 7. This has the benefit, that the users at least are not blocked by the app component in order to update to CUBA 7. Support for the new concepts of CUAB 7 in the application components will be published in another version.
+
+If you want to help me out here with that I would really like to see that. You can create issues or even PRs in the [Githhub repositories](https://github.com/mariodavid).
+
+### Required Changes for Updating
+
+The CUBA team did a pretty good job in not introducing heavy breaking changes. It is more that there are more options on the table. They used the <code>@Deprecation</code> hint to indicate that certain concepts / APIs are not future-proof anymore. 
+
+However, most of the stuff keeps woking as it is. E.g. you can still use the <code>AbstractEditor</code> & <code>AbstractLookup</code> without interacting with the new Screen APIs at all. The same is true for the datasources.
+
+
+## Let's Celebrate the New Release
+
+<img src="/images/cuba-7-release-party/star.png" />
+
+Overall, I really like the new release. It is packed with evolutionary ideas that bring CUBA into the Java world of 2019. 
+
+The CUBA team did a great job on not forcing the complete ecosystem to rewrite their apps from scratch. This is always one of the most important points, and a lot of other frameworks (teams) fail heavily in that regard.
+
+The release has took quite some time. CUBA 6.10 was released somewhere in the summer of 2018. But development of CUBA 7 was already ongoing back then.
+
+I would like to congratulate on the Haulmont team for the Release of CUBA 7. It most likely was a huge undertaking to get that one shipped. I think you can really be proud of what you did.
