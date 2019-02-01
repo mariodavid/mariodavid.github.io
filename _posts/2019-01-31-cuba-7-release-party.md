@@ -80,7 +80,7 @@ Although the tooling side is very important - what the main area of interest for
 
 ### URLs become a First Class Citizen
 
-URLs and CUBA up until now always seemed to always be a love-hate relationship. CUAB actually offered support for URL handling at least for deep links. But URL changes have never been a thing. With CUBA 7 and the underlying Vaadin 8, this now became possible.
+URLs and CUBA up until now always seemed to always be a love-hate relationship. CUBA actually offered support for URL handling at least for deep links. But URL changes have never been a thing. With CUBA 7 and the underlying Vaadin 8, this now became possible.
 
 CUBA 7 offers a programmatic API to reflect changes in the UI state also in the URL in the browser address bar.
 
@@ -298,7 +298,7 @@ When it comes to adpoting the new version, it boils down to not only the framewo
 
 This normally means that the practical adoption of new framework versions for applications is dependend on how fast the the ecosystem can keep up.
 
-Speakinf of my existing open source application components: The way I will probably go is, that I will publish versions of them, that will only have a very basic compatability with CUBA 7. This has the benefit, that the users at least are not blocked by the app component in order to update to CUBA 7. Support for the new concepts of CUAB 7 in the application components will be published in another version.
+Speakinf of my existing open source application components: The way I will probably go is, that I will publish versions of them, that will only have a very basic compatability with CUBA 7. This has the benefit, that the users at least are not blocked by the app component in order to update to CUBA 7. Support for the new concepts of CUBA 7 in the application components will be published in another version.
 
 If you want to help me out here with that I would really like to see that. You can create issues or even PRs in the [Githhub repositories](https://github.com/mariodavid).
 
