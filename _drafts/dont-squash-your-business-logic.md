@@ -5,6 +5,7 @@ description: "In this blog post let's try to understand where business logic in 
 modified: 2017-04-15
 tags: [cuba, business applications]
 image:
+  dir: dont-squash-your-business-logic
   feature: cuba-security-subsystem-distilled/feature-2.jpg
 ---
 
@@ -114,6 +115,8 @@ What oftentimes happens is that we try to embrace those options in descending or
 1. use CUBAs artifact patterns where ever we can
 2. if not possible try to fiddle around with Spring
 3. if everything does not work, come back to Java mechanisms
+
+We normally tend to prefer the solution that is closest to the framework we use. The reason is, that when staying close to the framework (like CUBA) we can leverage the most of it.
 
 For _real business logic_ I would propose to turn this way upside down. Start with the Java mechanisms wherever possible, use spring where needed and switch to CUBA artifacts only where it makes sense. Let's get into the why:
 
@@ -270,7 +273,7 @@ The same question applies here: does the _real_ business logic of calculating pr
 
 The underlying problem of those dependencies is that we allowed ourselves to merge the two concepts of _real_ and _solution domain_ business logic.
 
-This tangling of the two concepts leads to the situation where you cannot differentiate between those two concepts anymore. When doing that in a decent sized application, it feels like _the framework is eating your application_.
+This tangling of the two concepts leads to the situation where you cannot differentiate between those two concepts clearly anymore. When doing that in a decent sized application, it feels like _the framework is eating your application_.
 
 The problem is that it is so easy to do it. Therefore it is oftentimes the default choice. Also: when we look at the example from above - one could ask: _now what? - who cares_? From a pragmatic point of view this is legit.
 
@@ -288,10 +291,10 @@ This in fact is a violation of the single responsibility. So let's get rid of it
 The resulting code looks like this:
 
 {% highlight java %}
-package com.rotab.cuba.my_app.real_business_logic;
+package com.rtcab.cuba.my_app.real_business_logic;
 
 class VisitPriceCalculator {
-  public VisitPrice calculateVisitPrice(PriceUnit priceUnit, PetType petType, LocalDate visitStart, LocalDate visitEnd) {
+  public VisitPrice calculateVisitPrice(PriceUnit priceUnit, LocalDate visitStart, LocalDate visitEnd) {
 
       VisitDuration visitDuration = calculateDuration(visitStart, visitEnd);
 
@@ -316,7 +319,7 @@ This also requires to have a code snippet that will still interact with the data
 
 
 {% highlight java %}
-package com.rotab.cuba.my_app.solution_domain_business_logic;
+package com.rtcab.cuba.my_app.solution_domain_business_logic;
 
 import org.springframework.stereotype.Component;
 import javax.inject.Inject;
@@ -339,7 +342,7 @@ class VisitPriceUnitFetcher {
 As you see: we now have separated the solution domain business logic from the real business logic. The last step is that we need to have a class that combines the two worlds. This class in fact will need to have one foot in the solution domain, because it needs to interact with the <code>VisitPriceUnitFetcher</code> which is a spring bean and so on. It could look like this:
 
 {% highlight java %}
-package com.rotab.cuba.my_app.integration_of_the_two_worlds;
+package com.rtcab.cuba.my_app.integration_of_the_two_worlds;
 
 import org.springframework.stereotype.Component;
 import javax.inject.Inject;
@@ -354,7 +357,7 @@ class VisitPriceOrchestrator {
       PriceUnit priceUnit = visitPriceUnitFetcher.determineUnitPrice(petType);
       VisitPriceCalculator priceCalculator = new VisitPriceCalculator();
 
-      return priceCalculator.calculateVisitPrice(priceUnit, petType, visitStart, visitEnd);
+      return priceCalculator.calculateVisitPrice(priceUnit, visitStart, visitEnd);
   }
 }
 {% endhighlight %}
@@ -380,4 +383,23 @@ This is right. In order to drive that out what we would need to do is to try to 
 
 Even if this is accomplishable - it would remove the whole point of CUBA all together. To be fair, this is also true for a lot of other "Full stack frameworks".
 
-So what alternatives are there?
+So what alternatives are there? There is one. It is based on the idea to create an entity-interface layer for your entities. This interface layer lives in the _real_ business logic. In the _real_ business logic code you will only interact with those interfaces.
+
+In the _solution space_, where the real entities live, they now implement those interfaces. This way, once again, we have achieved an inversion of the dependencies.
+
+The UML representation of this change would look like this:
+
+
+{% include hover-image.html image="entity-interface-wrong.png" class="overview" description="Dependencies between classes before the dependency inversion" %}
+
+
+{% include hover-image.html image="entity-interface-right.png" class="overview" description="Dependencies between classes after the dependency inversion" %}
+
+
+Note, that this architectural changes does not come for free. It adds additional burden, especially if there are a lot of entities. Therefore it is not a silver bullet. 
+
+### Summary 
+
+The above mentioned solution for the entity dependency problem  a very good reminder that there are no easy choices when it comes to architecture decisions. Architecture is a set of trade-offs that need to be taken into consideration.
+
+Generally, actively thinking about architecture, dependencies between classes, modules and so on is the real value here. Only because with CUBA you are in a full stack framework that offers a lot out of the box does not mean that we cannot emancipate from the framework. Applying proper software architecture gives us a way out of a way to _the framework eats my application_ and protects our most important business logic and treats is like a real asset that is worth carving out properly.
