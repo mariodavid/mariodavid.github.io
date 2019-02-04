@@ -221,7 +221,7 @@ public class PartyEdit extends StandardEditor<Party> implements Commentable, Att
 
 <code>Commentable</code> as well as <code>Attachable</code> are both interfaces that provide certain generic logic, which can be used within the Party editor. Also it might be possible, that those interfaces automatically extend the UI screen with certain behavior like having a UI for managing comments to this Party.
 
-Previously it was possible to use the [declarative-controllers](https://github.com/balvi/cuba-component-declarative-controllers) application component for this kind of behavior. There the implementation was done via Annotations, which has certain limitations. With CUBA 7 it is not possible to get a very similar kind of functionality from the Framework directly.
+Previously it was possible to use the [declarative-controllers](https://github.com/balvi/cuba-component-declarative-controllers) application component for this kind of behavior. There the implementation was done via Annotations, which has certain limitations. With CUBA 7 it is now possible to get a very similar kind of functionality from the framework directly.
 
 I really like that interface based approach, because it is more type save and adds various compile time checks to the table.
 
