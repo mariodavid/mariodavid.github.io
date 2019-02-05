@@ -1,8 +1,8 @@
 ---
 layout: post
-title: Don't squash your business logics
+title: Don't squash your business logic
 description: "In this blog post let's try to understand where business logic in a CUBA app can and should go - and why you shouldn't squash it. But wait: What is actually business logic? And does it at all have something to do with CUBA?"
-modified: 2017-04-15
+modified: 2019-02-15
 tags: [cuba, business applications]
 image:
   dir: dont-squash-your-business-logic
@@ -13,7 +13,7 @@ In this blog post let's try to understand where business logic in a CUBA app can
 
 <!-- more -->
 
-## What is business logic
+## What is Business Logic
 
 A CUBA application, just like any other custom application, has different logic implemented that represents:
 
@@ -28,7 +28,7 @@ Normally this pieces of functionality are called _business logic_. That term is 
 A CUBA application has oftentimes less of _solution domain business logic_ compared to other applications because of the features the platform itself provides. But regarding the real _business logic_ a CUBA application is not different by any means compared to any other application.
 
 
-### An example of _real_ business logic
+### An Example of _Real_ Business Logic
 
 To better understand what _real business logic_ means and where it differs from _solution domain business logic_ the following examples should give an option to identify the differences.
 
@@ -42,13 +42,13 @@ public VisitPrice calculateVisitPrice(PetType petType, LocalDate visitStart, Loc
     VisitPrice visitPrice;
 
     if (visitDuration.isOneDay()) {
-        visitPrice = priceUnit * 1 + FIXED_VISIT_PRICE
+        visitPrice = priceUnit.multiply(1).plus(FIXED_VISIT_PRICE)
     }
     else if (visitDuration.isLessThenAWeek()) {
-        visitPrice = priceUnit * visitDuration.getDurationDays() + FIXED_VISIT_PRICE / 2
+        visitPrice = priceUnit.multiply(visitDuration.getDurationDays()).plus(FIXED_VISIT_PRICE / 2)
     }
     else if (visitDuration.isMoreThenAWeek() {
-        visitPrice = priceUnit * visitDuration.getDurationDays()
+        visitPrice = priceUnit.multiply(visitDuration.getDurationDays())
     }
 
     return visitPrice;
@@ -57,7 +57,7 @@ public VisitPrice calculateVisitPrice(PetType petType, LocalDate visitStart, Loc
 
 The method `calculateVisitPrice` is an example of _real business logic_. It contains rules that are very much related to the business. Moreover it does not really contain any code that deals with the solution space and constructs of that.
 
-### An example of _solution domain_ business logic
+### An Example of _Solution Domain_ Business Logic
 
 The next example will show a piece of code which in contrast falls more under the category of _solution domain business logic_:
 
@@ -106,7 +106,7 @@ dealing with the solution space like the Database or the Email sending mechanism
 With that differentiation between _real business logic_ and _solution domain business logic_ in mind, this guide will explore in which ways _real_ business logic can be expressed in a CUBA application and what the pros and cons of those options are.
 
 
-## How business logic can be represented
+## How Business Logic can be Represented
 
 A CUBA application is a _regular_ Java application. Therefore all options to represent logic in Java are available in a CUBA application as well. Furthermore since a CUBA application uses Spring as a Framework for Dependency Injection, the patterns that Spring suggests are available as well. Additionally CUBA has certain preferences on how to represent business logic as specific artifacts.
 
@@ -120,7 +120,7 @@ We normally tend to prefer the solution that is closest to the framework we use.
 
 For _real business logic_ I would propose to turn this way upside down. Start with the Java mechanisms wherever possible, use spring where needed and switch to CUBA artifacts only where it makes sense. Let's get into the why:
 
-## POJOs for real business logic
+## POJOs for Real Business Logic
 
 The easiest and most powerful thing is to put business logic into a class. Just a normal Java class. No Frameworks included. No libraries used.
 
@@ -138,13 +138,13 @@ class VisitPriceCalculator {
       VisitPrice visitPrice;
 
       if (visitDuration.isOneDay()) {
-          visitPrice = priceUnit * 1 + FIXED_VISIT_PRICE
+          visitPrice = priceUnit.multiply(1).plus(FIXED_VISIT_PRICE)
       }
       else if (visitDuration.isLessThenAWeek()) {
-          visitPrice = priceUnit * visitDuration.getDurationDays() + FIXED_VISIT_PRICE / 2
+          visitPrice = priceUnit.multiply(visitDuration.getDurationDays()).plus(FIXED_VISIT_PRICE / 2)
       }
       else if (visitDuration.isMoreThenAWeek() {
-          visitPrice = priceUnit * visitDuration.getDurationDays()
+          visitPrice = priceUnit.multiply(visitDuration.getDurationDays())
       }
 
       return visitPrice;
@@ -170,7 +170,7 @@ In the light of everyone is using frameworks these days (just as I am), this opt
 
 So where does this fuzzy feeling of not-state-of-the-art comes from?
 
-## Integration points lead to mixing kinds of business logic
+## Integration Points Lead to Mixing Kinds of Business Logic
 
 Let's look at the integration points. Take a look at the private method <code>determineUnitPrice</code> that is called within this class. When we imagine what this method has to do, we will very quickly end up at the database. But how does it access the database? This is where the transition between the _real_ business logic and the bespoken _solution domain_ business logic comes into play. If we mix this two kinds of business logic the resulting implementation of the method would look like this:
 
@@ -233,7 +233,7 @@ class VisitPriceCalculator {
 
 Pretty similar, right? Right. To point you at the differences, I added the import statements to it. With Spring configured in a way that it will do something called "component scanning", Spring will pick up the class and register it as a _Spring bean_ and with that enable the dependency injection functionality.
 
-## Mixing business logic has disadvantages
+## Mixing Business Logic has Disadvantages
 
 But what is oftentimes overlooked is that this decision comes with a cost associated to it. Let's recap what this decision also includes:
 
@@ -243,7 +243,7 @@ But what is oftentimes overlooked is that this decision comes with a cost associ
 
 Let's go through them one by one and unpack what the problems associated with those are:
 
-### Compile-time dependency to CUBA interfaces
+### Compile-time Dependency to CUBA Interfaces
 
 The first thing would be that we introduce a dependency between the POJO <code>VisitPriceCalculator</code> and the CUBA interface <code>DataManager</code>.  This means, that in order to _compile_ and with that _use_ the class <code>VisitPriceCalculator</code> it is always required to also ship the code CUBA platform framework in the code as well. Without this dependency it is not possible to execute the source code any more.
 
@@ -257,7 +257,7 @@ When we look at a specific part of software development, this _dependency proble
 
 But when you "just" want to test your business rules, why do you have to spin up a integration test context? Why do you need to spin up the database? But this is oftentimes the next logic step, that leads down to a highly coupled software which cannot live without its framework anymore.
 
-### Logic dependency to Spring
+### Logical Dependency to Spring
 
 With introducing the <code>javax.inject.Inject</code> annotation we basically introducted a compile-time dependency to an injection mechanism. It logically means that there is a dependency to Spring (more or less). This kind of dependency is basically the same as the above with the CUBA interfaces.
 
@@ -269,7 +269,7 @@ But still: it means, that your code can only be compiled with the Spring framewo
 
 The same question applies here: does the _real_ business logic of calculating prices has anything to do with the Spring framework? No, it doesn't.
 
-### Squashing of _real_ and _solution domain_ business logic
+### Squashing of _Real_ and _Solution Domain_ Business Logic
 
 The underlying problem of those dependencies is that we allowed ourselves to merge the two concepts of _real_ and _solution domain_ business logic.
 
@@ -281,7 +281,7 @@ The whole discussion deals with the questions of what _software architecture_ is
 
 In the concrete this means, that there should be as little dependencies between the parts as possible. Furthermore it means that there should not be arrows from every service / module / class to every other service / module / class in a corresponding dependency diagram.
 
-## Separate instead of squash
+## Separate Instead of Squash
 
 Let's try to organize the class and its dependencies in a way, that keeps the _real_ business logic different from _solution space_ domain logic. When we look at the dependency to the <code>DataManager</code> class, why is it there? It is there, because the <code>VisitPriceCalculator</code> also tries to load the data from a datasource. We can turn that around, because as the name of the class already states: it should calculate the price, not load the data and calculate.
 
@@ -301,13 +301,13 @@ class VisitPriceCalculator {
       VisitPrice visitPrice;
 
       if (visitDuration.isOneDay()) {
-          visitPrice = priceUnit * 1 + FIXED_VISIT_PRICE
+          visitPrice = priceUnit.multiply(1).plus(FIXED_VISIT_PRICE)
       }
       else if (visitDuration.isLessThenAWeek()) {
-          visitPrice = priceUnit * visitDuration.getDurationDays() + FIXED_VISIT_PRICE / 2
+          visitPrice = priceUnit.multiply(visitDuration.getDurationDays()).plus(FIXED_VISIT_PRICE / 2)
       }
       else if (visitDuration.isMoreThenAWeek() {
-          visitPrice = priceUnit * visitDuration.getDurationDays()
+          visitPrice = priceUnit.multiply(visitDuration.getDurationDays())
       }
 
       return visitPrice;
@@ -373,7 +373,7 @@ With this change we have accomplished the following aspects:
 
 There are also other possibilities to do the orchestration layer or don't even have one at all and instead directly call the real business logic from the solution domain business logic. There is a whole field of ideas around it that have been there for quite some time. One very sophisticated example of it is "Clean architecture" from Uncle bob.
 
-## What about the domain entities?
+## What About the Domain Entities?
 
 If you looked carefully over the example, you will notice that there is a dependency between the two worlds, that actually sits in the _solution space_ business logic and is required from the _real_ business logic to do its job. It is the complete entity layer. Why is this the case?
 
@@ -385,13 +385,11 @@ Even if this is accomplishable - it would remove the whole point of CUBA all tog
 
 So what alternatives are there? There is one. It is based on the idea to create an entity-interface layer for your entities. This interface layer lives in the _real_ business logic. In the _real_ business logic code you will only interact with those interfaces.
 
-In the _solution space_, where the real entities live, they now implement those interfaces. This way, once again, we have achieved an inversion of the dependencies.
+In the _solution space_, where the real entities live, they now implement those interfaces. This way, once again, we have achieved inversion of control for the problematic dependency.
 
 The UML representation of this change would look like this:
 
-
 {% include hover-image.html image="entity-interface-wrong.png" class="overview" description="Dependencies between classes before the dependency inversion" %}
-
 
 {% include hover-image.html image="entity-interface-right.png" class="overview" description="Dependencies between classes after the dependency inversion" %}
 
@@ -400,6 +398,8 @@ Note, that this architectural changes does not come for free. It adds additional
 
 ### Summary 
 
-The above mentioned solution for the entity dependency problem  a very good reminder that there are no easy choices when it comes to architecture decisions. Architecture is a set of trade-offs that need to be taken into consideration.
+The above mentioned solution for the entity dependency problem is a very good reminder that there are no easy choices when it comes to architecture decisions. Architecture is a set of trade-offs that need to be taken into consideration.
 
-Generally, actively thinking about architecture, dependencies between classes, modules and so on is the real value here. Only because with CUBA you are in a full stack framework that offers a lot out of the box does not mean that we cannot emancipate from the framework. Applying proper software architecture gives us a way out of a way to _the framework eats my application_ and protects our most important business logic and treats is like a real asset that is worth carving out properly.
+Generally, actively thinking about architecture, dependencies between classes, modules and so on is the real value of this blog post. Only because with CUBA you are in a full stack framework that offers a lot out of the box does not mean that we cannot emancipate from the framework. Applying proper software architecture gives us a way out of _the framework eats my application_ and protects our most important business logic. With that we treat the real business logic like a real asset that is worth carving out properly.
+
+I hope I could give you an idea on how software architecture in general and protecting business logic in particular can be modelled in a CUBA application. There are several other techniques that go much beyond this initial ideas of dependency inversion.
