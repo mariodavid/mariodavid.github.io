@@ -137,6 +137,9 @@ public class PartyBrowse extends StandardLookup<Party> {
     private Messages messages;
 
     @Inject
+    protected MessageBundle messageBundle;
+    
+    @Inject
     protected GroupTable<Party> partiesTable;
 
 
@@ -144,7 +147,7 @@ public class PartyBrowse extends StandardLookup<Party> {
         Party partyToStart = partiesTable.getSingleSelected();
         String themeName = messages.getMessage(partyToStart.getTheme());
 
-        String startPartyMessage = messages.formatMessage(this.getClass(), "startPartyMessage", partyToStart.getTitle(),themeName);
+        String startPartyMessage = messageBundle.formatMessage("startPartyMessage", partyToStart.getTitle(), themeName);
 
         notifications.create(Notifications.NotificationType.WARNING)
                 .withCaption(startPartyMessage)
@@ -218,7 +221,7 @@ public class PartyEdit extends StandardEditor<Party> implements Commentable, Att
 
 <code>Commentable</code>, as well as <code>Attachable</code>, are both interfaces that provide certain generic logic, which can be used within the Party editor. Also, it might be possible that those interfaces automatically extend the UI screen with certain behavior like having a UI for managing comments to this Party.
 
-Previously it was possible to use the [declarative-controllers](https://github.com/balvi/cuba-component-declarative-controllers) application component for this kind of behavior. There the implementation was done via Annotations, which has certain limitations. With CUBA 7 it is not possible to get a very similar kind of functionality from the Framework directly.
+Previously it was possible to use the [declarative-controllers](https://github.com/balvi/cuba-component-declarative-controllers) application component for this kind of behavior. There the implementation was done via Annotations, which has certain limitations. With CUBA 7 it is now possible to get a very similar kind of functionality from the framework directly.
 
 I really like that interface based-approach, because it is more type save and adds various compile time checks to the table.
 
@@ -296,7 +299,6 @@ When it comes to adopting the new version, it boils down not only to the framewo
 This normally means that the practical adoption of new framework versions for applications is dependent on how fast the ecosystem can keep up.
 
 Speaking of my existing open source application components: the way I will probably go is that I will publish versions of them, that will only have very basic compatibility with CUBA 7. This has the benefit that the users at least are not blocked by the app component in order to update to CUBA 7. Support for the new concepts of CUBA 7 in the application components will be published in another version.
-
 If you want to help me out here with that, I would really like to see that. You can create issues or even PRs in the [Githhub repositories](https://github.com/mariodavid).
 
 ### Required Changes for Updating
