@@ -6,7 +6,7 @@ modified: 2017-04-15
 tags: [cuba, business applications]
 image:
   dir: dont-squash-your-business-logic
-  feature: cuba-security-subsystem-distilled/feature-2.jpg
+  feature: dont-squash-your-business-logic/feature.png
 ---
 
 In this blog post let's try to understand where business logic in a CUBA app can and should go - and why you shouldn't squash it. But wait: What is actually business logic? And does it at all have something to do with CUBA?
@@ -396,9 +396,9 @@ The UML representation of this change would look like this:
 {% include hover-image.html image="entity-interface-right.png" class="overview" description="Dependencies between classes after the dependency inversion" %}
 
 
-Note, that this architectural changes does not come for free. It adds additional burden, especially if there are a lot of entities. Therefore it is not a silver bullet. 
+Note, that this architectural changes does not come for free. It adds additional burden, especially if there are a lot of entities. Therefore it is not a silver bullet.
 
-### Summary 
+### Summary
 
 The above mentioned solution for the entity dependency problem  a very good reminder that there are no easy choices when it comes to architecture decisions. Architecture is a set of trade-offs that need to be taken into consideration.
 
