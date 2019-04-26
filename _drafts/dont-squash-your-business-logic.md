@@ -16,7 +16,7 @@ In this blog post let's try to understand where business logic in a CUBA app can
 ## What is Business Logic
 
 
-{% include image-center.html image="snowball.jpg" width="600px" class="lady-shadow" %}
+{% include image-center.html image="business-logic-diff.png" width="600px" %}
 
 A CUBA application, just like any other custom application, has different logic implemented that represents:
 
@@ -32,6 +32,8 @@ A CUBA application has oftentimes less of _solution domain business logic_ compa
 
 
 ### An Example of _Real_ Business Logic
+
+{% include image-left.html image="snowball1.png" width="100px" %}
 
 To better understand what _real business logic_ means and where it differs from _solution domain business logic_ the following examples should give an option to identify the differences.
 
@@ -61,6 +63,9 @@ public VisitPrice calculateVisitPrice(PetType petType, LocalDate visitStart, Loc
 The method `calculateVisitPrice` is an example of _real business logic_. It contains rules that are very much related to the business. Moreover it does not really contain any code that deals with the solution space and constructs of that.
 
 ### An Example of _Solution Domain_ Business Logic
+
+
+{% include image-right.html image="snowball2.png" width="100px" %}
 
 The next example will show a piece of code which in contrast falls more under the category of _solution domain business logic_:
 
@@ -245,7 +250,7 @@ Pretty similar, right? Right. To point you at the differences, I added the impor
 ## Mixing Business Logic has Disadvantages
 
 
-{% include image-center.html image="lisa-lady.gif" width="300px" class="lady-shadow" %}
+{% include image-center.html image="lisa-lady.gif" width="300px" class="shadow" %}
 
 But what is oftentimes overlooked is that this decision comes with a cost associated to it. Let's recap what this decision also includes:
 
@@ -301,12 +306,9 @@ In the concrete this means, that there should be as little dependencies between 
 
 Let's try to organize the class and its dependencies in a way, that keeps the _real_ business logic different from _solution space_ domain logic.
 
-
-{% include image-center.html image="lisa-lady.gif" width="300px" class="lady-shadow" %}
+{% include image-center.html image="maggie-snowball.jpg" width="600px" class="shadow" %}
 
 When we look at the dependency to the <code>DataManager</code> class, why is it there? It is there, because the <code>VisitPriceCalculator</code> also tries to load the data from a datasource. We can turn that around, because as the name of the class already states: it should calculate the price, not load the data and calculate.
-
-
 
 This in fact is a violation of the single responsibility. So let's get rid of it. Instead we will pass in the data into the method:
 
@@ -409,9 +411,9 @@ In the _solution space_, where the real entities live, they now implement those 
 
 The UML representation of this change would look like this:
 
-{% include hover-image.html image="entity-interface-wrong.png" class="overview" description="Dependencies between classes before the dependency inversion" %}
+{% include hover-image.html image="entity-interface-wrong.png" class="shadow" description="Dependencies between classes before the dependency inversion" %}
 
-{% include hover-image.html image="entity-interface-right.png" class="overview" description="Dependencies between classes after the dependency inversion" %}
+{% include hover-image.html image="entity-interface-right.png" class="shadow" description="Dependencies between classes after the dependency inversion" %}
 
 
 Note, that this architectural changes does not come for free. It adds additional burden, especially if there are a lot of entities. Therefore it is not a silver bullet.
@@ -422,7 +424,7 @@ The above mentioned solution for the entity dependency problem is a very good re
 
 Generally, actively thinking about architecture, dependencies between classes, modules and so on is the real value of this blog post. Only because with CUBA you are in a full stack framework that offers a lot out of the box does not mean that we cannot emancipate from the framework. Applying proper software architecture gives us a way out of _the framework eats my application_ and protects our most important business logic. With that we treat the real business logic like a real asset that is worth carving out properly.
 
-{% include image-center.html image="lady3.png" width="600px" class="lady-shadow" %}
+{% include image-center.html image="lady3.png" width="600px" class="shadow" %}
 
 
 I hope I could give you an idea on how software architecture in general and protecting business logic in particular can be modelled in a CUBA application. There are several other techniques that go much beyond this initial ideas of dependency inversion.
