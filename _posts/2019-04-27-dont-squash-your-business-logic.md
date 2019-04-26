@@ -2,7 +2,7 @@
 layout: dont-squash-your-business-logic
 title: Don't squash your business logic
 description: "In this blog post let's try to understand where business logic in a CUBA app can and should go - and why you shouldn't squash it. But wait: What is actually business logic? And does it at all have something to do with CUBA?"
-modified: 2019-02-15
+modified: 2019-04-27
 tags: [cuba, business applications]
 image:
   dir: dont-squash-your-business-logic
@@ -250,13 +250,13 @@ Pretty similar, right? Right. To point you at the differences, I added the impor
 ## Mixing Business Logic has Disadvantages
 
 
-{% include image-center.html image="lisa-lady.gif" width="300px" class="shadow" %}
-
 But what is oftentimes overlooked is that this decision comes with a cost associated to it. Let's recap what this decision also includes:
 
 * we introduced a compile-time dependency between the VisitPriceCalculator class and a CUBA specific interface called <code>DataManager</code>
 * we introduced a logical & compile-time dependency between the VisitPriceCalculator class and the Spring dependency injection framework
 * we merged _business logic_ with _solution domain business logic_
+
+{% include image-center.html image="lisa-lady.gif" width="300px" class="shadow" %}
 
 Let's go through them one by one and unpack what the problems associated with those are:
 
