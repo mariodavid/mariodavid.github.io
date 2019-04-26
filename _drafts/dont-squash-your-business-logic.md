@@ -1,12 +1,12 @@
 ---
-layout: post
+layout: dont-squash-your-business-logic
 title: Don't squash your business logic
 description: "In this blog post let's try to understand where business logic in a CUBA app can and should go - and why you shouldn't squash it. But wait: What is actually business logic? And does it at all have something to do with CUBA?"
 modified: 2019-02-15
 tags: [cuba, business applications]
 image:
   dir: dont-squash-your-business-logic
-  feature: cuba-security-subsystem-distilled/feature-2.jpg
+  feature: dont-squash-your-business-logic/feature.png
 ---
 
 In this blog post let's try to understand where business logic in a CUBA app can and should go - and why you shouldn't squash it. But wait: What is actually business logic? And does it at all have something to do with CUBA?
@@ -14,6 +14,9 @@ In this blog post let's try to understand where business logic in a CUBA app can
 <!-- more -->
 
 ## What is Business Logic
+
+
+{% include image-center.html image="snowball.jpg" width="600px" class="lady-shadow" %}
 
 A CUBA application, just like any other custom application, has different logic implemented that represents:
 
@@ -172,7 +175,13 @@ So where does this fuzzy feeling of not-state-of-the-art comes from?
 
 ## Integration Points Lead to Mixing Kinds of Business Logic
 
-Let's look at the integration points. Take a look at the private method <code>determineUnitPrice</code> that is called within this class. When we imagine what this method has to do, we will very quickly end up at the database. But how does it access the database? This is where the transition between the _real_ business logic and the bespoken _solution domain_ business logic comes into play. If we mix this two kinds of business logic the resulting implementation of the method would look like this:
+
+
+Let's look at the integration points. Take a look at the private method <code>determineUnitPrice</code> that is called within this class. When we imagine what this method has to do, we will very quickly end up at the database. But how does it access the database? 
+
+{% include image-right.html image="lady.png" width="150px" class="lady" %}
+
+This is where the transition between the _real_ business logic and the bespoken _solution domain_ business logic comes into play. If we mix this two kinds of business logic the resulting implementation of the method would look like this:
 
 {% highlight java %}
 class VisitPriceCalculator {
@@ -235,6 +244,9 @@ Pretty similar, right? Right. To point you at the differences, I added the impor
 
 ## Mixing Business Logic has Disadvantages
 
+
+{% include image-center.html image="lisa-lady.gif" width="300px" class="lady-shadow" %}
+
 But what is oftentimes overlooked is that this decision comes with a cost associated to it. Let's recap what this decision also includes:
 
 * we introduced a compile-time dependency between the VisitPriceCalculator class and a CUBA specific interface called <code>DataManager</code>
@@ -273,6 +285,10 @@ The same question applies here: does the _real_ business logic of calculating pr
 
 The underlying problem of those dependencies is that we allowed ourselves to merge the two concepts of _real_ and _solution domain_ business logic.
 
+
+{% include image-center.html image="lady2.png" width="250px" class="lady" %}
+
+
 This tangling of the two concepts leads to the situation where you cannot differentiate between those two concepts clearly anymore. When doing that in a decent sized application, it feels like _the framework is eating your application_.
 
 The problem is that it is so easy to do it. Therefore it is oftentimes the default choice. Also: when we look at the example from above - one could ask: _now what? - who cares_? From a pragmatic point of view this is legit.
@@ -283,12 +299,16 @@ In the concrete this means, that there should be as little dependencies between 
 
 ## Separate Instead of Squash
 
-Let's try to organize the class and its dependencies in a way, that keeps the _real_ business logic different from _solution space_ domain logic. When we look at the dependency to the <code>DataManager</code> class, why is it there? It is there, because the <code>VisitPriceCalculator</code> also tries to load the data from a datasource. We can turn that around, because as the name of the class already states: it should calculate the price, not load the data and calculate.
+Let's try to organize the class and its dependencies in a way, that keeps the _real_ business logic different from _solution space_ domain logic.
+
+
+{% include image-center.html image="lisa-lady.gif" width="300px" class="lady-shadow" %}
+
+When we look at the dependency to the <code>DataManager</code> class, why is it there? It is there, because the <code>VisitPriceCalculator</code> also tries to load the data from a datasource. We can turn that around, because as the name of the class already states: it should calculate the price, not load the data and calculate.
+
+
 
 This in fact is a violation of the single responsibility. So let's get rid of it. Instead we will pass in the data into the method:
-
-
-The resulting code looks like this:
 
 {% highlight java %}
 package com.rtcab.cuba.my_app.real_business_logic;
@@ -394,12 +414,15 @@ The UML representation of this change would look like this:
 {% include hover-image.html image="entity-interface-right.png" class="overview" description="Dependencies between classes after the dependency inversion" %}
 
 
-Note, that this architectural changes does not come for free. It adds additional burden, especially if there are a lot of entities. Therefore it is not a silver bullet. 
+Note, that this architectural changes does not come for free. It adds additional burden, especially if there are a lot of entities. Therefore it is not a silver bullet.
 
-### Summary 
+### Summary
 
 The above mentioned solution for the entity dependency problem is a very good reminder that there are no easy choices when it comes to architecture decisions. Architecture is a set of trade-offs that need to be taken into consideration.
 
 Generally, actively thinking about architecture, dependencies between classes, modules and so on is the real value of this blog post. Only because with CUBA you are in a full stack framework that offers a lot out of the box does not mean that we cannot emancipate from the framework. Applying proper software architecture gives us a way out of _the framework eats my application_ and protects our most important business logic. With that we treat the real business logic like a real asset that is worth carving out properly.
+
+{% include image-center.html image="lady3.png" width="600px" class="lady-shadow" %}
+
 
 I hope I could give you an idea on how software architecture in general and protecting business logic in particular can be modelled in a CUBA application. There are several other techniques that go much beyond this initial ideas of dependency inversion.

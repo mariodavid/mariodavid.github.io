@@ -12,6 +12,13 @@ h2.post-subtitle{
 	padding-left: 50px;
 }
 
+@font-face {
+	font-family: "Simpsons";
+	src: url("/fonts/Simpsonfont.eot");
+	src: 
+	url("/fonts/Simpsonfont.woff") format("woff"),
+	url("/fonts/Simpsonfont.otf") format("opentype"),
+	}
 
 h2.entry-subtitle{
 	font-style: italic;

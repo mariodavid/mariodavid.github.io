@@ -3,7 +3,7 @@ layout: post
 title: API integration in CUBA with Xero
 description: "In this blog post, we will discover how to integrate with a SaaS software solution like Xero."
 modified: 2018-08-24
-tags: [cuba, API, integration, xero, REST, OAuth2]
+tags: [cuba, API, integration, xero, REST, OAuth]
 image:
   feature: api-integration-in-cuba-with-xero/feature.png
 ---
@@ -38,7 +38,7 @@ As a prerequisite, it is required to authenticate against the API. This is a lit
 
 In the case of Xero, they differentiate between different applications that you want to create. A Xero application is, in this case, a representation of your application on the Xero service itself, that you register on their site for every integration application that you want to build. They have classified those applications into "private", "public" and "partner". You can read more about that concept in their docs around [API application types](https://developer.xero.com/documentation/getting-started/api-application-types).
 
-When you want to have a private app connecting to Xero, an OAuth2-based authentication with a public/private key combination is required to interact with the SaaS. In this blog post we will use a private app, so the corresponding authentication workflow will be used.
+When you want to have a private app connecting to Xero, an OAuth-based authentication with a public/private key combination is required to interact with the SaaS. In this blog post we will use a private app, so the corresponding authentication workflow will be used.
 
 
 ### SDK integration with Xero
@@ -54,7 +54,7 @@ The main benefit of using an SDK is that the vendor removed some of the heavy li
 
 As an example, let's take a look at the authentication workflow against Xero with a private app.
 
-On the API layer, you have to understand how OAuth2 works in general, what particular flavor they use in this case, understand how to sign a request and so on.
+On the API layer, you have to understand how OAuth works in general, what particular flavor they use in this case, understand how to sign a request and so on.
 
 On the SDK layer, Xero has mostly removed the necessity to understand all of this. Instead, they created a Java / Javascript / C# function or object which has a particular interface with particular parameters. The surface area, in this case, is much smaller, so the integration effort oftentimes becomes easier.
 
