@@ -60,7 +60,7 @@ public VisitPrice calculateVisitPrice(PetType petType, LocalDate visitStart, Loc
 }
 {% endhighlight %}
 
-The method `calculateVisitPrice` is an example of _real business logic_. It contains rules that are very much related to the business. Moreover it does not really contain any code that deals with the solution space and constructs of that.
+The method <code>calculateVisitPrice</code> is an example of _real business logic_. It contains rules that are very much related to the business. Moreover it does not really contain any code that deals with the solution space and constructs of that.
 
 ### An Example of _Solution Domain_ Business Logic
 
