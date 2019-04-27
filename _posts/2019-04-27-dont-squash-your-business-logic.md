@@ -337,7 +337,7 @@ class VisitPriceCalculator {
 }
 {% endhighlight %}
 
-This also requires to have a code snippet that will still interact with the database and load the data. We will extract that method into its own class that is onlys responsibility is to load the data. This class is part of the solution space business logic.
+This also requires to have a code snippet that will still interact with the database and load the data. We will extract that method into its own class that the only responsibility it has is to load the data. This class is part of the solution space business logic.
 
 
 {% highlight java %}
