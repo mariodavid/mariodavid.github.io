@@ -387,7 +387,7 @@ class VisitPriceOrchestrator {
 With this change we have accomplished the following aspects:
 
 * the _real_ business logic is encapsulated from all dependencies to frameworks
-* the _solution space_ business logic is still the doing its thing, but independent of the business rules
+* the _solution space_ business logic is still doing its thing, but independent of the business rules
 * the *thin* orchestration layer combines the two worlds
 * the _real_ business logic can be tested in isolation without mocking
 * the _real_ business logic can be tested in isolation without integration testing
