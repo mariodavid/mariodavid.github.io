@@ -310,7 +310,7 @@ Let's try to organize the class and its dependencies in a way, that keeps the _r
 
 When we look at the dependency to the <code>DataManager</code> class, why is it there? It is there, because the <code>VisitPriceCalculator</code> also tries to load the data from a datasource. We can turn that around, because as the name of the class already states: it should calculate the price, not load the data and calculate.
 
-This in fact is a violation of the single responsibility. So let's get rid of it. Instead we will pass in the data into the method:
+This in fact is a violation of the single responsibility principle. So let's get rid of it. Instead we will pass in the data into the method:
 
 {% highlight java %}
 package com.rtcab.cuba.my_app.real_business_logic;
