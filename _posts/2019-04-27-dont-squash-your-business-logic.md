@@ -416,7 +416,7 @@ The UML representation of this change would look like this:
 {% include hover-image.html image="entity-interface-right.png" class="shadow" description="Dependencies between classes after the dependency inversion" %}
 
 
-Note, that this architectural changes does not come for free. It adds additional burden, especially if there are a lot of entities. Therefore it is not a silver bullet.
+Note, that this architectural changes does not come for free. It adds additional burden, especially if there are a lot of entities. But instead of just mirroring every getter of all entities into their corresponding interface counterpart, it is probably worth thinking about what actual interface is needed from a _real domain logic_ perspectic. Most likely not everything that is available in the entities is needed in this interface. But still it will be more effort - so it is not a silver bullet either. But as there is not silver bullet anyways, and Software architecture is all about trade-offs - this one is just another one of those.
 
 ### Summary
 
