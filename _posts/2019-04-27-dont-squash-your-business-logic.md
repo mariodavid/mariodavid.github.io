@@ -60,7 +60,7 @@ public VisitPrice calculateVisitPrice(PetType petType, LocalDate visitStart, Loc
 }
 {% endhighlight %}
 
-The method `calculateVisitPrice` is an example of _real business logic_. It contains rules that are very much related to the business. Moreover it does not really contain any code that deals with the solution space and constructs of that.
+The method <code>calculateVisitPrice</code> is an example of _real business logic_. It contains rules that are very much related to the business. Moreover it does not really contain any code that deals with the solution space and constructs of that.
 
 ### An Example of _Solution Domain_ Business Logic
 
@@ -310,7 +310,7 @@ Let's try to organize the class and its dependencies in a way, that keeps the _r
 
 When we look at the dependency to the <code>DataManager</code> class, why is it there? It is there, because the <code>VisitPriceCalculator</code> also tries to load the data from a datasource. We can turn that around, because as the name of the class already states: it should calculate the price, not load the data and calculate.
 
-This in fact is a violation of the single responsibility. So let's get rid of it. Instead we will pass in the data into the method:
+This in fact is a violation of the single responsibility principle. So let's get rid of it. Instead we will pass in the data into the method:
 
 {% highlight java %}
 package com.rtcab.cuba.my_app.real_business_logic;
@@ -337,7 +337,7 @@ class VisitPriceCalculator {
 }
 {% endhighlight %}
 
-This also requires to have a code snippet that will still interact with the database and load the data. We will extract that method into its own class that is onlys responsibility is to load the data. This class is part of the solution space business logic.
+This also requires to have a code snippet that will still interact with the database and load the data. We will extract that method into its own class that the only responsibility it has is to load the data. This class is part of the solution space business logic.
 
 
 {% highlight java %}
@@ -387,7 +387,7 @@ class VisitPriceOrchestrator {
 With this change we have accomplished the following aspects:
 
 * the _real_ business logic is encapsulated from all dependencies to frameworks
-* the _solution space_ business logic is still the doing its thing, but independent of the business rules
+* the _solution space_ business logic is still doing its thing, but independent of the business rules
 * the *thin* orchestration layer combines the two worlds
 * the _real_ business logic can be tested in isolation without mocking
 * the _real_ business logic can be tested in isolation without integration testing
@@ -416,7 +416,7 @@ The UML representation of this change would look like this:
 {% include hover-image.html image="entity-interface-right.png" class="shadow" description="Dependencies between classes after the dependency inversion" %}
 
 
-Note, that this architectural changes does not come for free. It adds additional burden, especially if there are a lot of entities. Therefore it is not a silver bullet.
+Note, that this architectural changes does not come for free. It adds additional burden, especially if there are a lot of entities. But instead of just mirroring every getter of all entities into their corresponding interface counterpart, it is probably worth thinking about what actual interface is needed from a _real domain logic_ perspective. Most likely not everything that is available in the entities is needed in this interface. But still it will be more effort - so it is not a silver bullet either. But as there is not silver bullet anyways, and Software architecture is all about trade-offs - this one is just another one of those.
 
 ### Summary
 
