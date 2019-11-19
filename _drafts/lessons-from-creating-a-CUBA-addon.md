@@ -1,0 +1,169 @@
+---
+layout: post
+title: Lessons from creating a CUBA addon
+description: "This blog post is a walk through the process of creating an application component for CUBA. It is based on the recently released default-values addon, that provides the ability to configure default vaues for entity attributes at runtime. You will learn about default-values itself, some less known attributes as well as some internals of the CUBA."
+modified: 2019-11-18
+tags: [cuba, default values]
+image:
+  feature: cuba-7-release-party/feature.png
+---
+
+This blog post is a walk through the process of creating an application component for CUBA. It is based on the recently released default-values addon, that provides the ability to configure default vaues for entity attributes at runtime. You will learn about default-values itself, some less known attributes as well as some internals of the CUBA.
+
+<!-- more -->
+
+### Step 0: identify a common problem: default value definition
+
+Normally I used to develop default values in a CUBA application either directly in the UI controller code or in a <code>@PostConstruct</code> annotated method within the Entity class itself.
+
+It normally looked like this for an Entity:
+
+{%highlight java%}
+public class Visit extends StandardEntity {
+
+    @PostConstruct
+    private void initVisitDate() {
+        if (visitDate == null) {
+            setVisitDate(today());
+        }
+    }
+}
+{% endhighlight %}
+
+Or on the UI layer more like this:
+
+{%highlight java%}
+public class RegularCheckup extends StandardEditor<Visit> {
+
+    @Subscribe
+    protected void initRegularCheckupVisit(
+        InitEntityEvent<Visit> event
+    ) {
+        Visit visit = event.getEntity();
+        visit.setPaid(false);
+    }
+}
+{% endhighlight %}
+
+But the pattern was always very similar - because the problem at hand was very similar.
+
+Normally as this is logic expressed as source code I also implemented unit tests for this piece of code.
+
+One realization that I had when implementing the problem space of default value population over and over again is that actually the programmatic approach was cumbersome and it almost felt that there was some missing declarative abstraction.
+
+Furthermore sometimes there were requirements that actually business users would want to change this population of default values in the software development process or as a user of the application there was a need to configure those values based on the use-case / context the current user is in.
+
+Also - and this is probably very crucial when going through the process of creating a application component or any kind of abstraction: I was bored by doing that same-looking task over and over again and the pain of doing that boring task brought me to the point of thinking about a proper abstraction.
+
+### Step 1: create a mental model over the common parts
+
+So I gave it a try to crystallize the idea about having a dedicated application component that deals with default value population.
+
+What I wanted to achieve is that it should be possible to configure default values via a administrative UI that allows tech-savy business users to define what values should be set by default for a particular entity / screen.  For developers / administrators of the system configuring this behavior would be a little easier and faster instead of doing the coding of this very same fact for the regular case.
+
+#### The Value of CUBA abstraction layers
+
+Besides the administrative UI for setting up the default values, the main part of the application component was to actually populate the values.
+
+Initially I was thinking about a UI annotation based approach as I did previously in various application components. But the problem was that when restricting the solution to the UI layer, you would have a inconsistent solution in your overall application, because there are multiple other ways to create an entity instance then just the specific UI controller with the correct annotation:
+
+* creating an instance via the REST API
+* using CUBAs entity inspector
+* leveraging the data-import application component to create entities
+* having a react based frontend for entity creation
+* using any kind of service business logic to create instances
+
+Luckily it bacame clear that CUBA with its general tedancy to create thin layers of abstractions on everything was helping our here very much.
+
+The way you create an entity instance in CUBA is not by calling the constructor of the entity like this: <code>Customer customer = new Customer();</code> but instead by using a factory method:<code>Customer customer = metadata.create(Customer.class);</code>.
+
+The difference is only very small for the calling code, but it enables a whole lot functinality that could otherwise not be put under this abstraction. E.g. the following use-cases are executed during the entity creation process of <code> metadata.create();</code>:
+
+* assign a unique ID value
+* finding the actual class that should be instanciated through entity inheritance
+* executing <code>@PostConstruct</code> methods on the instance
+
+There are several more possibilities that could be executed there, e.g. if it is possible in this user context to actually create instances of this entity.
+
+One additional use-case that can be executed in there: <i>Default Value population</i>.
+
+#### Extending CUBA by Inheritance
+
+Having that abstraction in place allows to easily inject this new behavior into the system without changing any of the calling code. It would have just not been possible to create this cross cutting functionality into the system, if this abstraction would not be there.
+
+But with the existence of the <code>Metadata</code> abstraction, is should be possible to inject my desired functionality and not only - not breaking all other parts of the system, but also to automatically include the other parts with my new functionality.
+
+When overriding the behavior of the <code>Metadata</code> API, I would immediately have the default value behavior also in the REST API e.g.
+
+So I went ahead and created a new class that extends the default API implementation <code>MetadataImpl</code>:
+
+{%highlight java%}
+public class MetadataWithDefaultValuesSupport extends MetadataImpl {
+
+    @Override
+    protected <T> T create(Class<T> entityClass) {
+        T entityInstance = super.create(entityClass);
+
+        // here comes the default value logic
+        initDefaultValues((Class<Entity>) entityClass, (Entity) entityInstance);
+
+        return entityInstance;
+    }
+}
+{% endhighlight %}
+
+#### Extending CUBA by Dependency Injection
+
+Overriding the behavior of the Metadata API has to be elaborated a litte bit here, because it is the omnipresent underpinning of almost all CUBAs APIs.
+
+CUBA is based on the Spring framework. Spring is a at its core a Dependency Injection framework. Dependency Injection (DI) is a the process of Spring taking over the instanciation of abitraty objects in the application (just like <code>metadata.create()</code> itself for Entity instances).
+
+Instead of the calling class doing a <code>Metadata metadata = new MetadataImpl();</code> it simply declares a Field (or a constructur parameter) and annotates it with <code>@Inject</code>. This leads Spring to instanciate an instance on behalf of this class and _injects_ the instance into the target class.
+
+This is where I got lucky once again. In case every class (within CUBA itself or within any CUBA application) that would have written the instanciation of the Metadata API like this: <code>Metadata metadata = new MetadataImpl();</code> - I would not have been able to somehow replace <code>MetadataImpl</code> with my subclass <code>MetadataWithDefaultValuesSupport</code>.
+
+Since CUBA is a Spring application, I can rely on the fact that the Metadata API is injected into the calling code.
+
+Since the class instanciation is delegated to a Spring mechanism in a dedicated place, Spring provides the ability to influence the creation of the <code>Metadata</code> instance.
+
+The way it works is that there is a declarative definition of which class should be used to provide this _Bean_ (this is a Spring Term and basically means a Class / Interface that is registered in the Spring application context, that can be injected). This definition for a CUBA application is normally in the <code>spring.xml</code> / <code>web-spring.xml</code>. What I had to do is that defined under the bean name a differernt class (my class) like this:
+
+{%highlight xml%}
+<bean
+    id="cuba_Metadata"    
+    class="de.diedavids.cuba.defaultvalues.MetadataWithDefaultValuesSupport"
+/>
+{% endhighlight %}
+
+With that single line now all classes that require an instance of the <code>Metadata</code> Interface via Injection will receive my Implementation - Luckily CUBA uses Spring...
+
+### Step 2: Creating a Management UI
+
+With the default values population injection point in place, the remaining question was - how to configure the values. In particular in the UI there was one interesting part. The input fields where the default value is configure needs to be of the correct type based on the MetaProperty of the Entity attribute.
+
+For a <code>Order.orderDate</code> attribute, it needs to be a Date Picker, where the Customer's name should be of type String and the Customer Type needs to show a LookupField with all of the possible <code>CustomerType</code> Enum options.
+
+CUBA 7.1 released a functionality that helped out here heavily. With the introduction of the <code>InputDialog</code> through the <code>Dialogs</code> API, it is possible to create a dialog window, that depending on the provided parameters renders the correct input fields.
+
+This is a very good enhancement, because it is very easy to create an on-the-fly input form programmatically without creating a dedicated and static screen.
+
+#### Split mixed-up usages and API
+
+In the scenario of the default values, instead of having the different datatypes, I had the <code>MetaProperty</code> of the entity attribute at hand.
+
+Taking that idea a little further I noticed that it would actually be a good standalone enhancement to create a input parameter out of a <code>MetaProperty</code>.
+
+With that realization I refactored the code that provided the dialog window to set the entity attribute default value. Initially there was a mixed-up implementation where the input dialog creation, datatype determination and usage was all combined.
+
+This turned into one dedicated API I called <code>EntityDialogs</code> that only has one purpose: create an <code>InputDialog</code> with a <code>MetaProperty</code> as the parameter.
+
+
+### Extend CUBA functionality by Delegation
+
+During the creation of this particular API two worth mentioning points came up.
+
+The first one was the question on how to extend the existing <code>Dialogs</code> API of CUBA. Unfortunately this time it was not as straight forward as with the <code>Metadata</code> API from above. Instead of injecting new functionality into the same API I needed to do some API extensions.
+
+So I needed to created a new interface
+
+### Different types of Default Values
