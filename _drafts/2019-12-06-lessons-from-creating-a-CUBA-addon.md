@@ -5,7 +5,7 @@ description: "This blog post we will walk through the process of creating an app
 modified: 2019-11-18
 tags: [cuba, default values]
 image:
-  feature: cuba-7-release-party/feature.png
+  feature: 2019-12-06-lessons-learned-from-creating-a-cuba-addon/feature.png
 ---
 
 This blog post we will walk through the process of creating an application component for CUBA. It is based on the recently released default-values addon, that provides the ability to configure default vaues for entity attributes at runtime.
@@ -15,6 +15,8 @@ You will learn something about the default-values internal implementation as wel
 <!-- more -->
 
 ### Identify a Pattern
+
+<img src="/images/2019-12-06-lessons-learned-from-creating-a-cuba-addon/pencils/green-180.png" style="height:30px;" />
 
 Normally I used to develop default values in a CUBA application either directly in the UI controller code or in a <code>@PostConstruct</code> annotated method within the Entity class itself.
 
@@ -57,11 +59,15 @@ Also - and this is probably very crucial when going through the process of creat
 
 ### A Mental Model over the Common Problem
 
+<img src="/images/2019-12-06-lessons-learned-from-creating-a-cuba-addon/pencils/green-180.png" style="height:30px;" />
+
 So I gave it a try to crystallize the idea about having a dedicated application component that deals with default value population.
 
 What I wanted to achieve is that it should be possible to configure default values via a administrative UI that allows tech-savy business users / administrators / developers to define what values should be set by default for a particular entity / screen.s
 
 #### The Value of CUBA Abstraction Layers
+
+<img src="/images/2019-12-06-lessons-learned-from-creating-a-cuba-addon/pencils/green-180.png" style="height:30px;" />
 
 Besides the administrative UI for setting up the default values, the main part of the application component was to actually populate the values.
 
@@ -141,6 +147,8 @@ With that single line now all classes that require an instance of the <code>Meta
 
 ### Creating a Management UI
 
+<img src="/images/2019-12-06-lessons-learned-from-creating-a-cuba-addon/pencils/green-180.png" style="height:30px;" />
+
 With the default values population injection point in place, the remaining question was - how to configure the values. In particular in the UI there was one interesting part. The input fields where the default value is configure needs to be of the correct type based on the MetaProperty of the Entity attribute.
 
 For a <code>Order.orderDate</code> attribute, it needs to be a Date Picker, where the Customer's name should be of type String and the Customer Type needs to show a LookupField with all of the possible <code>CustomerType</code> Enum options.
@@ -161,6 +169,8 @@ This turned into one dedicated API I called <code>EntityDialogs</code> that only
 
 
 ### Extend CUBA functionality by Delegation
+
+<img src="/images/2019-12-06-lessons-learned-from-creating-a-cuba-addon/pencils/green-180.png" style="height:30px;" />
 
 During the creation of this particular API two worth mentioning points came up.
 
@@ -207,7 +217,10 @@ To sum up this piece of extensions: compared to the API extension from above, th
 In the end the <code>EntityDialogs</code> API alongside with a couple of other classes ended up not directly in the default-values application component. Instead I realized that since this functionality is quite common and I (and others) could re-use it in different application components, I created another application component that hosts this functionality: [metadata-extensions](https://github.com/mariodavid/cuba-component-metadata-extensions).
 
 
+
 ### The Metadata Underpinning
+
+<img src="/images/2019-12-06-lessons-learned-from-creating-a-cuba-addon/pencils/green-180.png" style="height:30px;" />
 
 As you already saw in the EntityDialogs example - I leveraged the Metadata Subsystem of CUBA. It is one of the less common known / more advanced capabilities of CUBA.
 
@@ -221,6 +234,7 @@ I will not go into any more detail about this right here, but I can only encoura
 
 
 ### Wrap Up
+<img src="/images/2019-12-06-lessons-learned-from-creating-a-cuba-addon/pencils/green-180.png" style="height:30px;" />
 
 To wrap up this piece of experience write down: I explained a couple of ways how to extend CUBA by Spring bean replacement or Delegation. Also we learned about some capabilities of CUBA that are not super common in the everyday use but still very powerful.
 
@@ -230,3 +244,52 @@ You can check out both application components here:
 
 * [default-values](https://github.com/mariodavid/cuba-component-default-values)
 * [metadata-extensions](https://github.com/mariodavid/cuba-component-metadata-extensions)
+
+
+
+<style type="text/css">
+  article.hentry {
+    background-color:#a7d6dc;
+  }
+
+  .entry-content, .read-more, section#disqus_thread {
+
+    background-color:#e8f3f5 !important;
+    color:#000;
+    border: 0px solid #333;
+
+  }
+  h1, h2, h3, h4 {
+    color: #74979b;
+  }
+
+    .entry-content h1 {
+      margin-bottom:-20px;
+    }
+
+      .entry-content h2 {
+        margin-bottom:-20px;
+      }
+
+        .entry-content h3 {
+          margin-bottom:-20px;
+        }
+
+  .entry-content a {
+    color: #74979b;
+  }
+
+  .read-more h3 > a, .read-more h4 > a, .read-more  a {
+    color: #74979b;
+  }
+
+.entry-content a:hover, .entry-content a:active {
+    color: #74979b;
+
+  }
+
+  code {
+    color:#000;
+  }
+
+</style>
