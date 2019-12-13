@@ -133,4 +133,4 @@ Then you have on the very top of the pyramid something like JIRA. It is a pre-bu
 But here, you should neiter try to create a Twitter Clone nor a general purpose business application to it. But if you need a solution in the Collaboration space with some flexibility: just roll with it.
 
 
-Where does Salesforce does fit now into this picture?
+Where does Salesforce does fit now into this picture? 
