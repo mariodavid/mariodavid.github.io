@@ -1,14 +1,14 @@
 ---
 layout: post
 title: Lessons from creating a CUBA addon
-description: "This blog post we will walk through the process of creating an application component for CUBA. It is based on the recently released default-values addon, that provides the ability to configure default vaues for entity attributes at runtime. You will learn something about the default-values internal implementation as well as some internals of the CUBA."
+description: "This blog post we will walk through the process of creating an application component for CUBA. It is based on the recently released default-values addon, that provides the ability to configure default values for entity attributes at runtime. You will learn something about the default-values internal implementation as well as some internals of the CUBA."
 modified: 2019-12-12
 tags: [cuba, default values]
 image:
   feature: lessons-learned-from-creating-a-cuba-addon/feature.png
 ---
 
-This blog post we will walk through the process of creating an application component for CUBA. It is based on the recently released default-values addon, that provides the ability to configure default vaues for entity attributes at runtime.
+This blog post we will walk through the process of creating an application component for CUBA. It is based on the recently released default-values addon, that provides the ability to configure default values for entity attributes at runtime.
 
 You will learn something about the default-values internal implementation as well as some internals of the CUBA framework.
 
