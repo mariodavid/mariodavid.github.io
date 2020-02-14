@@ -1,6 +1,6 @@
 ---
 layout: sf-lens
-title: Salesforce trough the Lens of a Java DEV
+title: Salesforce trough the Lens of a Java Dev
 subtitle: Part 1 - Salesforce Landscape overview
 description: "This blog post series is about the my learnings that I had during working in the domain of Salesforce Development. I will try to put SF into a broader context and compare it to previous experice - in particular CUBA"
 modified: 2020-02-14
