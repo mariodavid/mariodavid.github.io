@@ -1,5 +1,5 @@
 ---
-layout: sf-lens
+layout: sf-lens-red
 title: Salesforce trough the Lens of a Java Dev
 subtitle: Part 2 - Salesforce Technology Comparison
 description: "This blog post series is about the my learnings that I had during working in the domain of Salesforce Development. I will try to put SF into a broader context and compare it to previous experice - in particular CUBA"
@@ -46,7 +46,98 @@ Broadly speaking, it is possible to put the available solutions & technologies i
 
 Let's go through the categories to unfold these somewhat general terms.
 
-Starting off with the "User Interface". It is obviously about creating user interfaces. But in Salesforce this can happen in various shapes and forms. 
+### User Interface
+
+Starting off with the "User Interface". It is obviously about creating user interfaces. But in Salesforce this can happen in various shapes and forms or better: at various abstraction levels.
+
+
+#### Page Layouts
+Starting from the very top of the abstraction pyramid, let's look first at a detail screen of a Pet:
+
+<img src="/images/salesforce-through-the-lens-of-a-java-dev-part-2/pet-details-screen.png" />
+
+This Screen is defined out of the box for every costum object, that is created within Salesforce. It is possible to configure the arrangement of elements within the screen, as well as attributes that should be displayed within a dedicated Setup section of the SF environment. 
+
+This Page Layout can be defined within something called "Lighning App Builder":
+
+<img src="/images/salesforce-through-the-lens-of-a-java-dev-part-2/pet-details-screen-page-layout.png" />
+
+The way to configure requires a little bit knowledge about the SF concepts, but besides that it does not require any kind of coding capabilities.
+
+#### Flow
+The next layer below Page Layouts is something called "Flow". Flow is a capability to define UI workflows / wizards with a brief understanding of programming concepts. 
+
+It still does not require to write source code, but it at least is necessary to have some abstract understanding of the underlying concepts like conditions or variables.  
+
+
+<img src="/images/salesforce-through-the-lens-of-a-java-dev-part-2/flow.png" />
+
+Instead of defining particular screens / pages, flows main focus is around guided user interactions that are across multiple screens.
+
+#### Lightning Web Components
+Programming in the User interface layer is also possible. It allows to cover all cases that are not available via the higher level abstractions. In the concrete with Lightning Web Components Salesforce exposes a propriatry Javascript based component library to the Developers that are working with Salesforce.
+
+Those components are used by Salesforce itself to create the existing User interfaces, so that there is generally a common look and feel independent if the component is created by Salesforce or by an external developer.
+
+{%highlight html%}
+<lightning-datatable
+        key-field="id"
+        data={data}
+        columns={columns}
+        onrowaction={handleRowAction}>
+</lightning-datatable>
+{% endhighlight %}
+
+This code (together with some Javascript functionality to load data) will result in the following UI component:
+
+<img src="/images/salesforce-through-the-lens-of-a-java-dev-part-2/lightning-web-component-datatable-petclinic.png" />
+
+### Workflow & Automation
+
+Turning away a little bit from the User interface part to a related area: Workflow & Automation. In order to create a solution that is more than just a structured way of storing data, it is necessary to create some kind of automation to take away the heavy lifting from the user.
+
+In this area there are also multiple solutions on different levels of the abstraction pyramid.
+
+#### Process Builder
+
+One very powerful declarative development mechanism in Salesforce is called Process Builder. What it does is, that it allows to define automation workflows based on certain environmental circumstances. 
+
+One abitrary example: When a Pet is created in the Petclinic example, in case the Pet is of type "Electric" a new Task is created for a Electric Vet specialist, to review the new Pet. Automatically after one week a reminder Email is send. Also a Visit for a regular checkup is scheduled after another week.
+
+Defining this processes is part of declarative development as well. Here is a screenshot of the Process Builder Configuration User Interface:
+
+
+<img src="/images/salesforce-through-the-lens-of-a-java-dev-part-2/process-builder.png" />
+
+It does not require to write source code. That being said it is possible to interact with source code. Oftentimes it will send notifications to the system that then executes a particular piece of source code. 
+
+This intersection is quite common and has the potential to be a real enabler. It allows to let the pieces of the functionality be where they belong the best. Sometimes it is declarative development, sometimes it is source code.
+
+Normally such functionality would be embodied by a BMPN workflow engine. Process builder is the propriatery equivalent of that tightly integrated onto other Salesforce capabilities.
+
+### Logic & Database
+
+The next section is all about business logic and the ability to store data. There is also a broad declarative as well as an imperative part to it.
+
+#### Object Manager
+
+The most obvious declarative mechanism to define data storage is the Object Manager. It allows to define Objects (= Database Tables / JPA Entities) and fields of that object. Fields can be either regular datatypes like text, numbers, checkboxes, picklist but also relationships to other objects.
+
+It is also possible instead of creating custom Objects adjust existing Objects (to a certain degree). As said before Salesforce comes with certain business objects out-of-the-box like <code>Account, Product, Case</code> etc.
+
+One example is the above shown <code>Pet</code> object. The corresponding Configuration User Interface looks like this:
+
+<img src="/images/salesforce-through-the-lens-of-a-java-dev-part-2/object-manager.png" />
+
+#### Calculated Fields
+
+A good example of logic is the concept of calculated / formular fields. When defining an Object in Salesforce it is possible to define fields of different types (numbers, text, checkboxes etc.). Those fields can either be editable by the user, or they can be calculated. Those fields can execute simple arithmetic operations like sum building, but they can also be defined as formulars.
+
+Those Formulars are conceptually very similar to a function in an Excel cell like <code>=SUM(MIN(A1:A3), MAX(B5:B10))</code>. They have a dedicated language, that the user needs to get familar with, but conceptually requires the same level of understanding as for defining an Excel calculated cell. Similar to Excel the Salesforce Configuration User Interface supports with explanations and Click-and-Point tools.
+
+The following configuration UI contains a definition of a calculated field for the Pet object. It calculates a reminder date that can be used for sending out Email reminders to the Vets about an upcoming Pets Birthday:
+
+<img src="/images/salesforce-through-the-lens-of-a-java-dev-part-2/formular.png" />
 
 ### Declarative Programming Possibilities in SF
 
