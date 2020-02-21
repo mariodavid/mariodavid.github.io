@@ -6,6 +6,7 @@ description: "This blog post series is about the learnings that I had during wor
 modified: 2020-02-14
 tags: [cuba, Salesforce]
 image:
+  dir: salesforce-through-the-lens-of-a-java-dev-part-2
   feature: salesforce-through-the-lens-of-a-java-dev-part-1/feature.png
 ---
 This blog post series is about the learnings that I had during working in the domain of Salesforce Development. I will try to put Salesforce into a broader context and compare it to the previous experience - in particular CUBA.
@@ -111,8 +112,8 @@ The numbers represent the parts of a solution that are either achieved by config
 Let's compare that to the domain of applications created in the SF ecosystem.
 
 #### Code vs. no-code ratio in a Salesforce Solution
-<img src="/images/salesforce-through-the-lens-of-a-java-dev-part-1/config-vs-code-ratio-sf.png" class="drawing" />
 
+<img src="/images/salesforce-through-the-lens-of-a-java-dev-part-1/config-vs-code-ratio-sf.png" class="drawing" />
 
 We see a couple of differences there. In general, the size of distinct areas is smaller. Area (2) + (3) in relativity is much bigger. This means the amount of stuff that can be done by non-code abilities is overall bigger.
 

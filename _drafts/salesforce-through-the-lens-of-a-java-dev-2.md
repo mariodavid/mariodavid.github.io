@@ -1,45 +1,48 @@
 ---
 layout: sf-lens-red
 title: Salesforce trough the Lens of a Java Dev
-subtitle: Part 2 - Salesforce Technology Comparison
-description: "This blog post series is about the my learnings that I had during working in the domain of Salesforce Development. I will try to put SF into a broader context and compare it to previous experice - in particular CUBA"
-modified: 2019-11-18
+subtitle: Part 2 - Declarative Technology Solutions
+description: "This blog post series is about the my learnings that I had during working in the domain of Salesforce Development. This blog post gives an overview of one side of the Technology coin: the declarative development solutions."
+modified: 2020-02-25
 tags: [cuba, Salesforce]
 image:
+  dir: salesforce-through-the-lens-of-a-java-dev-part-2
   feature: salesforce-through-the-lens-of-a-java-dev-part-2/feature.png
 ---
-This blog post series is about the my learnings that I had during working in the domain of Salesforce Development. I will try to put Salesforce into a broader context and compare it to previous experice - in particular CUBAs.
+This blog post series is about the my learnings that I had during working in the domain of Salesforce Development. This blog post gives an overview of one side of the technology coin: the declarative development solutions.
 
 <!-- more -->
 
-After elaborating the mindset and landscape in the first part let's go a little bit deeper into technical details in this part. 
+After elaborating the mindset and landscape in the first part let's go a little bit deeper into technical details in this part.
 
 ## Declarative vs. Imperative Development
 
-The first topic to talk about is the concept of declarative development. Declarative development mainly means to configure parts of the solution by expressing the intend of what we would like to achieve instead of also express how we would like to get the solution to go there. 
+The first topic to talk about is the concept of declarative development. Declarative development mainly means to define parts of the solution by expressing the intend of what we would like to achieve instead of also express how we would like to get the solution to go there. 
 
-In the land of Salesforce this happens through a more or less user friendly & accessible user interface that sits directly next to the actual application that is build.
+In the land of Salesforce this happens through a more or less user friendly & accessible configuration user interface that sits directly next to the actual application that is build.
 
 This concept is quite big in the Salesforce ecosystem and it is for good reasons. 
 
 On the one hand there is the target audience of tech-savy business people and Administrators, which need and benefit most of this kind of development. 
 
-On the other hand, Salesforce runs the solutions the users design on their behalf as part of the Software-as-a-Service offering. This means that they have to take care that the stuff that some builder / developer creates is controllable when running their solution. Because Salesforce has to take care that an error, that I as a builder / developer within the solution, does not effect any other application that runs on Salesforce.
+On the other hand, Salesforce runs the solutions the users design on their behalf as part of the Software-as-a-Service offering. This means that they have to take care that the stuff that some builder / developer creates is not going wild when running their solution on their servers. 
 
-Declarative development is much more controllable & restricable from the SaaS runtime perspective of Salesforce than imperative development mechanisms are.
+One example of this would be that I as a builder / developer cannot create something, that effects any other application that runs on Salesforce by another client.
+
+Declarative development tools are much more controllable & restricable from the SaaS runtime perspective of Salesforce than imperative development mechanisms are.
 
 Besides those two concrete Salesforce related reasons for declarative development there is an even more fundamental reason: it is oftentimes simply not necessary to use imperative development when the higher-level abstractions of declarative development are sufficient.
 
-In order to make this abstarct explanation about declarative vs. imperativ development a little bit more concrete, let's take a look at a simple example.
+In order to make this abstract explanation about declarative vs. imperativ development a little bit more concrete, let's take a look at a simple example.
 
 
 ### An Example of Configuration: Adding a Field
 
 
 
-## Salesforce Technology Landscape
+## Salesforce Declarative Development Technologies
 
-Next let's explore the technology landscape of the Salesforce platform in order to get a better feeling of the overall space. As this topic is so huge to fill multiple books we will just scratch the surface level. But conceptually I will try to at least touch the main options available to give you a full overview of the landscape.
+Next let's explore the declarative technology landscape of the Salesforce platform in order to get a better feeling of the overall space. As this topic is so huge to fill multiple books we will just scratch the surface level. But conceptually I will try to at least touch the main options available to give you a full overview of the landscape.
 
 Broadly speaking, it is possible to put the available solutions & technologies into the following categories:
 
@@ -52,11 +55,17 @@ Let's go through those categories to unfold these somewhat general terms.
 
 ### Example Project: Salesforce Petclinic
 
-All the examples that you will see in this blog post series will based on an example project: Petclinic. This example originated from the Spring Petclinic and was ported extended later implemented with CUBA.
+All the examples that you will see in this blog post series will based on an example project: Salesforce Petclinic.
+
+<img src="/images/salesforce-through-the-lens-of-a-java-dev-part-2/sf-petclinic-overview.png" />
+
+This example originated from the Spring Petclinic and was ported extended later implemented with CUBA. The Petclinic application deals with the domain of a Pet clinic and the associated business workflows to manage a pet clinic.
+
+{% include image-left.html image="sf-petclinic.png" width="100px" %}
 
 I took this example domain in order to show certain concepts in Salesforce, but did not implemented it thoughtly.
 
-More information on the Petclinic example can be found here: [CUBA Petclinic](https://demo10.cuba-platform.com/petclinic/).
+A full running Petclinic example can be found here: [CUBA Petclinic Demo](https://demo10.cuba-platform.com/petclinic/).
 
 ### 1. User Interface
 
@@ -78,6 +87,8 @@ The screen aragement is called "Page Layout". It can be defined within the "Ligh
 
 The way to configure requires a little bit knowledge about the SF concepts, but besides that it does not require any kind of coding capabilities.
 
+The components on the left can be dragged on to the page. The list contains standard Salesforce components. Additionally it is also possible to create Components via imperative development and source code. Then those components also appear in the list and can be leveraged by tech-savy business people.
+
 #### Flow
 The next layer below Page Layouts is something called "Flow". Flow is a capability to define UI workflows / wizards with a brief understanding of programming concepts. 
 
@@ -85,7 +96,7 @@ It still does not require to write source code, but it at least is necessary to 
 
 <img src="/images/salesforce-through-the-lens-of-a-java-dev-part-2/flow.png" />
 
-Instead of defining particular screens / pages, flows main focus is around guided user interactions that are across multiple screens.
+Instead of defining particular screens / pages, flows main focus is around guided user interactions that are across multiple screens. That being said, it is also possible to create particular screens that are part of the overall flow directly from here (similar to the way the above seen Page Builder).
 
 #### Lightning Web Components
 Going down further in the abstraction pyramid more into the imperative development with source code side of things there are also multiple options available.
@@ -184,7 +195,7 @@ Through dedicated integration services like Zapier it is possible to extend that
 
 In this example an integration is configured through Zapier to create a new Google Calender Event in case a new Record (e.g. Pet) is created in the Salesforce System.
 
-### It is all about declarative development?
+## It is all about declarative development?
 
 After looking over the technology landscape in Salesforce you could get the impression that this is all only Click-and-Point. 
 
@@ -199,28 +210,24 @@ Declarative development in these configuration UI has the following characterist
 * it speeds up initial development due to higher level abstractions
 * it openes up the specifics to a broader range of builders/developers
 
-## Salesforce for Developers
+Looking back at our Venn Diagram of the last blog post, for the most part we have covered the area (1), (2) and a small portion of (3).
 
-I already showed you a small example that source-code based software development is also available in Salesforce. Indeed the area of what can be done in this area is at least as big as or even bigger compared to the declarative development part.
+<img src="/images/salesforce-through-the-lens-of-a-java-dev-part-1/config-vs-code-ratio-sf.png" class="drawing" />
 
-As Salesforce already has a history of technologies that were supported throught the years, there are various options. We will only focus on the current technology stack.
+##### Legend: SF declarative vs. imperative development overlap
 
-### Salesforce Javascript Fragmentation Approach
+1. creating a solution only by configuration
+2. creating a solution normally by configuration, code variant possible
+3. creating a solution normally by code, sometimes configuration is possible
+4. creating a solution only by codes
 
-When it comes to the user interface, the technology is Javascript, as Salesforce exclusively is a web based solution.
 
-As for all big tech players that market in particular is very problematic technology wise, as it is very fragmented and fast moving (although it slowed down in the last 1-2 years). This highly contradicts with the requirements of enterprises that normally need loooong living technology lifecycles and support.
+## Summary
 
-Salesforce does not have a silver bullet here. In order to not make a big bet on any Javascript framework that will be irrelevant and gone in two years, they develop their own framework, where probably the main reason is that they are control the lifecycle better, which is necessary to fulfill the enterprise requirement of long support.
+In this blog post we started out with an exploration of the differences between declarative vs. imperative development styles.
 
-SAP went into a similar direction with [SAP UI 5](https://openui5.org/).
+After this classification, we took a deeper look into the first class: declarative solutions, that are provided the the builder/developer within the Salesforce ecosystem. Those solutions can be grouped into different areas, namely "User Interface", "Workflow & Automation", "Business Logic & Database" and "Integrations & APIs".
 
-To balance those two contradictory forces they have multiple technologies in different phases of their lifecycle in their portfolio. Currently those are in particular these two options:
+For each of those groups Salesforce provides different solutions to sub-problems in this area. Those solutions differ mainly in the main target audience, the required technical know-how as well as the abstraction level and inherently therefore also with the flexibility of the solution.
 
-* Lightning Web Components (newer, build ontop of open Webcomponents standard, does not cover all use-cases, open source)
-* Aura Components (more mature, older, propriatery)
-
-This blog post from Salesforce shares some more light on this topic: https://developer.salesforce.com/blogs/2019/05/introducing-lightning-web-components-open-source.html
-
-This move of adopting open standard and also embracing open source is aligned with what the majority of the software industrie is doing nowadays. It also shows that Salesforce wants to leverare the community effects in the software development world much more then it used to do before (we will see this other examples later).
-
+In the next blog post, we will go down the abstraction level further (or you could also say: "go up the flexibility level further") by looking closer in the imperative style of development. So expect some source code in there.
