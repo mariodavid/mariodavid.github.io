@@ -14,19 +14,19 @@ This blog post series is about the my learnings that I had during working in the
 
 ## Salesforce for Developers
 
-I already showed you a small example that source-code based software development is also available in Salesforce. Indeed the area of what can be done in this area is at least as big as or even bigger compared to the declarative development part.
+I already showed you a small example that source-code based software development is also available in Salesforce in the last post of the series. Indeed the area of what can be done in this area is at least as big as or even bigger compared to the declarative development part.
 
 As Salesforce already has a history of technologies that were supported throught the years, there are various options. We will only focus on the current technology stack.
 
-### Salesforce Javascript Fragmentation Approach
+### Salesforce Javascript Fragmentation Fighting Approach
 
 When it comes to the user interface, the technology is Javascript, as Salesforce exclusively is a web based solution.
 
 As for all big tech players that market in particular is very problematic technology wise, as it is very fragmented and fast moving (although it slowed down in the last 1-2 years). This highly contradicts with the requirements of enterprises that normally need loooong living technology lifecycles and support.
 
-Salesforce does not have a silver bullet here. In order to not make a big bet on any Javascript framework that will be irrelevant and gone in two years, they develop their own framework, where probably the main reason is that they are control the lifecycle better, which is necessary to fulfill the enterprise requirement of long support.
+Salesforce does not have a silver bullet here. In order to not make a big bet on any Javascript framework that will be irrelevant and gone in two years, they develop their own frameworks. Probably the main reason for that is that they are control the lifecycle better, which is necessary to fulfill the enterprise requirement of long support.
 
-SAP went into a similar direction with [SAP UI 5](https://openui5.org/).
+SAP went into a similar direction with [SAP UI 5](https://openui5.org/) a couple of years ago.
 
 To balance those two contradictory forces they have multiple technologies in different phases of their lifecycle in their portfolio. Currently those are in particular these two options:
 
@@ -35,5 +35,5 @@ To balance those two contradictory forces they have multiple technologies in dif
 
 This blog post from Salesforce shares some more light on this topic: [Salesforce Developer - Introducing Lightning Web Components Open Source](https://developer.salesforce.com/blogs/2019/05/introducing-lightning-web-components-open-source.html).
 
-This move of adopting open standard and also embracing open source is aligned with what the majority of the software industrie is doing nowadays. It also shows that Salesforce wants to leverare the community effects in the software development world much more then it used to do before (we will see this other examples later).
+This move of adopting open standards and also embracing open source is aligned with what the majority of the software industrie is doing nowadays. It also shows that Salesforce wants to leverare the community effects in the software development world much more then it used to do before (we will see this other examples later).
 
