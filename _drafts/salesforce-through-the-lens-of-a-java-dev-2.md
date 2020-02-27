@@ -33,11 +33,7 @@ Declarative development tools are much more controllable & restrictable from the
 
 Besides those two concrete Salesforce related reasons for declarative development, there is an even more fundamental reason: it is oftentimes simply not necessary to use imperative development when the higher-level abstractions of declarative development are sufficient.
 
-To make this abstract explanation about declarative vs. imperative development a little bit more concrete, let's take a look at a simple example.
-
-
-### An Example of Configuration: Adding a Field
-
+To make this abstract explanation about declarative vs. imperative development a little bit more concrete, let's take a look at various UI configuration examples that show how to do certain things are expressed through declarative development.
 
 
 ## Salesforce Declarative Development Technologies
@@ -51,7 +47,24 @@ Broadly speaking, it is possible to put the available solutions & technologies i
 3. Business Logic & Database
 4. Integrations & APIs
 
-Let's go through those categories to unfold these somewhat general terms.
+Let's go through those categories to unfold these somewhat general terms. But before we do that it is necessary to revisit the Abstraction Pyramid from the first blog post, because for each category there are different solutions even in the declarative development space that are representing different levels of abstraction.
+
+
+### Abstraction Pyramid Revisited
+
+In the next section we will take a look at concrete examples how Salesforce coveres the different categories with multiple solutions even within one category. The reason is that for the different tasks different abstraction levels or "super-powers" are necessary to fulfil the requirement.
+
+In the first blog post I drawed a very high level and oversimplified abstraction pyramid and was putting Salesforce somewhere in there.
+
+<img src="/images/salesforce-through-the-lens-of-a-java-dev-part-2/abstraction-pyramid-salesforce-cuba.png" />
+
+Now we can zoom in a little further and concentrate only on the Salesforce side and try to compare it the CUBA / high-level Java category. 
+
+What we will see then is that actually the closer we look, the more diverse the picture becomes Instead of clean cuts between the abstraction categories with straight lines (red line), you can almost thing of it like an overlap between those categories. 
+
+Also the borders of the pyramid that indicate the transition from the flexible space (white area within the pyramid) to the inflexible space (dashed area outside the pyramid) are not straight lines. Instead it is more an somewhat undefined wavy line that shows a correlation between speed / abstraction and flexibility.
+
+The points (1) - (7) are arbitrary solutions within Salesforce like "Process Builder" (some of them we will see in the examples below). The important point here is, that it is not inheriently dependent on the abstraction category like "in Salesforce everything is more high level and faster" in a black / white fashion. But instead the reality is more shades of grey. It might be that there are solutions in the CUBA world that have the same abstraction level as something in Salesforce (like the BPM add-on) or even higher.
 
 ### Example Project: Salesforce Petclinic
 
@@ -202,7 +215,7 @@ After looking over the declarative technology landscape in Salesforce you could 
 
 In fact, although Salesforce covers the main use-cases all with declarative development this is quite far from reality. Instead for almost all use-cases, it is possible to alternatively imperatively develop the solutions through source code.
 
-> The Choice between declarative vs. imperative development boils down to the abstraction level that is necessary to fulfill the business requirements.
+> The Choice between declarative vs. imperative development boils down to the abstraction level that is necessary to fulfill the business requirement at hand
 
 Declarative development in these configuration UIs has the following characteristics:
 

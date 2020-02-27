@@ -47,7 +47,7 @@ SF was revolutionary back then, with this idea of having software not installed 
 
 <img src="/images/salesforce-through-the-lens-of-a-java-dev-part-1/no-software-logo.png" style="float:right;width:100px" />
 
-For a long time there was a very famous Logo and Marketing Campaign from SF that claimed "no-software", referring to the above-mentioned situation of not having to install & maintain software anymore. Of course, it was still very much software - just not what regular people would associate with the term "software" back then (for the most part).
+For a long time there was a very famous Logo and Marketing Campaign from SF that claimed "no-software", referring to the above-mentioned situation of not having to install & maintain software anymore. Of cfourse, it was still very much software - just not what regular people would associate with the term "software" back then (for the most part).
 
 SF successfully operated in the domain with this multi-tenancy application that was offering CRM in the cloud.
 
@@ -99,7 +99,7 @@ But "optional" also means that source code is possible.
 If we put the general distinction between code and non-code in an application created by custom software development into an advanced Venn diagram, the ratio between code and non-code parts would look like this:
 
 #### Code vs. No-code Ratio in a General Solution
-<img src="/images/salesforce-through-the-lens-of-a-java-dev-part-1/config-vs-code-ratio-generally.png" class="drawing"/>
+<img src="/images/salesforce-through-the-lens-of-a-java-dev-part-1/config-vs-code-ratio-generally-2.png" style="width:400px" class="drawing"/>
 
 The numbers represent the parts of a solution that are either achieved by configuration or by creating source code. 1-4 can then be described as:
 
@@ -111,12 +111,15 @@ The numbers represent the parts of a solution that are either achieved by config
 Let's compare that to the domain of applications created in the SF ecosystem.
 
 #### Code vs. No-code Ratio in a Salesforce Solution
+
 <img src="/images/salesforce-through-the-lens-of-a-java-dev-part-1/config-vs-code-ratio-sf.png" class="drawing" />
 
 
-We see a couple of differences there. In general, the size of distinct areas is smaller. Area (2) + (3) in relativity is much bigger. This means the amount of stuff that can be done by non-code abilities is overall bigger.
+We see a couple of differences there. In general, the size of distinct areas is smaller - in particular the section (4) is much smaller compared to the former picture. THis is not so much because it is not possible to express the same amount in source code compared to a general slution.
 
-There are still parts that are better suited (3) or exclusive (4) to be done by code. But this area is smaller compared to the parts (1) and (2).
+But it is because the area (2) + (3) in relativity are much bigger. This means the amount of stuff that can be done by non-code abilities is overall bigger.
+
+There are still parts that are better suited (3) or exclusive (4) to be done by code. But the ratio beteen (3) + (4) compared to (1) + (2) is much more balanced compare to general solution. 
 
 With that observation let's go to the second concept that is worth pointing out:
 
