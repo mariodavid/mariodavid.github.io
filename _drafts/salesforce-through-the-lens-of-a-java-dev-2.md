@@ -9,7 +9,7 @@ image:
   dir: salesforce-through-the-lens-of-a-java-dev-part-2
   feature: salesforce-through-the-lens-of-a-java-dev-part-2/feature.png
 ---
-This blog post series is about the learnings that I had during working in the domain of Salesforce Development. This blog post gives an overview of one side of the technology coin: the declarative development solutions.
+This blog post series is about the learnings that I had during working in the domain of Salesforce Development. This blog post gives an overview on one side of the Salesforce technology coin: the declarative development solutions.
 
 <!-- more -->
 
@@ -25,15 +25,15 @@ This concept is quite big in the Salesforce ecosystem and it is for good reasons
 
 On the one hand, there is the target audience of tech-savvy business people and Administrators, which need and benefit most of this kind of development. 
 
-On the other hand, Salesforce runs the solutions, the users' design on their behalf as part of the Software-as-a-Service offering. This means that they have to take care that the stuff that some builder/developer creates is not going wild when running their solution on their servers. 
+On the other hand, Salesforce runs software that is defined by builders/developers as part of the Software-as-a-Service offering. This means that they have to take care that the stuff that some builder/developer creates is not going wild when running their solution on their servers. 
 
 One example of this would be that I, as a builder/developer cannot create something, that affects any other application that runs on Salesforce by another client.
 
-Declarative development tools are much more controllable & restrictable from the SaaS runtime perspective of Salesforce than imperative development mechanisms are.
+Declarative development tools are much more controllable & restrictable from the SaaS runtime perspective of Salesforce over imperative development mechanisms.
 
 Besides those two concrete Salesforce related reasons for declarative development, there is an even more fundamental reason: it is oftentimes simply not necessary to use imperative development when the higher-level abstractions of declarative development are sufficient.
 
-To make this abstract explanation about declarative vs. imperative development a little bit more concrete, let's take a look at various UI configuration examples that show how to do certain things are expressed through declarative development.
+To make this abstract explanation about declarative vs. imperative development a little bit more concrete, let's take a look at various UI configuration examples that show how certain things are expressed through declarative development.
 
 
 ## Salesforce Declarative Development Technologies
@@ -52,19 +52,23 @@ Let's go through those categories to unfold these somewhat general terms. But be
 
 ### Abstraction Pyramid Revisited
 
-In the next section we will take a look at concrete examples how Salesforce coveres the different categories with multiple solutions even within one category. The reason is that for the different tasks different abstraction levels or "super-powers" are necessary to fulfil the requirement.
+In the next section, we will take a look at concrete examples of how Salesforce covers the different categories with multiple solutions even within one category. The reason is that for the different tasks different abstraction levels or "super-powers" are necessary to fulfill the requirement.
 
-In the first blog post I drawed a very high level and oversimplified abstraction pyramid and was putting Salesforce somewhere in there.
+In the first blog post, I drew a very high level and oversimplified abstraction pyramid and was putting Salesforce somewhere in there.
+
+Now we can zoom in a little further and concentrate only on the Salesforce side and try to compare it to the CUBA / high-level Java category. 
 
 <img src="/images/salesforce-through-the-lens-of-a-java-dev-part-2/abstraction-pyramid-salesforce-cuba.png" />
 
-Now we can zoom in a little further and concentrate only on the Salesforce side and try to compare it the CUBA / high-level Java category. 
+What we will see then is that actually the closer we look, the more diverse the picture becomes. Instead of clean cuts between the abstraction categories with straight lines (red line), you can almost think of it as an overlap between those categories. Here I expressed through a very curved red line.
 
-What we will see then is that actually the closer we look, the more diverse the picture becomes Instead of clean cuts between the abstraction categories with straight lines (red line), you can almost thing of it like an overlap between those categories. 
+Also, the borders of the pyramid that indicate the transition from the flexible space (white area within the pyramid) to the inflexible space (dashed area outside the pyramid) are not straight lines. 
 
-Also the borders of the pyramid that indicate the transition from the flexible space (white area within the pyramid) to the inflexible space (dashed area outside the pyramid) are not straight lines. Instead it is more an somewhat undefined wavy line that shows a correlation between speed / abstraction and flexibility.
+Instead, it is more a somewhat undefined wavy line. Before it was more indicating that there is a linear relationship, but this is probably not true. Now it only shows that there is _some_ correlation between speed/abstraction and flexibility.
 
-The points (1) - (7) are arbitrary solutions within Salesforce like "Process Builder" (some of them we will see in the examples below). The important point here is, that it is not inheriently dependent on the abstraction category like "in Salesforce everything is more high level and faster" in a black / white fashion. But instead the reality is more shades of grey. It might be that there are solutions in the CUBA world that have the same abstraction level as something in Salesforce (like the BPM add-on) or even higher.
+The points (1) - (7) are arbitrary solutions within Salesforce like "Process Builder" (some of them we will see in the examples below). 
+
+The important point here to take away is, that it is not inherently dependent on the abstraction category like "in Salesforce everything is more high level and faster" in a black/white fashion. But instead, the reality is more shades of grey. It might be that there are solutions in the CUBA world that have the same abstraction level as something in Salesforce (like the BPM add-on) or even higher.
 
 ### Example Project: Salesforce Petclinic
 
@@ -86,19 +90,18 @@ Starting with the first category of user interfaces. In Salesforce this can happ
 
 
 #### Page Layouts
-At the very top of the abstraction pyramid, let's look first at a detail screen of a Pet:
+
+Let's look first at a detail screen of a Pet:
 
 <img src="/images/salesforce-through-the-lens-of-a-java-dev-part-2/pet-details-screen.png" />
 
 This Screen is defined out of the box for every custom object, that is created within Salesforce. It is possible to configure the arrangement of elements within the screen, as well as fields that should be displayed.
 
-This definition of the screen is expressed within a dedicated Setup section of the SF environment. 
-
-The screen arrangement is called "Page Layout". It can be defined within the "Lightning App Builder":
+This definition of the screen is expressed within a dedicated Setup section of the SF environment. The screen arrangement is called "Page Layout". It can be defined within the "Lightning App Builder":
 
 <img src="/images/salesforce-through-the-lens-of-a-java-dev-part-2/pet-details-screen-page-layout.png" />
 
-The way to configure requires a little bit of knowledge about the SF concepts, but besides that, it does not require any kind of coding capabilities.
+The way to configure requires a little bit of knowledge about the SF concepts, but besides that, it does not require any kind of coding capabilities. "Lightning App Builder" represents one example at the very top of the abstraction pyramid (like (5)).
 
 The components on the left can be dragged on to the page. The list contains standard Salesforce components. Additionally, it is also possible to create Components via imperative development and source code. Then those components also appear in the list and can be leveraged by tech-savvy business people.
 
@@ -157,7 +160,11 @@ It does not require to write source code. That being said it is possible to inte
 
 This intersection is quite common and has the potential to be a real enabler. It allows to let the pieces of the functionality be where they belong the best. Sometimes it is declarative development, sometimes it is imperative development via source code.
 
-Normally such functionality would be embodied in a BMPN workflow engine. Process builder is the proprietary equivalent of that concept, tightly integrated onto other Salesforce capabilities.
+Normally such functionality would be embodied in a BMPN workflow engine. Process builder is the proprietary equivalent of that concept, tightly integrated onto other Salesforce capabilities but also much more constraint compared to the [CUBA BPM addon](https://www.cuba-platform.com/marketplace/bproc):
+
+<img src="/images/salesforce-through-the-lens-of-a-java-dev-part-2/cuba-bproc.png" />
+
+The main reason for it is that BPMN is an open industrie standard that has evolved and generalised quite a lot over the years.
 
 ### 3. Logic & Database
 
@@ -177,11 +184,15 @@ One example of a custom object is the above shown <code>Pet</code> object. To gi
 
 A good example of logic is the concept of calculated / formula fields. When defining an Object in Salesforce it is possible to define fields of different types (numbers, text, checkboxes, etc.). Those fields can either be editable by the user, or they can be calculated. Those fields can execute simple arithmetic operations like sum building, but they can also be defined as complex formulas.
 
-Those Formulars are conceptually very similar to a function in an Excel cell, like <code>=SUM(MIN(A1:A3), MAX(B5:B10))</code>.  Similar to Excel the Salesforce Configuration User Interface supports the user with explanations and a Click-and-Point tool.
+Those Formulars are conceptually very similar to a function in an Excel cell, like <code>=SUM(MIN(A1:A3), MAX(B5:B10))</code>.  The Salesforce Configuration User Interface supports the user with explanations and a Click-and-Point tool.
 
 The following configuration UI contains a definition of a calculated field for the Pet object. It calculates a reminder date that can be used for sending out email reminders to the Vets about an upcoming Pets Birthday:
 
 <img src="/images/salesforce-through-the-lens-of-a-java-dev-part-2/formular.png" />
+
+The formula represents something like this:
+
+> Reminder Date is seven days before the birthday in the current year or at the first of the month in case the birthday is too early in the month.
 
 Defining those formulas requires to have an understanding of this dedicated formula language from the user. But conceptually it only requires the same level of understanding as for defining an Excel calculated cell. As seen in the Screenshot Salesforce tries to help the builder/developer here via inline help e.g.
 
@@ -193,7 +204,7 @@ In the remaining last big category, it is all about manual and automatic integra
 
 In the space of integration, it starts from something very lightweight like manual / automatic file import. Next, there are various out-of-the-box integrations with external Services like Outlook 365, CTI offerings like Amazon Connect e.g. All those integrations are all still on the declarative side of things. 
 
-Here is one simple example of integration. In this screen a CSV import was started to import new Visits from another system manually:
+Here is one simple example of integration. In this screen a CSV import was started to import new Visits from another system manually (in this case I exported it from the CUBA Petclinic example via its export capabilities):
 
 <img src="/images/salesforce-through-the-lens-of-a-java-dev-part-2/csv-import.png" />
 
@@ -203,17 +214,19 @@ Besides the Integration side, where the Salesforce application sits more on the 
 
 When it comes to automated integration it goes into the direction of APIs. Salesforce provides out-of-the-box APIs via SOAP Webservices and further allows them to imperatively develop any kind of APIs to act as the Provider of automated system-to-system integrations.
 
+With having a generic SOAP API to more or less remote-control all objects in Salesforce, it allows connecting either with source code to it by consuming the corresponding WSDL definitions. But it also opens up the possibility to connect to it with any kind of ETL tool to declaratively connect Salesforce and send & receive data from it.
+
 Through dedicated integration services like Zapier, it is possible to extend that list to thousands of Services.
 
 <img src="/images/salesforce-through-the-lens-of-a-java-dev-part-2/zapier-salesforce-to-google-calender.png" />
 
-In this example, an integration is configured through Zapier to create a new Google Calendar Event in case a new Record (e.g. Pet) is created in the Salesforce System.
+In this example, integration is configured through Zapier to create a new Google Calendar Event in case a new Record (e.g. Pet) is created in the Salesforce System.
 
 ## It is all about declarative development?
 
 After looking over the declarative technology landscape in Salesforce you could get the impression that this is all only Click-and-Point. 
 
-In fact, although Salesforce covers the main use-cases all with declarative development this is quite far from reality. Instead for almost all use-cases, it is possible to alternatively imperatively develop the solutions through source code.
+Although Salesforce covers the main use-cases all with declarative development this is quite far from reality. Instead of almost all use-cases, it is possible to alternatively imperatively develop the solutions through source code.
 
 > The Choice between declarative vs. imperative development boils down to the abstraction level that is necessary to fulfill the business requirement at hand
 
@@ -241,7 +254,7 @@ Looking back at our Venn Diagram of the last blog post, for the most part, we ha
 
 In this blog post, we started with an exploration of the differences between declarative vs. imperative development styles.
 
-After this classification, we took a deeper look into the first class: declarative solutions, that are provided to the builder/developer within the Salesforce ecosystem. Those solutions can be grouped into different areas, namely "User Interface", "Workflow & Automation", "Business Logic & Database" and "Integrations & APIs".
+After this classification, we took a deeper look into the first part: declarative solutions, that are provided to the builder/developer within the Salesforce ecosystem. Those solutions can be grouped into different areas, namely "User Interface", "Workflow & Automation", "Business Logic & Database" and "Integrations & APIs".
 
 For each of those groups, Salesforce provides different solutions to sub-problems in this area. Those solutions differ mainly in the main target audience, the required technical know-how as well as the abstraction level and inherently therefore also with the flexibility of the solution.
 
