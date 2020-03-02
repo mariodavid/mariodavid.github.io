@@ -3,7 +3,7 @@ layout: sf-lens-red
 title: Salesforce through the Lens of a Java Dev
 subtitle: Part 2 - Declarative Technology Solutions
 description: "This blog post series is about the learnings that I had during working in the domain of Salesforce Development. This blog post gives an overview of one side of the Technology coin: the declarative development solutions."
-modified: 2020-02-25
+modified: 2020-03-02
 tags: [cuba, Salesforce]
 image:
   dir: salesforce-through-the-lens-of-a-java-dev-part-2
