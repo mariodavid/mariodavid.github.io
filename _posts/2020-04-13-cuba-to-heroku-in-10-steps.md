@@ -9,7 +9,7 @@ image:
   feature: cuba-to-heroku-in-ten-steps/feature.jpg
 ---
 
-In this blog post, I will show you how to deploy a CUBA app to Heroku in ten minutes. With the Combination of CUBA, Github and Heroku you can focus on building your business logic. In this post, I will explain to you how to achieve that via a fast way to deploy your application.
+In this blog post, I will show you how to deploy a CUBA app to Heroku in ten steps (and probably ten minutes as well). With the Combination of CUBA, Github and Heroku you can focus on building your business logic. In this post, I will explain to you how to achieve that via a fast way to deploy your application.
 
 <!-- more -->
 
