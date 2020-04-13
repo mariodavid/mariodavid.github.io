@@ -40,7 +40,9 @@ So the takeaway of the PaaS idea is: there is a lot more to provide developers/b
 
 So what is the PaaS experience then? This is a good question. It is a little hard to describe, but it boils down to the removal friction of the application developer. Instead of having to have the mental burden on the developer to think about infrastructure concepts, a PaaS tries to replace it with higher level primitives, that encapsulate a lot of details that are not critical to know about or configure for a certain set of applications.
 
-One concrete example of that in the Heroku world: When you want to run an application on Heroku, you have to create something that is called an "app" on the Heroku dashboard. This represents your application as a concept. It e.g. requires that you point the "app" to your Github repository. Once this is done, the PaaS "knows" how to run the application. And with a click of one button, it does run it.
+One concrete example of that in the Heroku world: When you want to run an application on Heroku, you have to create something that is called an "app" on the Heroku dashboard. This represents your application as a conceptual thing. This name on its own is somewhat interesting. An "app" is a concept that you will hardly find in any IaaS provider naming. Instead you will find something like "Service", "Container", "Virtual Machine", etc. This shows in a very simplistic way the different abstraction levels that you will find in those two worlds.
+
+It e.g. requires that you point the "app" to your Github repository. Once this is done, the PaaS "knows" how to run the application. And with a click of one button, it does run it.
 
 There is _very little_ to _no_ need to know about stuff like: 
 
@@ -65,10 +67,9 @@ You can either follow the blog post in the written form here or alternatively I 
 
 ## Heroku Deployment
 
-This example shows how to easily deploy the Petclinic application to Heroku. Heroku is a PaaS offering, that allows having a very easy and frictionless experience when it comes to running applications in production. Compared to other cloud providers and solutions, Heroku is very high level in its building blocks. This means that the application developer that just wants to "host a CUBA application" somewhere, can achieve that goal with very little "heavy lifting" on the operations side.
+This example shows how to easily deploy the Petclinic application to Heroku. Compared to other cloud providers and solutions, Heroku is very high level in its building blocks. This means that the application developer that just wants to "host a CUBA application" somewhere, can achieve that goal with very little "heavy lifting" on the operations side.
 
 In this example, I will guide you through the steps that are necessary to deploy the Petclinic project to Heroku.
-
 
 {% 
     include image-left.html 
@@ -109,9 +110,8 @@ The first step is to put your CUBA application source code into Github source co
     include image-center-clickable.html 
     image="1-fork-github-repository.png" 
     width="600px" 
-    title="Fork github repository" 
+    title="Fork the CUBA Petclinic Github repository" 
 %}
-
 
 
 {% 
@@ -147,14 +147,14 @@ To run the Petclinic app, Heroku needs to know where to get the application sour
     include image-center-clickable.html 
     image="3-app-overview.png" 
     width="600px" 
-    title="App Overview" 
+    title="Heroku App Overview" 
 %}
 
 {% 
     include image-center-clickable.html 
     image="4-connect-to-github-search-repo.png" 
     width="600px" 
-    title="Connect to Github repo" 
+    title="Connect Heroku App to the Github repository" 
 %}
 
 {% 
