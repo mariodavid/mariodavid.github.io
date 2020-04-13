@@ -1,7 +1,7 @@
 ---
 layout: heroku
 title: CUBA to Heroku in 10 steps
-description: "In this blog post I will show you how to deploy a CUBA app to Heroku in ten simple steps"
+description: "In this blog post I will show you how to deploy a CUBA app to Heroku in ten simple steps "
 modified: 2020-04-13
 tags: [cuba, deployment, heroku, github]
 image:
@@ -254,7 +254,7 @@ CUBA 7.2 introduced the following three new configuration capabilities in  <code
 2. configure the datasource connection directly in the configuration files
 3. use profile-specific configuration files
 
-In the code module, add the the file <code>prod-app.properties</code> with the following content:
+In the core module, add the file <code>prod-app.properties</code> with the following content:
 {% highlight properties %}
 ###############################################################################
 #                Production Heroku Database Configuration                     #
@@ -273,19 +273,18 @@ cuba.dataSourceProvider = application
 cuba.dataSource.jdbcUrl = ${JDBC_DATABASE_URL}
 {% endhighlight %}
 
+The nice thing about the Heroku DB connection here, is the OS Environment variable <code>JDBC_DATABASE_URL</code>. Heroku automatically populates this variable with the complete information on how to connect to the database (including credentials).
+
 
 #### Step 7.3: Help Heroku run the CUBA app
 
-In order for Heroku to know what it needs to do when it comes to running the application, the source code can define
-the action it should do. For that, we create a file with the name <code>Procfile</code> in the root directory of the application 
-(see: [Procfile](Procfile)). It contains the following information:
-
+In order for Heroku to know what it needs to do when it comes to running the application, the source code can define the action it should do. For that, we create a file with the name <code>Procfile</code> in the root directory of the application (see: [Procfile](Procfile)). It contains the following information:
 
 {% highlight bash %}
 web: cd ./deploy/tomcat/bin && export 'JAVA_OPTS=-Dport.http=$PORT -Dspring.profiles.active=prod' && ./catalina.sh run
 {% endhighlight %}
 
-Here we tell heroku how to start the tomcat. Additionally with <code>-Dspring.profiles.active=prod</code> we define which Spring profile should be used. This way CUBA will pick up the profile specific configuration file <code>prod-app.properties</code> from 6.2.
+Here we tell Heroku how to start the tomcat. Additionally with <code>-Dspring.profiles.active=prod</code> we define which Spring profile should be used. This way CUBA will pick up the profile specific configuration file <code>prod-app.properties</code> from 6.2.
 
 {% 
     include image-right.html 
