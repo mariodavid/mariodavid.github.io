@@ -1,0 +1,11 @@
+
+<figure class="center">
+    <a href="{{site.url}}/images/{{ page.image.dir }}/{{ include.image }}">
+        <img 
+            src="{{site.url}}/images/{{ page.image.dir }}/{{ include.image }}" 
+            style="width:{{include.width}}" 
+            class="{{include.class}}" 
+            alt="{{ include.title}}">
+    </a>
+	<figcaption><a href="{{site.url}}/images/{{ page.image.dir }}/{{ include.image }}" title="{{ include.title}}">{{ include.title}}</a></figcaption>
+</figure>
