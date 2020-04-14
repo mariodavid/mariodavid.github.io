@@ -284,7 +284,7 @@ In order for Heroku to know what it needs to do when it comes to running the app
 web: cd ./deploy/tomcat/bin && export 'JAVA_OPTS=-Dport.http=$PORT -Dspring.profiles.active=prod' && ./catalina.sh run
 {% endhighlight %}
 
-Here we tell Heroku how to start the tomcat. Additionally with <code>-Dspring.profiles.active=prod</code> we define which Spring profile should be used. This way CUBA will pick up the profile specific configuration file <code>prod-app.properties</code> from 6.2.
+Here we tell Heroku how to start the tomcat. Additionally with <code>-Dspring.profiles.active=prod</code> we define which Spring profile should be used. This way CUBA will pick up the profile specific configuration file <code>prod-app.properties</code> from 7.2.
 
 {% 
     include image-right.html 
