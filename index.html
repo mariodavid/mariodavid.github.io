@@ -4,6 +4,7 @@ title: "Welcome on the Road to CUBA and beyond"
 description: "This blog is about my experience with the CUBA platform and related technologies."
 tags: []
 comments: false
+hidden: true
 ---
 
 {% for post in paginator.posts %}
@@ -35,7 +36,7 @@ comments: false
   </header>
   <div class="entry-content">
     {% if post.content contains "<!-- more -->" %}
-    {{ post.content | split:"<!-- more -->" | first % }}
+    {{ post.content | split:"<!-- more -->" | first }}
     {% else %}
       {{ post.content }}
     {% endif %}
